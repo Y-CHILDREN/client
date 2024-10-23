@@ -2,6 +2,7 @@
     height: 100vh;
     width: calc(100vh * 9 / 16);
     max-width: 600px; /* 최대 너비 제한 */
+    min-width: 400px;
     margin: 0 auto; /* 수평 중앙 정렬 */
     background-color: #474242; /* 배경색 설정 */
     display: flex;
