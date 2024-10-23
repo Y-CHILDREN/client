@@ -9,7 +9,7 @@ function App() {
         <ZustandPractice />
       </Layout>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
