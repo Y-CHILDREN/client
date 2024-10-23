@@ -7,20 +7,20 @@ import Layout from './components/layout/Layout';
 import Home from './core/presentation/pages/Home';
 import CreateTrip from './core/presentation/pages/CreateTrip';
 
-const App: React.FC= () => {
+const App: React.FC = () => {
   return (
     <>
       <Layout>
         <Router>
           <Routes>
-            <Route path="/zustand" element={<ZustandPractice/>} />
-            <Route path="/" element={<Home/>} />
-            <Route path="/create-trip" element={<CreateTrip/>}/>
+            <Route path="/zustand" element={<ZustandPractice />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/create-trip" element={<CreateTrip />} />
           </Routes>
         </Router>
       </Layout>
     </>
   );
-}
+};
 
 export default App;
