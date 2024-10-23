@@ -1,12 +1,13 @@
 import './App.css'
-import LoginForm from './components/LoginForm'
+import ZustandPractice from './core/presentation/pages/ZustandPractice'
+import Layout from './components/layout/Layout'
 
 function App() {
   return (
     <>
-      <div>
-        <LoginForm/>
-      </div>
+      <Layout>
+        <ZustandPractice />
+      </Layout>
     </>
   )
 }
