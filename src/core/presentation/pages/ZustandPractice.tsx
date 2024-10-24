@@ -1,8 +1,8 @@
-import useStore from '../hooks/store'
+import useStore from '../hooks/store';
 
 const ZustandPractice = () => {
-  const {user, updateUser} = useStore();
-  
+  const { user, updateUser } = useStore();
+
   return (
     <div>
       <h1>{user.name}</h1>
@@ -12,6 +12,6 @@ const ZustandPractice = () => {
       </button>
     </div>
   );
-}
+};
 
 export default ZustandPractice;
