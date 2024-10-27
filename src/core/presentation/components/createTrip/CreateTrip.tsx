@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import DatePickerComponent from '../components/datePicker/DatePickerComponent';
+import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
+import TripData from '../../../domain/entities/trip.ts';
 
-interface TripData {
-  title: string;
-  destination: string;
-  start_date?: Date;
-  end_date?: Date;
-  member: string;
+interface Props {
+  onClose: () => void;
 }
 
-const CreateTrip: React.FC = () => {
-  const navigate = useNavigate();
+const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const [step, setStep] = useState(1);
   const [dateRange, setDateRange] = useState<{
     start?: Date;
@@ -33,7 +28,7 @@ const CreateTrip: React.FC = () => {
     console.log('start:', start);
     console.log('end:', end);
     // console.log('Updated tripData:', tripData);
-  }, [tripData, dateRange]);
+  }, [tripData, dateRange, start, end]);
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
@@ -120,7 +115,7 @@ const CreateTrip: React.FC = () => {
   };
 
   const handleClose = () => {
-    navigate('/'); // 홈으로 이동.
+    onClose();
   };
 
   return (
