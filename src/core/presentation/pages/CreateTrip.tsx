@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import DatePickerComponent from '../../../components/datePicker/DatePickerComponent';
+import DatePickerComponent from '../components/datePicker/DatePickerComponent';
 
 interface TripData {
   title: string;

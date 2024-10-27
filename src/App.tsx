@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css';
 import ZustandPractice from './core/presentation/pages/ZustandPractice';
-import Layout from './components/layout/Layout';
+import Layout from './core/presentation/components/layout/Layout';
 import Home from './core/presentation/pages/Home';
 import CreateTrip from './core/presentation/pages/CreateTrip';
 
