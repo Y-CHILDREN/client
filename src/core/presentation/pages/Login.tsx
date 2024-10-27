@@ -69,18 +69,11 @@ const Login = () => {
       {!user ? (
         <>
           <div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '200px',
-                justifyContent: 'center',
-              }}
-            >
+            <div className="flex flex-col min-h-[200px] justify-center">
               {!showFinal &&
                 textList.map((text, index) => (
                   <h2
-                    style={{ margin: 0, padding: 0 }}
+                    // className="m-0, p-0"
                     key={index}
                     className="fade-in"
                   >
@@ -94,32 +87,21 @@ const Login = () => {
               )}
             </div>
           </div>
-          <div style={{ marginTop: '300px' }}>
+          <div className="my-300">
             <button
-              style={{
-                backgroundColor: 'white',
-                color: 'black',
-                marginRight: 10,
-              }}
+              className="bg-white text-black mr-10"
               onClick={handleGoogleLogin}
             >
               Google 로그인
             </button>
             <button
-              style={{
-                backgroundColor: 'yellow',
-                color: 'black',
-                marginRight: 10,
-              }}
+              className="bg-yellow-300 text-black mr-10"
               onClick={handleKakaoLogin}
             >
               Kakao 로그인
             </button>
             <button
-              style={{
-                backgroundColor: 'green',
-                color: 'white',
-              }}
+              className="bg-green-600 text-white"
               onClick={handleNaverLogin}
             >
               Naver 로그인
@@ -135,7 +117,7 @@ const Login = () => {
             <img
               src={user.user_image}
               alt="User profile"
-              style={{ width: 100, height: 100, borderRadius: '50%' }}
+              className="w-100 h-100 br-50%"
             />
           )}
         </div>
