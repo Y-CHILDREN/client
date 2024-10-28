@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface DropDownProps {
+export interface DropDownProps {
   label?: string;
   value?: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
