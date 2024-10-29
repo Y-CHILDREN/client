@@ -58,7 +58,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     console.log('Updated dateRange:', dateRange);
     console.log('start:', start);
     console.log('end:', end);
-    // console.log('Updated tripData:', tripData);
+    console.log('Updated tripData:', tripData);
   }, [tripData, dateRange, start, end]);
 
   // next 멀티스탭 핸들러.
@@ -82,50 +82,58 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     update: [Date | null | undefined, Date | null | undefined],
   ) => {
     console.log('update:', update);
-    let [newDate, newEnd] = update; // newEnd는 null 또는 유효한 두 번째 날짜
+    let [selectedStartDate, selectedEndDate] = update; // selectedEndDate는 null 또는 유효한 두 번째 날짜
 
     // 타입 변환 null -> undefined
-    if (newDate === null) {
-      newDate = undefined;
+    if (selectedStartDate === null) {
+      selectedStartDate = undefined;
     }
-    if (newEnd === null) {
-      newEnd = undefined;
+    if (selectedEndDate === null) {
+      selectedEndDate = undefined;
     }
+
+    let finalStartDate = start;
+    let finalEndDate = end;
 
     if (start === undefined && end === undefined) {
       // 첫 번째 날짜 선택 시
-      setDateRange({
-        start: newDate,
-        end: undefined,
-      });
+      finalStartDate = selectedStartDate;
+      finalEndDate = undefined;
       console.log('처음 날짜를 선택했을 때');
     } else if (start !== undefined && end === undefined) {
       // 두 번째 날짜를 선택 시
-      if (newDate !== undefined && newDate < start) {
+      if (selectedStartDate !== undefined && selectedStartDate < start) {
         // 새로운 날짜가 첫 번째 날짜보다 이전일 때
-        setDateRange({
-          start: newDate,
-          end: start,
-        });
+        finalStartDate = selectedStartDate;
+        finalEndDate = start;
         console.log('두 번째 선택된 날짜가 첫 번째 선택된 날짜보다 이전일 때');
       } else {
         // 새로운 날짜가 첫 번째 날짜 이후 또는 동일할 때
-        setDateRange({
-          start: start,
-          end: newEnd,
-        });
+        finalStartDate = start;
+        finalEndDate = selectedEndDate;
         console.log(
           '두 번째 선택된 날짜가 첫 번째 선택된 날짜 이후 또는 같은 날짜일 때',
         );
       }
     } else if (start !== null && end !== null) {
       // 이미 날짜 범위가 선택된 상태에서 새로운 선택을 시작할 때
-      setDateRange({
-        start: newDate,
-        end: undefined,
-      });
+      finalStartDate = selectedStartDate;
+      finalEndDate = undefined;
       console.log('날짜 범위를 재설정하고 새로운 첫 번째 날짜를 선택했을 때');
     }
+
+    // dateRange 상태 업데이트
+    setDateRange({
+      start: finalStartDate,
+      end: finalEndDate,
+    });
+
+    // tripData 상태 업데이트
+    setTripData((prev) => ({
+      ...prev,
+      start_date: finalStartDate,
+      end_date: finalEndDate,
+    }));
   };
 
   // 폼 제출 핸들러.
