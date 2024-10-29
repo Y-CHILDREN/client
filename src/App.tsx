@@ -7,20 +7,29 @@ import Layout from './core/presentation/components/layout/Layout';
 import Login from './core/presentation/pages/Login';
 import Home from './core/presentation/pages/Home';
 import CreateTrip from './core/presentation/pages/CreateTrip';
+import LoginLayout from './core/presentation/components/layout/LoginLayout';
 
 const App: React.FC = () => {
   return (
     <>
-      <Layout>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/zustand" element={<ZustandPractice />} />
+      <Router>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <LoginLayout>
+                <Login />
+              </LoginLayout>
+            }
+          />
+
+          <Route element={<Layout children={undefined} />}>
             <Route path="/" element={<Home />} />
+            <Route path="/zustand" element={<ZustandPractice />} />
             <Route path="/create-trip" element={<CreateTrip />} />
-          </Routes>
-        </Router>
-      </Layout>
+          </Route>
+        </Routes>
+      </Router>
     </>
   );
 };
