@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import TripData from '../../../domain/entities/trip.ts';
 import DropDown from '../dropDown/DropDown.tsx';
-import useTripStore from '../../hooks/tripStore.ts';
+import useTripStore from '../../hooks/stores/tripStore.ts';
 
 interface Props {
   onClose: () => void;
