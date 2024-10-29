@@ -13,7 +13,7 @@ export interface User {
   trip_history: [];
 }
 
-const Login = () => {
+const Login: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [textList, setTextList] = useState<string[]>([]);
@@ -68,44 +68,60 @@ const Login = () => {
     <div>
       {!user ? (
         <>
-          <div>
-            <div className="flex flex-col min-h-[200px] justify-center">
+          <div className="w-[327px] h-[573px] p-[24px_20px_24px] flex flex-col justify-center items-center g-[4px] flex-1 self-stretch filter brightness-200">
+            <div className="flex flex-col w-[112px] h-[120px] items-center text-center text-[32px] font-bold leading-[40px] font-pretendard">
               {!showFinal &&
                 textList.map((text, index) => (
-                  <h2
-                    // className="m-0, p-0"
-                    key={index}
-                    className="fade-in"
-                  >
+                  <h2 key={index} className="text-white fade-in text-2x1">
                     {text}
                   </h2>
                 ))}
               {showFinal && (
-                <h1 style={{ color: 'green' }} className="fade-in">
+                <h1 className="flex flex-col items-center justify-center w-full h-screen text-4xl font-bold text-green-500 fade-in">
                   J트립
                 </h1>
               )}
             </div>
           </div>
-          <div className="my-300">
-            <button
-              className="bg-white text-black mr-10"
-              onClick={handleGoogleLogin}
-            >
-              Google 로그인
-            </button>
-            <button
-              className="bg-yellow-300 text-black mr-10"
-              onClick={handleKakaoLogin}
-            >
-              Kakao 로그인
-            </button>
-            <button
-              className="bg-green-600 text-white"
-              onClick={handleNaverLogin}
-            >
-              Naver 로그인
-            </button>
+          <div className="flex flex-col items-center gap-[24px] self-stretch">
+            <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-white">
+              ----- 간편 로그인으로 여행 시작하기 -----
+            </div>
+            <div className="flex items-center gap-[20px]">
+              <button
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-white
+            "
+                onClick={handleGoogleLogin}
+              >
+                <img
+                  className="w-[24px] h-[25px]"
+                  src="src/core/presentation/assets/loginPage/Google Logo.svg"
+                  alt="구글 로고"
+                />
+              </button>
+              <button
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#FEE500]
+            "
+                onClick={handleKakaoLogin}
+              >
+                <img
+                  className="w-[24px] h-[25px]"
+                  src="src/core/presentation/assets/loginPage/logo-kakao.svg"
+                  alt="카카오 로고"
+                />
+              </button>
+              <button
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#03C75A]
+            "
+                onClick={handleNaverLogin}
+              >
+                <img
+                  className="w-[24px] h-[25px]"
+                  src="src/core/presentation/assets/loginPage/logo-naver.svg"
+                  alt="네이버 로고"
+                />
+              </button>
+            </div>
           </div>
         </>
       ) : (
