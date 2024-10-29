@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import TripData from '../../../domain/entities/trip.ts';
 import DropDown from '../dropDown/DropDown.tsx';
+import useTripStore from '../../hooks/tripStore.ts';
 
 interface Props {
   onClose: () => void;
 }
 
 const CreateTrip: React.FC<Props> = ({ onClose }) => {
-  // Multi-Step status
-  const [step, setStep] = useState(1);
+  const { step, setStep } = useTripStore();
 
   // DatePicker status
   const [dateRange, setDateRange] = useState<{
@@ -63,12 +63,12 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
-    setStep((prev) => prev + 1);
+    setStep('next');
   };
 
   // previous 멀티스탭 핸들러.
   const handlePreviousStep = () => {
-    setStep((prev) => prev - 1);
+    setStep('previous');
   };
 
   // tripData 핸들러.
