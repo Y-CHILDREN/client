@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import TripData from '../../../domain/entities/trip.ts';
-import DropDown from '../dropDown/DropDown.tsx';
+import User from '../../../domain/entities/user.ts';
 import useTripStore from '../../hooks/stores/tripStore.ts';
+import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
+import DropDown from '../dropDown/DropDown.tsx';
+import SearchInputComponent from '../Search/SearchInputComponent.tsx';
 
 interface Props {
   onClose: () => void;
 }
 
 const CreateTrip: React.FC<Props> = ({ onClose }) => {
+  // Multi-Step status
   const { step, setStep } = useTripStore();
 
   // DatePicker status
@@ -50,8 +54,11 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     destination: '',
     start_date: undefined,
     end_date: undefined,
-    member: '',
+    members: [],
   });
+
+  // member status
+  const [members, setMembers] = useState<User[]>([]);
 
   // logging
   useEffect(() => {
@@ -59,7 +66,8 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     console.log('start:', start);
     console.log('end:', end);
     console.log('Updated tripData:', tripData);
-  }, [tripData, dateRange, start, end]);
+    console.log('members:', members);
+  }, [tripData, dateRange, start, end, members]);
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
@@ -128,19 +136,12 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
       end: finalEndDate,
     });
 
-    // tripData 상태 업데이트
+    // tripData 날짜 상태 업데이트
     setTripData((prev) => ({
       ...prev,
       start_date: finalStartDate,
       end_date: finalEndDate,
     }));
-  };
-
-  // 폼 제출 핸들러.
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('Creating trip: ', tripData);
-    // 여기에서 생성 로직을 추가 또는 API 호출.
   };
 
   // enter로 다음 스텝 이동 핸들러.
@@ -174,6 +175,43 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSubregion(event.target.value);
+  };
+
+  // 멤버 추가 핸들러.
+  const handleAddMember = (users: User[]) => {
+    setMembers((prevMembers) => {
+      const newMembers = users.filter(
+        (user) => !prevMembers.some((member) => member.id === user.id),
+      );
+      return [...prevMembers, ...newMembers];
+    });
+  };
+
+  // 멤버 제거 핸들러.
+  const handleRemoveMember = (memberId: number) => {
+    setMembers((prev) => prev.filter((member) => member.id !== memberId));
+  };
+
+  // 폼 제출 핸들러.
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // formatting
+    const tripDetails = {
+      title: tripData.title,
+      destination: tripData.destination,
+      start_date: tripData.start_date,
+      end_date: tripData.end_date,
+      members: members.map((member) => member.email), // 이메일만 전송.
+    };
+
+    // 서버 전송.
+    try {
+      const response = await axios.post(`my server api`, tripDetails);
+      console.log('Trip created:', response.data);
+    } catch (error) {
+      console.error('Error creating trip:', error);
+    }
   };
 
   return (
@@ -265,15 +303,15 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
         {step === 4 && (
           <div>
             <h2>누구와 함께 가나요?</h2>
-            <input
-              type="text"
-              name="member"
-              value={tripData.member}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="같이 여행할 친구를 추가하세요."
-              className="border rounded p-2"
-            />
+            <SearchInputComponent onSearchResult={handleAddMember} />
+            {members.map((member) => (
+              <div key={member.id}>
+                {member.nickname} ({member.email})
+                <button onClick={() => handleRemoveMember(member.id)}>
+                  Remove
+                </button>
+              </div>
+            ))}
             <button type="button" onClick={handlePreviousStep} className="ml-2">
               이전
             </button>
