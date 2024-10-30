@@ -1,8 +1,10 @@
 import React from 'react';
 
 import Header from './Header';
-import Footer from './Footer';
+// import Footer from './Footer';
 import './Layout.css';
+import Navigation from './Navigation';
+import Footers from './Footers';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,10 +17,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Header />
 
       {/*Main content*/}
-      <main className="flex-grow p-4">{children}</main>
+      <main className="flex-grow">{children}</main>
 
+      <Navigation />
       {/*Bottom navigation bar*/}
-      <Footer />
+      <Footers />
     </div>
   );
 };
