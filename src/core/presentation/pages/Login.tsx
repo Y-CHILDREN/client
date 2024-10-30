@@ -84,12 +84,16 @@ const Login: React.FC = () => {
             </div>
           </div>
           <div className="flex flex-col items-center gap-[24px] self-stretch">
-            <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-white">
-              ----- 간편 로그인으로 여행 시작하기 -----
+            <div className="flex justify-center items-center gap-[16px] self-stretch">
+              <div className="h-[1px] flex-[1_0_0] bg-[rgba(255,255,255,0.4)]"></div>
+              <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-white">
+                간편 로그인으로 여행 시작하기
+              </div>
+              <div className="h-[1px] flex-[1_0_0] bg-[rgba(255,255,255,0.4)]"></div>
             </div>
             <div className="flex items-center gap-[20px]">
               <button
-                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-white
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-white p-0
             "
                 onClick={handleGoogleLogin}
               >
@@ -100,7 +104,7 @@ const Login: React.FC = () => {
                 />
               </button>
               <button
-                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#FEE500]
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#FEE500] p-0 
             "
                 onClick={handleKakaoLogin}
               >
@@ -111,7 +115,7 @@ const Login: React.FC = () => {
                 />
               </button>
               <button
-                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#03C75A]
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#03C75A] p-0
             "
                 onClick={handleNaverLogin}
               >
