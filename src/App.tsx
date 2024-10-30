@@ -8,6 +8,7 @@ import Login from './core/presentation/pages/Login';
 import Home from './core/presentation/pages/Home';
 import CreateTrip from './core/presentation/pages/CreateTrip';
 import LoginLayout from './core/presentation/components/layout/LoginLayout';
+import Mypage from './core/presentation/pages/Mypage';
 
 const App: React.FC = () => {
   return (
@@ -22,12 +23,38 @@ const App: React.FC = () => {
               </LoginLayout>
             }
           />
-
-          <Route element={<Layout children={undefined} />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/zustand" element={<ZustandPractice />} />
-            <Route path="/create-trip" element={<CreateTrip />} />
-          </Route>
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="/zustand"
+            element={
+              <Layout>
+                <ZustandPractice />
+              </Layout>
+            }
+          />
+          <Route
+            path="/create-trip"
+            element={
+              <Layout>
+                <CreateTrip />
+              </Layout>
+            }
+          />
+          <Route
+            path="/mypage"
+            element={
+              <Layout>
+                <Mypage />
+              </Layout>
+            }
+          />
         </Routes>
       </Router>
     </>
