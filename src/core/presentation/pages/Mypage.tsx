@@ -33,7 +33,7 @@ const Mypage = () => {
               <p>test@gmail.com</p>
             </div>
           </div>
-          <div className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2] mb-[234px]">
+          <div className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2]">
             <div className="flex items-center flex-1 gap-3">
               <div className="w-[40px] h-[40px] ">
                 <img
