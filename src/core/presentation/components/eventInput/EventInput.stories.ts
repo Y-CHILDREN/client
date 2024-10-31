@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import EventInput from './eventInput.tsx';
+import EventInput from './EventInput.tsx';
 import { MutableRefObject } from 'react';
 
 // storybook meta 정보 설정
