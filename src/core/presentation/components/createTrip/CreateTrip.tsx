@@ -181,7 +181,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const handleAddMember = (users: User[]) => {
     setMembers((prevMembers) => {
       const newMembers = users.filter(
-        (user) => !prevMembers.some((member) => member.id === user.id),
+        (user) => !prevMembers.some((member) => member.email === user.email),
       );
       return [...prevMembers, ...newMembers];
     });
@@ -303,7 +303,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
         {step === 4 && (
           <div>
             <h2>누구와 함께 가나요?</h2>
-            <SearchInputComponent onSearchResult={handleAddMember} />
+            <SearchInputComponent onMembersSelected={handleAddMember} />
             {members.map((member) => (
               <div key={member.id}>
                 {member.nickname} ({member.email})

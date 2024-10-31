@@ -12,10 +12,10 @@ const meta: Meta<typeof SearchInputComponent> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    onSearchResult: { action: 'searched' },
+    onMembersSelected: { action: 'searched' },
   },
   args: {
-    onSearchResult: action('onSearchResult'),
+    onMembersSelected: action('onSearchResult'),
   },
 };
 
@@ -68,7 +68,7 @@ export const Basic: StoryObj<typeof SearchInputComponent> = {
   render: (args) => (
     <SearchInputComponent
       {...args}
-      onSearchResult={(users) => {
+      onMembersSelected={(users) => {
         console.log(users);
         const email = 'alice@example.com';
         const results = searchMock(dummyUsers, email);
@@ -76,4 +76,10 @@ export const Basic: StoryObj<typeof SearchInputComponent> = {
       }}
     />
   ),
+};
+
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+  args: {},
 };
