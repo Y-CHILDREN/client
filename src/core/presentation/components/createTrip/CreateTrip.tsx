@@ -311,7 +311,10 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
         {step === 4 && (
           <div className="flex flex-col">
             <h2>누구와 함께 가나요?</h2>
-            <SearchInputComponent onMembersSelected={handleAddMember} />
+            <SearchInputComponent
+              onMembersSelected={handleAddMember}
+              selectedMembers={members}
+            />
             <div className="ml-auto">
               <button
                 onClick={handleClearAllMembers}

@@ -7,9 +7,13 @@ import MultiSelectDropDown from '../dropDown/MultiSelectDropDown.tsx';
 
 interface Props {
   onMembersSelected: (results: User[]) => void;
+  selectedMembers?: User[];
 }
 
-const SearchInputComponent: React.FC<Props> = ({ onMembersSelected }) => {
+const SearchInputComponent: React.FC<Props> = ({
+  onMembersSelected,
+  selectedMembers = [],
+}) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // 검색 Input 값.
   const debouncedSearchTerm = useDebounce<string>(searchTerm, 1000); // 1000ms 디바운스
   const [searchResults, setSearchResults] = useState<User[]>([]); // 검색 결과 목록 저장.
@@ -81,6 +85,7 @@ const SearchInputComponent: React.FC<Props> = ({ onMembersSelected }) => {
             email: user.email,
           }))}
           onChange={handleSelectionChange}
+          selectedMembers={selectedMembers.map((member) => member.email)}
         />
       )}
     </div>

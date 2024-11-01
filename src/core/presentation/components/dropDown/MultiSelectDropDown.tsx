@@ -8,16 +8,23 @@ interface Option {
 export interface MultiSelectDropDownProps {
   options: Option[];
   onChange: (selectedValuesArray: string[]) => void;
+  selectedMembers: string[];
   className?: string;
 }
 
 const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
   options,
   onChange,
+  selectedMembers = [],
   className,
 }) => {
   const handleClick = (email: string) => {
-    onChange([email]); // 선택한 이메일을 배열로 감싸 전달.
+    // 이미 선택된 값인지 확인 후 진행.
+    const updatedValue = selectedMembers.includes(email)
+      ? selectedMembers.filter((memberEmail) => memberEmail !== email) // 이미 선택된 값인 경우 제거.
+      : [...selectedMembers, email]; // 선택되지 않은 값은 추가.
+
+    onChange(updatedValue); // 선택한 이메일을 배열로 감싸 전달.
   };
 
   return (
@@ -32,6 +39,12 @@ const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
             onClick={() => handleClick(option.email)}
             className="p-2 cursor-pointer hover:bg-gray-500"
           >
+            <input
+              type="checkbox"
+              checked={selectedMembers.includes(option.email)} // 이미 선택된 멤버 체크
+              readOnly
+              className="mr-2"
+            />
             |{option.nickname}| : {option.email}
           </div>
         ))
