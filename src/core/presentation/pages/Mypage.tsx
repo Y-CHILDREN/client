@@ -1,9 +1,9 @@
-import Title from '../components/layout/Title';
+import Header from '../components/layout/Header';
 
 const Mypage = () => {
   return (
     <>
-      <Title>마이페이지</Title>
+      <Header>마이페이지</Header>
       <div className="flex p-[32px_24px_28px_24px] flex-col items-start gap-6 flex-[1_0_0] self-stretch relative">
         <img
           src="src/core/presentation/assets/mypage/Group2.png"
