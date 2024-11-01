@@ -1,5 +1,6 @@
 .container {
-  height: 100vh;
+  /* height: 100vh; */
+  height: 812px;
   width: calc(100vh * 9 / 16);
   max-width: 600px; /* 최대 너비 제한 */
   min-width: 375px;
