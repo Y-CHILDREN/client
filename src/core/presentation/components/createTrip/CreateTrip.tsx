@@ -191,9 +191,14 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   };
 
   // 멤버 제거 핸들러.
-  // const handleRemoveMember = (memberId: number) => {
-  //   setMembers((prev) => prev.filter((member) => member.id !== memberId));
-  // };
+  const handleRemoveMember = (email: string) => {
+    setMembers((prev) => prev.filter((member) => member.email !== email));
+  };
+
+  // 전체 멤버 제거 핸들러.
+  const handleClearAllMembers = () => {
+    setMembers([]); // 빈 배열로 선언.
+  };
 
   // 폼 제출 핸들러.
   const handleSubmit = async (event: React.FormEvent) => {
@@ -304,18 +309,36 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
           </div>
         )}
         {step === 4 && (
-          <div>
+          <div className="flex flex-col">
             <h2>누구와 함께 가나요?</h2>
             <SearchInputComponent onMembersSelected={handleAddMember} />
+            <div className="ml-auto">
+              <button
+                onClick={handleClearAllMembers}
+                className="mt-4 p-2 bg-gray-500 text-white rounded"
+              >
+                All Clear
+              </button>
+            </div>
             {members.map((member) => (
-              <div key={member.email}>
+              <div
+                key={member.email}
+                className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
+              >
                 {member.nickname} ({member.email})
+                <button
+                  onClick={() => handleRemoveMember(member.email)}
+                  className="m-2 p-1 text-white bg-red-600 rounded"
+                >
+                  X
+                </button>
               </div>
             ))}
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
+
+            <button type="button" onClick={handlePreviousStep} className="m-2">
               이전
             </button>
-            <button type="submit" className="ml-2">
+            <button type="submit" className="m-2">
               여행 생성
             </button>
             {/* 여행 생성 마지막 단계가 끝난 후 생성된 여행의 여행 디테일 페이지로 연결. */}
