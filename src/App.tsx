@@ -13,23 +13,20 @@ import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
 const App: React.FC = () => {
   return (
     <>
-      <LoginLayout>
-        <Router>
-          <Routes>
+      <Router>
+        <Routes>
+          <Route element={<LoginLayout />}>
             <Route path="/login" element={<Login />} />
-          </Routes>
-        </Router>
-      </LoginLayout>
-      <Layout>
-        <Router>
-          <Routes>
+          </Route>
+
+          <Route element={<Layout />}>
             <Route path="/zustand" element={<ZustandPractice />} />
             <Route path="/" element={<Home />} />
             <Route path="/create-trip" element={<CreateTripPage />} />
             <Route path="/mypage" element={<Mypage />} />
-          </Routes>
-        </Router>
-      </Layout>
+          </Route>
+        </Routes>
+      </Router>
     </>
   );
 };
