@@ -14,7 +14,7 @@ interface Props {
 
 const CreateTrip: React.FC<Props> = ({ onClose }) => {
   // Multi-Step status
-  const { step, setStep } = useTripStore();
+  const { step, setStep, resetStep } = useTripStore();
 
   // DatePicker status
   const [dateRange, setDateRange] = useState<{
@@ -159,6 +159,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 닫기 핸들러.
   const handleClose = () => {
+    resetStep(); // step 값을 1로 초기화.
     onClose();
   };
 
