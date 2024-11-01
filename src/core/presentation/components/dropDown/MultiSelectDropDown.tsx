@@ -24,12 +24,19 @@ const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
       (option) => option.value,
     );
     setSelected(selectedValuesArray);
-    onChange(selected);
+    onChange(selectedValuesArray);
   };
 
   return (
-    <div className={className}>
-      <select multiple value={selected} onChange={handleChange}>
+    <div
+      className={`${className} absolute top-full left-0 w-full bg-white border border-gray-300 shadow-lg z-10`}
+    >
+      <select
+        multiple
+        value={selected}
+        onChange={handleChange}
+        className="w-full p-2"
+      >
         {options.map((option) => (
           <option key={option.email} value={option.email}>
             |{option.nickname}| : {option.email}
