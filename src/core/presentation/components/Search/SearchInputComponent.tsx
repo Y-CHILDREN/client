@@ -35,7 +35,7 @@ const SearchInputComponent: React.FC<Props> = ({ onMembersSelected }) => {
       setSearchResults([]); // 검색어가 비었을 때 결과를 비움
       setIsOpen(false); // 검색어가 없을 때 드롭다운 닫기.
     }
-  }, [debouncedSearchTerm, onMembersSelected]);
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     const handleClickOutSide = (e: MouseEvent) => {
@@ -54,9 +54,13 @@ const SearchInputComponent: React.FC<Props> = ({ onMembersSelected }) => {
   }, []);
 
   const handleSelectionChange = (selectedValuesArray: string[]) => {
-    const selectedValue = searchResults.filter((searchResult) => {
-      selectedValuesArray.includes(searchResult.email);
-    });
+    const selectedValue = searchResults.filter((searchResult) =>
+      selectedValuesArray.includes(searchResult.email),
+    );
+    // console.log(selectedValuesArray.includes(searchResults[0].email));
+    // console.log('selectedValuesArray:', selectedValuesArray);
+    // console.log('searchResults:', searchResults);
+    // console.log('selectedValue:', selectedValue);
     onMembersSelected(selectedValue);
   };
 

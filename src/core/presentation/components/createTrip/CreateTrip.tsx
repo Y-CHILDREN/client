@@ -62,11 +62,11 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // logging
   useEffect(() => {
-    console.log('Updated dateRange:', dateRange);
-    console.log('start:', start);
-    console.log('end:', end);
-    console.log('Updated tripData:', tripData);
-    console.log('members:', members);
+    // console.log('Updated dateRange:', dateRange);
+    // console.log('start:', start);
+    // console.log('end:', end);
+    // console.log('members:', members);
+    // console.log('Updated tripData:', tripData);
   }, [tripData, dateRange, start, end, members]);
 
   // next 멀티스탭 핸들러.
@@ -179,18 +179,21 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 멤버 추가 핸들러.
   const handleAddMember = (users: User[]) => {
+    // console.log('users:', users);
     setMembers((prevMembers) => {
       const newMembers = users.filter(
         (user) => !prevMembers.some((member) => member.email === user.email),
       );
+      // console.log('newMembers:', newMembers);
       return [...prevMembers, ...newMembers];
     });
+    // console.log('members:', members);
   };
 
   // 멤버 제거 핸들러.
-  const handleRemoveMember = (memberId: number) => {
-    setMembers((prev) => prev.filter((member) => member.id !== memberId));
-  };
+  // const handleRemoveMember = (memberId: number) => {
+  //   setMembers((prev) => prev.filter((member) => member.id !== memberId));
+  // };
 
   // 폼 제출 핸들러.
   const handleSubmit = async (event: React.FormEvent) => {
@@ -305,11 +308,8 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
             <h2>누구와 함께 가나요?</h2>
             <SearchInputComponent onMembersSelected={handleAddMember} />
             {members.map((member) => (
-              <div key={member.id}>
+              <div key={member.email}>
                 {member.nickname} ({member.email})
-                <button onClick={() => handleRemoveMember(member.id)}>
-                  Remove
-                </button>
               </div>
             ))}
             <button type="button" onClick={handlePreviousStep} className="ml-2">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface Option {
   nickname: string;
@@ -16,33 +16,28 @@ const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
   onChange,
   className,
 }) => {
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValuesArray = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    );
-    setSelected(selectedValuesArray);
-    onChange(selectedValuesArray);
+  const handleClick = (email: string) => {
+    onChange([email]); // 선택한 이메일을 배열로 감싸 전달.
   };
 
   return (
     <div
-      className={`${className} absolute top-full left-0 w-full bg-white border border-gray-300 shadow-lg z-10`}
+      className={`${className} absolute top-full left-0 w-full bg-black border border-gray-300 shadow-lg z-10 
+        ${options.length > 0 ? 'max-h-40' : 'h-10'} overflow-y-auto`}
     >
-      <select
-        multiple
-        value={selected}
-        onChange={handleChange}
-        className="w-full p-2"
-      >
-        {options.map((option) => (
-          <option key={option.email} value={option.email}>
+      {options.length > 0 ? (
+        options.map((option) => (
+          <div
+            key={option.email}
+            onClick={() => handleClick(option.email)}
+            className="p-2 cursor-pointer hover:bg-gray-500"
+          >
             |{option.nickname}| : {option.email}
-          </option>
-        ))}
-      </select>
+          </div>
+        ))
+      ) : (
+        <div className="p-2 text-gray-500">검색 결과 없음</div>
+      )}
     </div>
   );
 };
