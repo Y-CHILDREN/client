@@ -1,4 +1,4 @@
-import useStore from '../hooks/store';
+import useStore from '../hooks/stores/store.ts';
 
 const ZustandPractice = () => {
   const { user, updateUser } = useStore();
