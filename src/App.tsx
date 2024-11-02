@@ -6,8 +6,8 @@ import ZustandPractice from './core/presentation/pages/ZustandPractice';
 import Layout from './core/presentation/components/layout/Layout';
 import Login from './core/presentation/pages/Login';
 import Home from './core/presentation/pages/Home';
-import CreateTrip from './core/presentation/pages/CreateTrip';
 import LoginLayout from './core/presentation/components/layout/LoginLayout';
+import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
 
 const App: React.FC = () => {
   return (
