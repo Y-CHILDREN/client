@@ -7,6 +7,9 @@ export default {
         fadeIn: 'fadeIn 1s forwards',
         fadeOut: 'fadeOut 1s forwards',
       },
+      fontFamily: {
+        pretendard: ['Pretendard'],
+      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
