@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import './Login.css';
 
 export interface User {
@@ -18,30 +20,53 @@ const Login: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
   const [textList, setTextList] = useState<string[]>([]);
   const [showFinal, setShowFinal] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+
+  const env = import.meta.env.VITE_ENV;
+  const isProduction = env === 'production';
+
+  const callbackUrls = {
+    google: isProduction
+      ? import.meta.env.VITE_AWS_EC2_GOOGLE_CALLBACK_URL
+      : import.meta.env.VITE_LOCAL_GOOGLE_CALLBACK_URL,
+    kakao: isProduction
+      ? import.meta.env.VITE_AWS_EC2_KAKAO_CALLBACK_URL
+      : import.meta.env.VITE_LOCAL_KAKAO_CALLBACK_URL,
+    naver: isProduction
+      ? import.meta.env.VITE_AWS_EC2_NAVER_CALLBACK_URL
+      : import.meta.env.VITE_LOCAL_NAVER_CALLBACK_URL,
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenParam = urlParams.get('token');
     const userParam = urlParams.get('user');
+    const errorParam = urlParams.get('error');
 
     if (tokenParam && userParam) {
       setToken(tokenParam);
       setUser(JSON.parse(decodeURIComponent(userParam)));
+      navigate('/mypage');
+    } else if (errorParam === 'email_conflict') {
+      setError('이미 가입된 이메일이 있습니다.');
+    } else if (errorParam === 'login_failed') {
+      setError('로그인에 실패했습니다. 다시 시도해주세요.');
+      navigate('/login');
     }
   }, []);
 
   const handleGoogleLogin = () => {
-    window.location.href =
-      'http://ec2-13-124-226-192.ap-northeast-2.compute.amazonaws.com:3000/auth/google/callback';
+    window.location.href = callbackUrls.google;
   };
 
   const handleKakaoLogin = () => {
-    window.location.href =
-      'http://ec2-13-124-226-192.ap-northeast-2.compute.amazonaws.com:3000/auth/kakao/callback';
+    window.location.href = callbackUrls.kakao;
   };
+
   const handleNaverLogin = () => {
-    window.location.href =
-      'http://ec2-13-124-226-192.ap-northeast-2.compute.amazonaws.com:3000/auth/naver/callback';
+    window.location.href = callbackUrls.naver;
   };
 
   useEffect(() => {
@@ -126,21 +151,11 @@ const Login: React.FC = () => {
                 />
               </button>
             </div>
+            {error && <p className="error-message">{error}</p>}
           </div>
         </>
       ) : (
-        <div>
-          <h2>로그인 성공</h2>
-          <p>토큰: {token}</p>
-          <p>유저 정보: {JSON.stringify(user)}</p>
-          {user.user_image && (
-            <img
-              src={user.user_image}
-              alt="User profile"
-              className="w-100 h-100 br-50%"
-            />
-          )}
-        </div>
+        <div>로그인 실패!</div>
       )}
     </div>
   );
