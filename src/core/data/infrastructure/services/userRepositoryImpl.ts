@@ -13,7 +13,7 @@ const userApi = axios.create({
   },
 });
 
-export async function getUserByid(id: string): Promise<User | undefined> {
+export async function getUserById(id: string): Promise<User | undefined> {
   try {
     const res = await userApi.get(`/users/${id}`);
     if (!res.data) {
@@ -26,9 +26,9 @@ export async function getUserByid(id: string): Promise<User | undefined> {
   }
 }
 
-export async function getUserByEmail(email: string): Promise<User> {
+export async function getUserByEmail(id: string, email: string): Promise<User> {
   try {
-    const res = await userApi.get(`/users/email/${email}`);
+    const res = await userApi.get(`/users/${id}/${email}`);
     if (!res.data) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
@@ -77,5 +77,18 @@ export async function deleteUser(id: string): Promise<User | undefined> {
     return res.data;
   } catch (error) {
     console.log('삭제에 실패 했습니다.', error);
+  }
+}
+
+export async function logout(): Promise<void> {
+  try {
+    const response = await userApi.post('/users/logout');
+
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
+  } catch (error) {
+    console.error('로그아웃 실패:', error);
+    throw error;
   }
 }
