@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/stores/authStore';
-import { getUserByEmail } from '../../data/infrastructure/services/userRepositoryImpl';
+import { getUserById } from '../../data/infrastructure/services/userRepositoryImpl';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -42,10 +42,14 @@ const Login: React.FC = () => {
         setToken(tokenParam);
         setUser(parsedUser);
 
-        getUserByEmail(parsedUser.email)
+        getUserById(parsedUser.id)
           .then((updatedUser) => {
-            setUser(updatedUser);
-            navigate('/home', { replace: true });
+            if (updatedUser) {
+              setUser(updatedUser);
+              navigate('/home', { replace: true });
+            } else {
+              throw new Error('사용자를 찾을 수 없습니다');
+            }
           })
           .catch((error) => {
             console.error('사용자 정보 업데이트 실패:', error);
