@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import TripData from '../../../domain/entities/trip.ts';
-import DropDown from '../dropDown/DropDown.tsx';
+import User from '../../../domain/entities/user.ts';
 import useTripStore from '../../hooks/stores/tripStore.ts';
+import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
+import DropDown from '../dropDown/DropDown.tsx';
+import SearchInputComponent from '../Search/SearchInputComponent.tsx';
 
 interface Props {
   onClose: () => void;
 }
 
 const CreateTrip: React.FC<Props> = ({ onClose }) => {
-  const { step, setStep } = useTripStore();
+  // Multi-Step status
+  const { step, setStep, resetStep } = useTripStore();
 
   // DatePicker status
   const [dateRange, setDateRange] = useState<{
@@ -50,16 +54,20 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     destination: '',
     start_date: undefined,
     end_date: undefined,
-    member: '',
+    members: [],
   });
+
+  // member status
+  const [members, setMembers] = useState<User[]>([]);
 
   // logging
   useEffect(() => {
-    console.log('Updated dateRange:', dateRange);
-    console.log('start:', start);
-    console.log('end:', end);
-    console.log('Updated tripData:', tripData);
-  }, [tripData, dateRange, start, end]);
+    // console.log('Updated dateRange:', dateRange);
+    // console.log('start:', start);
+    // console.log('end:', end);
+    // console.log('members:', members);
+    // console.log('Updated tripData:', tripData);
+  }, [tripData, dateRange, start, end, members]);
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
@@ -128,19 +136,12 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
       end: finalEndDate,
     });
 
-    // tripData 상태 업데이트
+    // tripData 날짜 상태 업데이트
     setTripData((prev) => ({
       ...prev,
       start_date: finalStartDate,
       end_date: finalEndDate,
     }));
-  };
-
-  // 폼 제출 핸들러.
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('Creating trip: ', tripData);
-    // 여기에서 생성 로직을 추가 또는 API 호출.
   };
 
   // enter로 다음 스텝 이동 핸들러.
@@ -158,6 +159,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 닫기 핸들러.
   const handleClose = () => {
+    resetStep(); // step 값을 1로 초기화.
     onClose();
   };
 
@@ -174,6 +176,51 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSubregion(event.target.value);
+  };
+
+  // 멤버 추가 핸들러.
+  const handleAddMember = (users: User[]) => {
+    // console.log('users:', users);
+    setMembers((prevMembers) => {
+      const newMembers = users.filter(
+        (user) => !prevMembers.some((member) => member.email === user.email),
+      );
+      // console.log('newMembers:', newMembers);
+      return [...prevMembers, ...newMembers];
+    });
+    // console.log('members:', members);
+  };
+
+  // 멤버 제거 핸들러.
+  const handleRemoveMember = (email: string) => {
+    setMembers((prev) => prev.filter((member) => member.email !== email));
+  };
+
+  // 전체 멤버 제거 핸들러.
+  const handleClearAllMembers = () => {
+    setMembers([]); // 빈 배열로 선언.
+  };
+
+  // 폼 제출 핸들러.
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    // formatting
+    const tripDetails = {
+      title: tripData.title,
+      destination: tripData.destination,
+      start_date: tripData.start_date,
+      end_date: tripData.end_date,
+      members: members.map((member) => member.email), // 이메일만 전송.
+    };
+
+    // 서버 전송.
+    try {
+      const response = await axios.post(`my server api`, tripDetails);
+      console.log('Trip created:', response.data);
+    } catch (error) {
+      console.error('Error creating trip:', error);
+    }
   };
 
   return (
@@ -263,21 +310,39 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
           </div>
         )}
         {step === 4 && (
-          <div>
+          <div className="flex flex-col">
             <h2>누구와 함께 가나요?</h2>
-            <input
-              type="text"
-              name="member"
-              value={tripData.member}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="같이 여행할 친구를 추가하세요."
-              className="border rounded p-2"
+            <SearchInputComponent
+              onMembersSelected={handleAddMember}
+              selectedMembers={members}
             />
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
+            <div className="ml-auto">
+              <button
+                onClick={handleClearAllMembers}
+                className="mt-4 p-2 bg-gray-500 text-white rounded"
+              >
+                All Clear
+              </button>
+            </div>
+            {members.map((member) => (
+              <div
+                key={member.email}
+                className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
+              >
+                {member.nickname} ({member.email})
+                <button
+                  onClick={() => handleRemoveMember(member.email)}
+                  className="m-2 p-1 text-white bg-red-600 rounded"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+
+            <button type="button" onClick={handlePreviousStep} className="m-2">
               이전
             </button>
-            <button type="submit" className="ml-2">
+            <button type="submit" className="m-2">
               여행 생성
             </button>
             {/* 여행 생성 마지막 단계가 끝난 후 생성된 여행의 여행 디테일 페이지로 연결. */}
