@@ -1,6 +1,54 @@
 import Header from '../components/layout/Header';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import User from '../../domain/entities/user';
 
 const Mypage = () => {
+  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const storedUserStr = localStorage.getItem('user');
+        const storedToken = localStorage.getItem('access_token');
+
+        console.log('로컬스토리지 데이터:', {
+          user: storedUserStr,
+          token: storedToken,
+        });
+
+        if (!storedUserStr || !storedToken) {
+          console.log('인증 정보 없음');
+          navigate('/login');
+          return;
+        }
+
+        const storedUser = JSON.parse(storedUserStr);
+        const userData = await getUser(storedUser.id, storedToken);
+
+        if (userData) {
+          setUserInfo(userData);
+        } else {
+          console.log('사용자 데이터 없음');
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('마이페이지 로드 중 에러:', error);
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          localStorage.clear();
+        }
+        navigate('/login');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
+
   return (
     <>
       <Header>마이페이지</Header>
@@ -26,11 +74,11 @@ const Mypage = () => {
           <div className="flex flex-col items-start self-stretch justify-center gap-2 px-1">
             <div className="flex items-center self-stretch gap-5">
               <p className="text-gray-700">닉네임</p>
-              <p>홍길동</p>
+              <p>{userInfo?.nickname}</p>
             </div>
             <div className="flex items-center self-stretch gap-5">
               <p className="text-gray-700">이메일</p>
-              <p>test@gmail.com</p>
+              <p>{userInfo?.email}</p>
             </div>
           </div>
           <div className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2]">

@@ -9,6 +9,7 @@ import Home from './core/presentation/pages/Home';
 import LoginLayout from './core/presentation/components/layout/LoginLayout';
 import Mypage from './core/presentation/pages/Mypage';
 import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
+import Mytrips from './core/presentation/pages/Mytrips';
 
 const App: React.FC = () => {
   return (
@@ -21,9 +22,10 @@ const App: React.FC = () => {
 
           <Route element={<Layout />}>
             <Route path="/zustand" element={<ZustandPractice />} />
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/create-trip" element={<CreateTripPage />} />
             <Route path="/mypage" element={<Mypage />} />
+            <Route path="/mytrips" element={<Mytrips />} />
           </Route>
         </Routes>
       </Router>

@@ -1,28 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useAuthStore } from '../hooks/stores/authStore';
+import { getUserByEmail } from '../../data/infrastructure/services/userRepositoryImpl';
 import './Login.css';
 
-export interface User {
-  id: string;
-  provider: string;
-  email: string;
-  user_image: string;
-  nickname: string;
-  user_memo: string;
-  access_token: string;
-  refresh_token: string;
-  trip_history: [];
-}
-
 const Login: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const [textList, setTextList] = useState<string[]>([]);
   const [showFinal, setShowFinal] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const setToken = useAuthStore((state) => state.setToken);
 
   const env = import.meta.env.VITE_ENV;
   const isProduction = env === 'production';
@@ -43,19 +34,29 @@ const Login: React.FC = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenParam = urlParams.get('token');
     const userParam = urlParams.get('user');
-    const errorParam = urlParams.get('error');
 
     if (tokenParam && userParam) {
-      setToken(tokenParam);
-      setUser(JSON.parse(decodeURIComponent(userParam)));
-      navigate('/mypage');
-    } else if (errorParam === 'email_conflict') {
-      setError('이미 가입된 이메일이 있습니다.');
-    } else if (errorParam === 'login_failed') {
-      setError('로그인에 실패했습니다. 다시 시도해주세요.');
-      navigate('/login');
+      try {
+        const parsedUser = JSON.parse(decodeURIComponent(userParam));
+
+        setToken(tokenParam);
+        setUser(parsedUser);
+
+        getUserByEmail(parsedUser.email)
+          .then((updatedUser) => {
+            setUser(updatedUser);
+            navigate('/home', { replace: true });
+          })
+          .catch((error) => {
+            console.error('사용자 정보 업데이트 실패:', error);
+            setError('사용자 정보를 가져오는데 실패했습니다.');
+          });
+      } catch (error) {
+        console.error('Login Error:', error);
+        setError('로그인 처리 중 오류가 발생했습니다.');
+      }
     }
-  }, []);
+  }, [navigate, setUser, setToken]);
 
   const handleGoogleLogin = () => {
     window.location.href = callbackUrls.google;

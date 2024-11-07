@@ -3,7 +3,7 @@
   height: 812px;
   width: calc(100vh * 9 / 16);
   max-width: 600px; /* 최대 너비 제한 */
-  min-width: 375px;
+  min-width: 420px;
   margin: 0 auto; /* 수평 중앙 정렬 */
   background-color: #ffff; /* 배경색 설정 */
   color: black;
