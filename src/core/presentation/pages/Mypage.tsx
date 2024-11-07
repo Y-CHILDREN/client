@@ -1,5 +1,8 @@
 import Header from '../components/layout/Header';
-import { logout } from '../../data/infrastructure/services/userRepositoryImpl';
+import {
+  logout,
+  deleteUser,
+} from '../../data/infrastructure/services/userRepositoryImpl';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +20,18 @@ const Mypage = () => {
       navigate('/login', { replace: true });
     } catch (error) {
       console.error('로그아웃 실패:', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (!user?.id) {
+        throw new Error('사용자 ID가 없습니다');
+      }
+      await deleteUser(user.id);
+      navigate('/deletecomplete', { replace: true });
+    } catch (error) {
+      console.error('회원 삭제 실패:', error);
     }
   };
 
@@ -83,7 +98,10 @@ const Mypage = () => {
           >
             로그아웃
           </button>
-          <button className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2">
+          <button
+            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2"
+            onClick={handleDelete}
+          >
             회원탈퇴
           </button>
         </div>
