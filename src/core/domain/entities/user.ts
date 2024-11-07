@@ -1,5 +1,5 @@
 interface User {
-  id: number;
+  id: string;
   provider: string;
   email: string;
   user_image: string;

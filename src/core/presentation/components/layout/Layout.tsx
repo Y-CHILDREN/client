@@ -1,22 +1,16 @@
 import React from 'react';
-
-import Header from './Header';
-import Footer from './Footer';
 import './Layout.css';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
+import { Outlet } from 'react-router-dom';
+import Footer from './Footer';
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   return (
     <div className="container">
-      {/*Header*/}
-      <Header />
-
       {/*Main content*/}
-      <main className="flex-grow p-4">{children}</main>
-
+      <main className="flex-grow">
+        <Outlet />
+      </main>
       {/*Bottom navigation bar*/}
       <Footer />
     </div>
