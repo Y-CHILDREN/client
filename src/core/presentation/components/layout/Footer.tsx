@@ -1,11 +1,37 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Footer: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getIconSrc = (path: string) => {
+    return location.pathname === path
+      ? path === '/home'
+        ? 'src/core/presentation/assets/navigation/onHouse.svg'
+        : path === '/mytrips'
+          ? 'src/core/presentation/assets/navigation/onSuitcaseRolling.svg'
+          : 'src/core/presentation/assets/navigation/onUser.svg'
+      : path === '/home'
+        ? 'src/core/presentation/assets/navigation/offHouse.svg'
+        : path === '/mytrips'
+          ? 'src/core/presentation/assets/navigation/offSuitcaseRolling.svg'
+          : 'src/core/presentation/assets/navigation/offUser.svg';
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="flex h-[64px] items-center flex-shrink-0 self-stretch bg-white border-t border-gray-200 ">
-      <div className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]">
+      <div
+        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]"
+        onClick={() => handleNavigation('/home')}
+      >
         <img
-          src="src/core/presentation/assets/navigation/House.svg"
+          src={getIconSrc('/home')}
           alt="home"
           className="w-[20px] h-[20px] flex-shrink-0"
         />
@@ -13,9 +39,12 @@ const Footer: React.FC = () => {
           홈
         </div>
       </div>
-      <div className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]">
+      <div
+        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]"
+        onClick={() => handleNavigation('/mytrips')}
+      >
         <img
-          src="src/core/presentation/assets/navigation/SuitcaseRolling.svg"
+          src={getIconSrc('/mytrips')}
           alt="내여행"
           className="w-[20px] h-[20px] flex-shrink-0"
         />
@@ -23,9 +52,12 @@ const Footer: React.FC = () => {
           내여행
         </div>
       </div>
-      <div className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]">
+      <div
+        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]"
+        onClick={() => handleNavigation('/mypage')}
+      >
         <img
-          src="src/core/presentation/assets/navigation/User.svg"
+          src={getIconSrc('/mypage')}
           alt="마이페이지"
           className="w-[20px] h-[20px] flex-shrink-0"
         />
