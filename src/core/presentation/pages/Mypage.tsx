@@ -29,8 +29,7 @@ const Mypage = () => {
         throw new Error('사용자 ID가 없습니다');
       }
       await deleteUser(user.id);
-      clearAuth();
-      navigate('/login', { replace: true });
+      navigate('/deletecomplete', { replace: true });
     } catch (error) {
       console.error('회원 삭제 실패:', error);
     }
