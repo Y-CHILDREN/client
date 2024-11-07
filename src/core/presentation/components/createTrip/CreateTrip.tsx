@@ -248,7 +248,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               placeholder="여행 제목을 입력하세요"
-              className="border rounded p-2"
+              className="p-2 border rounded"
             />
             <button type="button" onClick={handleNextStep} className="ml-2">
               다음
@@ -312,34 +312,16 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
         {step === 4 && (
           <div className="flex flex-col">
             <h2>누구와 함께 가나요?</h2>
-            <SearchInputComponent
-              onMembersSelected={handleAddMember}
-              selectedMembers={members}
+            <input
+              type="text"
+              name="member"
+              value={tripData.member}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              placeholder="같이 여행할 친구를 추가하세요."
+              className="p-2 border rounded"
             />
-            <div className="ml-auto">
-              <button
-                onClick={handleClearAllMembers}
-                className="mt-4 p-2 bg-gray-500 text-white rounded"
-              >
-                All Clear
-              </button>
-            </div>
-            {members.map((member) => (
-              <div
-                key={member.email}
-                className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
-              >
-                {member.nickname} ({member.email})
-                <button
-                  onClick={() => handleRemoveMember(member.email)}
-                  className="m-2 p-1 text-white bg-red-600 rounded"
-                >
-                  X
-                </button>
-              </div>
-            ))}
-
-            <button type="button" onClick={handlePreviousStep} className="m-2">
+            <button type="button" onClick={handlePreviousStep} className="ml-2">
               이전
             </button>
             <button type="submit" className="m-2">
