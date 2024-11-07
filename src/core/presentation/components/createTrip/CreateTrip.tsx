@@ -297,8 +297,10 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 minDate={new Date()}
                 onChange={handleDateChange}
                 inline={true}
-                showMonthDropdown={true}
-                showYearDropdown={true}
+                showMonthDropdown
+                showYearDropdown
+                className="w-full"
+                label="여행 일정"
               />
             </div>
             <button type="button" onClick={handlePreviousStep} className="ml-2">
