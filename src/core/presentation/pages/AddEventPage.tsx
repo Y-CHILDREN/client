@@ -12,13 +12,21 @@ const AddEventPage: React.FC = () => {
   };
   return (
     <>
+      <AddEventHeader message="이벤트 추가하기" />
       <EventInput
+        id="event name"
         label="이벤트 이름"
         inputRef={eventName}
         onChange={onChange}
+        inputText="이벤트 이름을 입력해 주세요."
       />
-      <EventInput label="장소" inputRef={location} onChange={onChange} />
-      <AddEventHeader message="이벤트 추가하기" />
+      <EventInput
+        id="place"
+        label="장소"
+        inputRef={location}
+        onChange={onChange}
+        inputText="주소 입력"
+      />
     </>
   );
 };
