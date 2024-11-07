@@ -1,53 +1,24 @@
 import Header from '../components/layout/Header';
-import { useEffect, useState } from 'react';
+import { logout } from '../../data/infrastructure/services/userRepositoryImpl';
+import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import User from '../../domain/entities/user';
 
 const Mypage = () => {
-  const [userInfo, setUserInfo] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, clearAuth } = useAuthStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const storedUserStr = localStorage.getItem('user');
-        const storedToken = localStorage.getItem('access_token');
+  console.log('User Object:', user);
+  console.log('User Image URL:', user?.user_image);
 
-        console.log('로컬스토리지 데이터:', {
-          user: storedUserStr,
-          token: storedToken,
-        });
-
-        if (!storedUserStr || !storedToken) {
-          console.log('인증 정보 없음');
-          navigate('/login');
-          return;
-        }
-
-        const storedUser = JSON.parse(storedUserStr);
-        const userData = await getUser(storedUser.id, storedToken);
-
-        if (userData) {
-          setUserInfo(userData);
-        } else {
-          console.log('사용자 데이터 없음');
-          navigate('/login');
-        }
-      } catch (error) {
-        console.error('마이페이지 로드 중 에러:', error);
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          localStorage.clear();
-        }
-        navigate('/login');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearAuth();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+    }
+  };
 
   return (
     <>
@@ -66,19 +37,19 @@ const Mypage = () => {
         <div className="flex flex-col items-start gap-6 flex-[1_0_0] self-stretch">
           <div className="border w-[100px] h-[100px] flex-shrink_0 rounded-[16px] border: 1px solid rgba(0, 0, 0, 0.16);">
             <img
-              src="src/core/presentation/assets/mypage/user.svg"
+              src={user?.user_image}
               alt="user이미지"
-              className="flex w-[100px] h-[100px] p-[25px] justify-center items-center flex-shrink_0"
+              className="flex w-[100px] h-[100px] p-1 justify-center items-center flex-shrink_0 rounded-[16px]"
             />
           </div>
           <div className="flex flex-col items-start self-stretch justify-center gap-2 px-1">
             <div className="flex items-center self-stretch gap-5">
               <p className="text-gray-700">닉네임</p>
-              <p>{userInfo?.nickname}</p>
+              <p>{user?.nickname}</p>
             </div>
             <div className="flex items-center self-stretch gap-5">
               <p className="text-gray-700">이메일</p>
-              <p>{userInfo?.email}</p>
+              <p>{user?.email}</p>
             </div>
           </div>
           <div className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2]">
@@ -106,7 +77,10 @@ const Mypage = () => {
         </div>
 
         <div className="flex items-start self-stretch justify-center gap-3 ">
-          <button className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2">
+          <button
+            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2"
+            onClick={handleLogout}
+          >
             로그아웃
           </button>
           <button className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2">
