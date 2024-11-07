@@ -10,24 +10,34 @@ import LoginLayout from './core/presentation/components/layout/LoginLayout';
 import Mypage from './core/presentation/pages/Mypage';
 import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
 import Mytrips from './core/presentation/pages/Mytrips';
+import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
+import { ProtectedRoute } from './routers/ProtectedRouter';
 
 const App: React.FC = () => {
   return (
     <>
       <Router>
-        <Routes>
-          <Route element={<LoginLayout />}>
-            <Route path="/login" element={<Login />} />
-          </Route>
+        <AuthProvider>
+          <Routes>
+            <Route element={<LoginLayout />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
 
-          <Route element={<Layout />}>
-            <Route path="/zustand" element={<ZustandPractice />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/create-trip" element={<CreateTripPage />} />
-            <Route path="/mypage" element={<Mypage />} />
-            <Route path="/mytrips" element={<Mytrips />} />
-          </Route>
-        </Routes>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/zustand" element={<ZustandPractice />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/create-trip" element={<CreateTripPage />} />
+              <Route path="/mypage" element={<Mypage />} />
+              <Route path="/mytrips" element={<Mytrips />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
       </Router>
     </>
   );
