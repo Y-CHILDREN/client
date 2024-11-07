@@ -6,7 +6,7 @@ import Footer from './Footer';
 
 const Layout: React.FC = () => {
   return (
-    <div className="container">
+    <div className="container relative">
       {/*Main content*/}
       <main className="flex-grow">
         <Outlet />
