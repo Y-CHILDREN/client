@@ -66,7 +66,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     // console.log('start:', start);
     // console.log('end:', end);
     // console.log('members:', members);
-    // console.log('Updated tripData:', tripData);
+    console.log('Updated tripData:', tripData);
   }, [tripData, dateRange, start, end, members]);
 
   // next 멀티스탭 핸들러.
@@ -240,23 +240,6 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
       >
         {step === 1 && (
           <div>
-            <h2>여행 이름을 적어주세요.</h2>
-            <input
-              type="text"
-              name="title"
-              value={tripData.title}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="여행 제목을 입력하세요"
-              className="p-2 border rounded"
-            />
-            <button type="button" onClick={handleNextStep} className="ml-2">
-              다음
-            </button>
-          </div>
-        )}
-        {step === 2 && (
-          <div>
             <h2>목적지를 입력하세요.</h2>
             <div className="flex justify-center">
               <DropDown
@@ -279,18 +262,19 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 placeholder="국가/도시 선택"
               />
             </div>
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
-              이전
-            </button>
             <button type="button" onClick={handleNextStep} className="ml-2">
               다음
             </button>
           </div>
         )}
-        {step === 3 && (
-          <div>
-            <div>
-              <h2>여행 일정을 선택해주세요.</h2>
+
+        {step === 2 && (
+          <div className="p-4">
+            <div className="space-y-4">
+              <p className="text-xl text-gray-600">
+                여행 일정을 선택해 주세요
+                <span className="text-sm text-[#3ACC97] ml-2">필수</span>
+              </p>
               <DatePickerComponent
                 startDate={start}
                 endDate={end}
@@ -300,36 +284,80 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 showMonthDropdown
                 showYearDropdown
                 className="w-full"
-                label="여행 일정"
               />
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="flex-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#92e7c5]"
+                >
+                  이전
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="flex-1 mx-3 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#92e7c5] hover:bg-[#7fceb0] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#92e7c5]"
+                >
+                  다음
+                </button>
+              </div>
             </div>
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="flex flex-col">
+            <h2>누구와 함께 가나요?</h2>
+            <SearchInputComponent
+              onMembersSelected={handleAddMember}
+              selectedMembers={members}
+            />
+            <div className="ml-auto">
+              <button
+                onClick={handleClearAllMembers}
+                className="mt-4 p-2 rounded"
+              >
+                All Clear
+              </button>
+            </div>
+            {members.map((member) => (
+              <div
+                key={member.email}
+                className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
+              >
+                {member.nickname} ({member.email})
+                <button
+                  onClick={() => handleRemoveMember(member.email)}
+                  className="m-2 p-1 text-white bg-red-600 rounded"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={handlePreviousStep} className="m-2">
               이전
             </button>
-            <button type="button" onClick={handleNextStep} className="ml-2">
+            <button type="button" onClick={handleNextStep} className="m-2">
               다음
             </button>
           </div>
         )}
+
         {step === 4 && (
-          <div className="flex flex-col">
-            <h2>누구와 함께 가나요?</h2>
+          <div>
+            <h2>여행 이름을 적어주세요.</h2>
             <input
               type="text"
-              name="member"
-              value={tripData.member}
+              name="title"
+              value={tripData.title}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
-              placeholder="같이 여행할 친구를 추가하세요."
-              className="p-2 border rounded"
+              placeholder="여행 제목을 입력하세요"
+              className="border rounded p-2"
             />
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
-              이전
-            </button>
-            <button type="submit" className="m-2">
+            <button type="submit" className="ml-2">
               여행 생성
             </button>
-            {/* 여행 생성 마지막 단계가 끝난 후 생성된 여행의 여행 디테일 페이지로 연결. */}
           </div>
         )}
       </form>
