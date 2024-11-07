@@ -1,0 +1,30 @@
+/* 페이드 효과를 위한 클래스 */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* 1초 동안 페이드 인 */
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 1s forwards; /* 1초 동안 페이드 아웃 */
+}
+
+/* 페이드 인 애니메이션 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 페이드 아웃 애니메이션 */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
