@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
 import './App.css';
 import ZustandPractice from './core/presentation/pages/ZustandPractice';
@@ -20,10 +25,10 @@ const App: React.FC = () => {
       <Router>
         <AuthProvider>
           <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route element={<LoginLayout />}>
               <Route path="/login" element={<Login />} />
             </Route>
-
             <Route
               element={
                 <ProtectedRoute>
