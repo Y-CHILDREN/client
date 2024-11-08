@@ -2,14 +2,12 @@ import React, { useEffect } from 'react';
 import { Check } from 'lucide-react';
 import Avatar from 'react-avatar';
 
-interface Option {
-  nickname: string;
-  email: string;
-}
+import { Option } from '../Search/SearchInputComponent.tsx';
 
 export interface MultiSelectDropDownProps {
   options: Option[];
   onChange: (selectedValuesArray: string[]) => void;
+  onRemove: (email: string) => void;
   selectedMembers: string[];
   className?: string;
 }
@@ -17,17 +15,25 @@ export interface MultiSelectDropDownProps {
 const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
   options,
   onChange,
+  onRemove,
   selectedMembers = [],
   className,
 }) => {
   const handleClick = (email: string) => {
-    // 이미 선택된 값인지 확인 후 진행.
-    const updatedValue = selectedMembers.includes(email)
-      ? selectedMembers.filter((memberEmail) => memberEmail !== email) // 이미 선택된 값인 경우 제거.
-      : [...selectedMembers, email]; // 선택되지 않은 값은 추가.
-
-    onChange(updatedValue); // 선택한 이메일을 배열로 감싸 전달.
+    if (selectedMembers.includes(email)) {
+      onRemove(email); // 선택 해제할 경우 멤버 제거 핸들러 호출
+    } else {
+      const updatedValue = [...selectedMembers, email];
+      onChange(updatedValue);
+    }
   };
+
+  useEffect(() => {
+    console.log(
+      'Updated selectedMembers in MultiSelectDropDown:',
+      selectedMembers,
+    );
+  }, [selectedMembers]);
 
   return (
     <div

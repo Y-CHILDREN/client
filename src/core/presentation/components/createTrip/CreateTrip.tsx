@@ -8,6 +8,7 @@ import useTripStore from '../../hooks/stores/tripStore.ts';
 import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import DropDown from '../dropDown/DropDown.tsx';
 import SearchInputComponent from '../Search/SearchInputComponent.tsx';
+import { useAuthStore } from '../../hooks/stores/authStore.ts';
 
 interface Props {
   onClose: () => void;
@@ -16,6 +17,9 @@ interface Props {
 const CreateTrip: React.FC<Props> = ({ onClose }) => {
   // Multi-Step status
   const { step, setStep, resetStep } = useTripStore();
+
+  // User
+  const { user } = useAuthStore();
 
   // DatePicker status
   const [dateRange, setDateRange] = useState<{
@@ -177,7 +181,14 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const handleSubregionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    setSubregion(event.target.value);
+    const newSubregion = event.target.value;
+    setSubregion(newSubregion);
+
+    // subregion 선택 시 tripData.destination 업데이트
+    setTripData((prev) => ({
+      ...prev,
+      destination: `${region === 'domestic' ? 'domestic' : 'overseas'} - ${newSubregion}`,
+    }));
   };
 
   // 멤버 추가 핸들러.
@@ -187,15 +198,29 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
       const newMembers = users.filter(
         (user) => !prevMembers.some((member) => member.email === user.email),
       );
-      // console.log('newMembers:', newMembers);
-      return [...prevMembers, ...newMembers];
+      const updatedMembers = [...prevMembers, ...newMembers];
+
+      // 여행 정보 업데이트
+      setTripData((prev) => ({
+        ...prev,
+        members: updatedMembers.map((member) => member.email),
+      }));
+      return updatedMembers;
     });
-    // console.log('members:', members);
   };
 
   // 멤버 제거 핸들러.
   const handleRemoveMember = (email: string) => {
-    setMembers((prev) => prev.filter((member) => member.email !== email));
+    setMembers((prev) => {
+      const updatedMembers = prev.filter((member) => member.email !== email);
+
+      // 여행 정보 업데이트
+      setTripData((prev) => ({
+        ...prev,
+        members: updatedMembers.map((member) => member.email),
+      }));
+      return updatedMembers;
+    });
   };
 
   // 전체 멤버 제거 핸들러.
@@ -214,11 +239,15 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
       start_date: tripData.start_date,
       end_date: tripData.end_date,
       members: members.map((member) => member.email), // 이메일만 전송.
+      created_by: user?.email,
     };
 
     // 서버 전송.
     try {
-      const response = await axios.post(`my server api`, tripDetails);
+      const response = await axios.post(
+        `http://localhost:3000/trips/`,
+        tripDetails,
+      );
       console.log('Trip created:', response.data);
     } catch (error) {
       console.error('Error creating trip:', error);
@@ -348,6 +377,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
               <div className="relative mb-4">
                 <SearchInputComponent
                   onMembersSelected={handleAddMember}
+                  onRemoveMember={handleRemoveMember}
                   selectedMembers={members}
                   placeholder="닉네임으로 친구 검색"
                 />
@@ -366,12 +396,10 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                   className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
                 >
                   {member.nickname} ({member.email})
-                  <button
+                  <X
                     onClick={() => handleRemoveMember(member.email)}
                     className="m-2 p-1 text-white bg-red-600 rounded"
-                  >
-                    X
-                  </button>
+                  />
                 </div>
               ))}
             </div>
