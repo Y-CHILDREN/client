@@ -68,7 +68,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     // console.log('end:', end);
     // console.log('members:', members);
     console.log('Updated tripData:', tripData);
-  }, [tripData, dateRange, start, end, members]);
+  }, [tripData, dateRange, start, end, members, step]);
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
@@ -147,7 +147,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // enter로 다음 스텝 이동 핸들러.
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.keyCode === 13) {
+    if (event.key === 'Enter') {
       // 엔터 키 코드
       event.preventDefault(); // 기본 제출 동작 방지
       if (step < 4) {
@@ -280,6 +280,17 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 />
               </div>
             </div>
+            <div className="p-6 mt-auto">
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                >
+                  다음
+                </button>
+              </div>
+            </div>
           </div>
         )}
         {step === 2 && (
@@ -301,6 +312,25 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 showYearDropdown
                 className="w-full"
               />
+            </div>
+
+            <div className="p-6 mt-auto">
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  이전
+                </button>
+                <button
+                  type="button"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                >
+                  다음
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -344,6 +374,25 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 </div>
               ))}
             </div>
+
+            <div className="p-6 mt-auto">
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  이전
+                </button>
+                <button
+                  type="button"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                >
+                  다음
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -366,30 +415,49 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#92e7c5]"
               />
             </div>
+
+            <div className="p-6 mt-auto">
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  이전
+                </button>
+                <button
+                  type="submit"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                >
+                  여행 저장
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
         {/*Step Button*/}
-        <div className="p-6 mt-auto">
-          <div className="flex gap-3">
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={handlePreviousStep}
-                className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
-              >
-                이전
-              </button>
-            )}
-            <button
-              type={step === 4 ? 'submit' : 'button'}
-              onClick={step < 4 ? handleNextStep : undefined}
-              className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
-            >
-              {step === 4 ? '여행 저장' : '다음'}
-            </button>
-          </div>
-        </div>
+        {/*<div className="p-6 mt-auto">*/}
+        {/*  <div className="flex gap-3">*/}
+        {/*    {step > 1 && (*/}
+        {/*      <button*/}
+        {/*        type="button"*/}
+        {/*        onClick={handlePreviousStep}*/}
+        {/*        className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"*/}
+        {/*      >*/}
+        {/*        이전*/}
+        {/*      </button>*/}
+        {/*    )}*/}
+        {/*    <button*/}
+        {/*      type={step === 4 ? 'submit' : 'button'}*/}
+        {/*      onClick={step < 4 ? handleNextStep : undefined}*/}
+        {/*      className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"*/}
+        {/*    >*/}
+        {/*      {step === 4 ? '여행 저장' : '다음'}*/}
+        {/*    </button>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </form>
     </div>
   );
