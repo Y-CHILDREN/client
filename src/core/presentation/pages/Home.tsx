@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../hooks/stores/authStore';
 import IntroMessage from '../components/home/IntroMessage';
 import OngoingTrip from '../components/home/OngoingTrip';
-import UpcomingTrip from '../components/home/UpcomingTrip';
+// import UpcomingTrip from '../components/home/UpcomingTrip';
 
 const Home: React.FC = () => {
-  // 사용자 이름 '은석'으로 초기값 설정해둠. 나중에 수정 요망.
-  const [userName, setUserName] = useState<string>('은석');
-
+  const { user } = useAuthStore();
   const [hasOngoingTrip, setHasOngoingTrip] = useState<boolean>(false);
-  const [hasUpcomingTrip, setHasUpcomingTrip] = useState<boolean>(false);
-  const [hasPastTrip, setHasPastTrip] = useState<boolean>(false);
-  const [tripName, setTripName] = useState<string>('');
-  const [tripDate, setTripDate] = useState<Date | null>(null);
+  const [ongoingTripData, setOngoingTripData] = useState<any>({});
+  // const [hasUpcomingTrip, setHasUpcomingTrip] = useState<boolean>(false);
+  // const [hasPastTrip, setHasPastTrip] = useState<boolean>(false);
+  const [tripData, setTripData] = useState<any[]>([]);
 
   useEffect(() => {
     const checkOngoingTrip = async () => {
       try {
-        // API 엔드포인트는 실제 사용하시는 것으로 변경해주세요
-        const response = await fetch('/api/trips/ongoing');
+        //일단 유저 3번으로 설정해둠. 나중에 수정 요망.${user.id}
+        const response = await fetch(
+          `http://localhost:3000/trips/user/${user.id}`,
+        );
         const data = await response.json();
+        setTripData(data);
+        const currentDate = new Date();
+        const ongoingTripIndex = data.findIndex((trip: any) => {
+          const startDate = new Date(trip.start_date);
+          const endDate = new Date(trip.end_date);
+          return startDate <= currentDate && currentDate <= endDate;
+        });
 
-        // 진행 중, 다가오는, 다녀온 여행이 있는지 확인
-        setHasOngoingTrip(data.hasOngoingTrip);
-        setHasUpcomingTrip(data.hasUpcomingTrip);
-        setHasPastTrip(data.hasPastTrip);
-
+        setHasOngoingTrip(ongoingTripIndex !== -1);
+        setOngoingTripData(data[ongoingTripIndex]);
         // 여행 정보 받아오기
-        setTripName(data.tripName);
-        setTripDate(data.tripDate);
-
-        // 사용자 이름도 함께 가져오기
-        setUserName(data.userName);
-        // setUserName('태정');
+        // setTripName(data.tripName);
+        // setTripDate(data.tripDate);
       } catch (error) {
         console.error('Failed to fetch ongoing trip status:', error);
         setHasOngoingTrip(false);
@@ -43,7 +44,7 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex w-[375px] h-[812px] flex-col items-start bg-white border shadow">
+    <div className="flex w-[375px] h-[812px] flex-col items-start bg-white border shadow relative">
       {/* header */}
       <div className="flex h-[60px] px-5 items-center gap-2 shrink-0 self-stretch bg-white">
         <p className="text-black text-center font-pretendard text-[18px] font-semibold leading-[24px]">
@@ -55,23 +56,25 @@ const Home: React.FC = () => {
         <div>
           {/* title */}
           <div>
-            <IntroMessage userName={userName} hasOngoingTrip={hasOngoingTrip} />
+            <IntroMessage
+              userName={user?.nickname ?? '비회원'}
+              hasOngoingTrip={hasOngoingTrip}
+            />
           </div>
           {/* section */}
           <div>
             <OngoingTrip
               hasOngoingTrip={hasOngoingTrip}
-              tripName={tripName}
-              tripDate={tripDate}
+              ongoingTripData={ongoingTripData}
             />
           </div>
           {/* trips */}
           <div>
             <div>
-              <UpcomingTrip
-                hasUpcomingTrip={hasUpcomingTrip}
-                hasPastTrip={hasPastTrip}
-              />
+              {/* <UpcomingTrip
+              // hasUpcomingTrip={hasUpcomingTrip}
+              // hasPastTrip={hasPastTrip}
+              /> */}
             </div>
           </div>
           {/* button */}
