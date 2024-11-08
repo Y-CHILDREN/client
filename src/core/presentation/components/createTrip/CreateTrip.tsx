@@ -269,7 +269,10 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
         </h1>
       </div>
 
-      <div className="h-0.5 bg-[#92e7c5] w-full" />
+      <div
+        style={{ width: `${(step / 4) * 100}%` }} // 진행도 표시
+        className="h-0.5 bg-[#92e7c5] rounded transition-all duration-1000 w-full"
+      />
 
       <form
         onSubmit={(event) => {
