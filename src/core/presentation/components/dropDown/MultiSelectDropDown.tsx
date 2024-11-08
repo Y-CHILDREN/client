@@ -57,7 +57,7 @@ const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
               />
               <span className="text-sm font-medium">{option.nickname}</span>
               <span className="text-sm font-medium text-gray-400">
-                {option.email}
+                ({option.email})
               </span>
             </div>
             <div

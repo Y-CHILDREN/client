@@ -433,33 +433,42 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                   placeholder="이메일로 친구 검색"
                 />
               </div>
-              <div className="ml-auto">
+              <div className="flex justify-end mb-1">
                 <button
                   onClick={handleClearAllMembers}
-                  className="mt-4 p-2 rounded"
+                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
                 >
                   전체 삭제
                 </button>
               </div>
-              {members.map((member) => (
-                <div
-                  key={member.email}
-                  className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
-                >
-                  <Avatar
-                    src={member.user_image}
-                    name={member.nickname}
-                    size="28"
-                    round
-                    className="flex-shrink-0"
-                  />
-                  {member.nickname} ({member.email})
-                  <X
-                    onClick={() => handleRemoveMember(member.email)}
-                    className="m-2 p-1 text-white bg-red-600 rounded"
-                  />
-                </div>
-              ))}
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {members.map((member) => (
+                  <div
+                    key={member.email}
+                    className="flex items-center justify-between p-1 bg-white border rounded-lg shadow-sm"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Avatar
+                        src={member.user_image}
+                        name={member.nickname}
+                        size="28"
+                        round
+                        className="flex-shrink-0"
+                      />
+                      <span className="text-sm font-medium">
+                        {member.nickname}{' '}
+                        <span className="text-gray-500">({member.email})</span>
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveMember(member.email)}
+                      className="p-1 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="p-6 mt-auto">
