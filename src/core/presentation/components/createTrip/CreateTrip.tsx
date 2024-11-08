@@ -9,6 +9,7 @@ import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import DropDown from '../dropDown/DropDown.tsx';
 import SearchInputComponent from '../Search/SearchInputComponent.tsx';
 import { useAuthStore } from '../../hooks/stores/authStore.ts';
+import Avatar from 'react-avatar';
 
 interface Props {
   onClose: () => void;
@@ -397,14 +398,16 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  style={{ flex: 1 }}
                 >
                   이전
                 </button>
                 <button
                   type="button"
                   onClick={step < 4 ? handleNextStep : undefined}
-                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  style={{ flex: 2 }}
                 >
                   다음
                 </button>
@@ -427,7 +430,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                   onMembersSelected={handleAddMember}
                   onRemoveMember={handleRemoveMember}
                   selectedMembers={members}
-                  placeholder="닉네임으로 친구 검색"
+                  placeholder="이메일로 친구 검색"
                 />
               </div>
               <div className="ml-auto">
@@ -443,6 +446,13 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                   key={member.email}
                   className="flex justify-between items-center overflow-y-auto border rounded-2xl mt-1 pl-2"
                 >
+                  <Avatar
+                    src={member.user_image}
+                    name={member.nickname}
+                    size="28"
+                    round
+                    className="flex-shrink-0"
+                  />
                   {member.nickname} ({member.email})
                   <X
                     onClick={() => handleRemoveMember(member.email)}
@@ -460,14 +470,16 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  style={{ flex: 1 }}
                 >
                   이전
                 </button>
                 <button
                   type="button"
                   onClick={step < 4 ? handleNextStep : undefined}
-                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  style={{ flex: 2 }}
                 >
                   다음
                 </button>
@@ -504,14 +516,16 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  style={{ flex: 1 }}
                 >
                   이전
                 </button>
                 <button
                   type="submit"
                   onClick={step < 4 ? handleNextStep : undefined}
-                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  style={{ flex: 2 }}
                 >
                   여행 저장
                 </button>

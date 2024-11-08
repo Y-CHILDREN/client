@@ -56,6 +56,9 @@ const MultiSelectDropDown: React.FC<MultiSelectDropDownProps> = ({
                 className="flex-shrink-0"
               />
               <span className="text-sm font-medium">{option.nickname}</span>
+              <span className="text-sm font-medium text-gray-400">
+                {option.email}
+              </span>
             </div>
             <div
               className={`w-5 h-5 rounded flex items-center justify-center
