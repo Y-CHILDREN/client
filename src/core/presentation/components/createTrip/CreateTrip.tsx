@@ -56,6 +56,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     start_date: undefined,
     end_date: undefined,
     members: [],
+    created_by: '',
   });
 
   // member status
