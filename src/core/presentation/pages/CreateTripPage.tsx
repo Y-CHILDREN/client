@@ -6,7 +6,7 @@ export function CreateTripPage() {
   const navigate = useNavigate();
 
   const handleClose = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   return <CreateTrip onClose={handleClose} />;
