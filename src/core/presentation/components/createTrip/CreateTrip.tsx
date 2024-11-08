@@ -66,6 +66,11 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   // member status
   const [members, setMembers] = useState<User[]>([]);
 
+  // error message
+  const [errors, setErrors] = useState<{ [key in keyof TripData]?: string }>(
+    {},
+  );
+
   // logging
   useEffect(() => {
     // console.log('Updated dateRange:', dateRange);
@@ -73,15 +78,41 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     // console.log('end:', end);
     // console.log('members:', members);
     console.log('Updated tripData:', tripData);
-  }, [tripData, dateRange, start, end, members, step]);
+  }, [tripData, dateRange, start, end, members, step, errors]);
+
+  // 유효성 검사 함수
+  const validateFields = () => {
+    const newErrors: { [key in keyof TripData]?: string } = {};
+
+    if (step === 1) {
+      if (!tripData.destination) newErrors.destination = '목적지를 입력하세요.';
+    } else if (step === 2) {
+      if (!tripData.start_date)
+        newErrors.start_date = '시작 날짜를 선택하세요.';
+      if (!tripData.end_date) newErrors.end_date = '종료 날짜를 선택하세요.';
+    } else if (step === 3) {
+      if (tripData.members.length === 0)
+        newErrors.members = '적어도 한 명의 멤버를 추가하세요.';
+    } else if (step === 4) {
+      if (!tripData.title) newErrors.title = '제목을 입력하세요.';
+    }
+
+    setErrors(newErrors);
+    console.log('newErrors:', newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
-    setStep('next');
+    if (validateFields()) {
+      console.log('다음 단계');
+      setStep('next');
+    }
   };
 
   // previous 멀티스탭 핸들러.
   const handlePreviousStep = () => {
+    console.log('이전 단계');
     setStep('previous');
   };
 
@@ -176,6 +207,12 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     if (!newRegion) {
       setSubregion('');
     }
+
+    // region 재선택시 목적지 값 초기화.
+    setTripData((prev) => ({
+      ...prev,
+      destination: '',
+    }));
   };
 
   const handleSubregionChange = (
@@ -230,27 +267,29 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 폼 제출 핸들러.
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    if (validateFields()) {
+      event.preventDefault();
 
-    // formatting
-    const tripDetails = {
-      title: tripData.title,
-      destination: tripData.destination,
-      start_date: tripData.start_date,
-      end_date: tripData.end_date,
-      members: members.map((member) => member.email), // 이메일만 전송.
-      created_by: user?.email,
-    };
+      // formatting
+      const tripDetails = {
+        title: tripData.title,
+        destination: tripData.destination,
+        start_date: tripData.start_date,
+        end_date: tripData.end_date,
+        members: members.map((member) => member.email), // 이메일만 전송.
+        created_by: user?.email,
+      };
 
-    // 서버 전송.
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/trips/`,
-        tripDetails,
-      );
-      console.log('Trip created:', response.data);
-    } catch (error) {
-      console.error('Error creating trip:', error);
+      // 서버 전송.
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/trips/`,
+          tripDetails,
+        );
+        console.log('Trip created:', response.data);
+      } catch (error) {
+        console.error('Error creating trip:', error);
+      }
     }
   };
 
@@ -313,6 +352,9 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 />
               </div>
             </div>
+            {errors.destination && (
+              <p className="mt-2 text-red-500 text-sm">{errors.destination}</p>
+            )}
             <div className="p-6 mt-auto">
               <div className="flex gap-3">
                 <button
@@ -348,6 +390,9 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
             </div>
 
             <div className="p-6 mt-auto">
+              {errors.end_date && (
+                <p className="mt-2 text-red-500 text-sm">{errors.end_date}</p>
+              )}
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -408,6 +453,9 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
             </div>
 
             <div className="p-6 mt-auto">
+              {errors.members && (
+                <p className="mt-2 text-red-500 text-sm">{errors.members}</p>
+              )}
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -449,6 +497,9 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
             </div>
 
             <div className="p-6 mt-auto">
+              {errors.title && (
+                <p className="mt-2 text-red-500 text-sm">{errors.title}</p>
+              )}
               <div className="flex gap-3">
                 <button
                   type="button"
