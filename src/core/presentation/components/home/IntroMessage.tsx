@@ -14,7 +14,7 @@ const IntroMessage: React.FC<IntroMessageProps> = ({
   return (
     <div className="flex flex-col items-start gap-2 self-stretch p-6 pb-4">
       <div>
-        <p className="text-[#17B47B] font-pretendard text-[20px] font-semibold leading-[28px]">
+        <p className="text-left text-[#17B47B] font-pretendard text-[20px] font-semibold leading-[28px]">
           여행자 {userName}님,
         </p>
         {hasOngoingTrip ? (
