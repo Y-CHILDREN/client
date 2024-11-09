@@ -27,5 +27,6 @@ export const Basic: Story = {
   args: {
     startDate: new Date(),
     endDate: new Date(),
+    inline: true,
   },
 };
