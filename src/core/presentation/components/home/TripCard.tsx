@@ -1,22 +1,21 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
+import TripThumbnail from './TripThumbnail';
 
 interface TripCardProps {
-  imageUrl: string;
   tripName: string;
   tripDate: Date | null;
+  destination: string;
 }
 
 const TripCard: React.FC<TripCardProps> = ({
-  imageUrl,
   tripName,
   tripDate,
+  destination,
 }) => {
   return (
-    <Card className="flex w-[327px] h-[327px] p-0 flex-col justify-between items-start">
-      name = {tripName}
-      img = {imageUrl}
-      <img className="rounded-xl w-full h-full" src={imageUrl} alt={tripName} />
+    <Card className="flex w-[148px] h-[148px] flex-col items-start self-stretch rounded-xl">
+      <TripThumbnail destination={destination} className="object-cover" />
       <div className="flex flex-col">
         <div>{tripName}</div>
         <div>

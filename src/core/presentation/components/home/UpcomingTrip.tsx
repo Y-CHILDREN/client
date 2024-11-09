@@ -6,14 +6,24 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TripCard from './TripCard';
 
+interface TripData {
+  name: string;
+  start_date: string;
+  destination: string;
+}
+
 interface UpcomingTripProps {
   hasUpcomingTrip: boolean;
   hasPastTrip: boolean;
+  upcomingTripData: TripData[];
+  pastTripData: TripData[];
 }
 
 const UpcomingTrip: React.FC<UpcomingTripProps> = ({
   hasUpcomingTrip,
   hasPastTrip,
+  upcomingTripData,
+  pastTripData,
 }) => {
   return (
     <div>
@@ -30,30 +40,30 @@ const UpcomingTrip: React.FC<UpcomingTripProps> = ({
         </TabsList>
         <TabsContent value="upcoming" className="mt-6">
           {hasUpcomingTrip ? (
-            data.map((item) => (
+            upcomingTripData.map((item) => (
               <TripCard
-                imageUrl={item.imageUrl}
-                tripName={item.tripName}
-                tripDate={item.tripDate}
+                tripName={item.name}
+                tripDate={new Date(item.start_date)}
+                destination={item.destination}
               />
             ))
           ) : (
-            <div className="rounded-lg border-2 border-dashed p-8 text-center">
+            <div className="flex h-[148px] p-[50px_48px] flex-col justify-center items-center gap-4 flex-1 rounded-xl border border-dashed border-[#DCDEE0] bg-white">
               <p className="text-muted-foreground">예정된 여행이 없어요.</p>
             </div>
           )}
         </TabsContent>
         <TabsContent value="past" className="mt-6">
           {hasPastTrip ? (
-            data.map((item) => (
+            pastTripData.map((item) => (
               <TripCard
-                imageUrl={item.imageUrl}
-                tripName={item.tripName}
-                tripDate={item.tripDate}
+                tripName={item.name}
+                tripDate={new Date(item.start_date)}
+                destination={item.destination}
               />
             ))
           ) : (
-            <div className="rounded-lg border-2 border-dashed p-8 text-center">
+            <div className="flex h-[148px] p-[50px_48px] flex-col justify-center items-center gap-4 flex-1 rounded-xl border border-dashed border-[#DCDEE0] bg-white">
               <p className="text-muted-foreground">다녀온 여행이 없어요.</p>
             </div>
           )}
