@@ -2,7 +2,7 @@ import Header from '../components/layout/Header';
 import {
   logout,
   deleteUser,
-} from '../../data/infrastructure/services/userRepositoryImpl';
+} from '../../data/infrastructure/services/userService';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
 
