@@ -6,7 +6,6 @@ import Footer from './Footer';
 
 const Layout: React.FC = () => {
   const location = useLocation();
-  console.log(location.pathname);
   return (
     <div className="container">
       {/*Main content*/}

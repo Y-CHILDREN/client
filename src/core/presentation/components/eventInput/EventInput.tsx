@@ -1,3 +1,13 @@
+import { UseFormRegister } from 'react-hook-form';
+
+interface FormValues {
+  eventName: string;
+  location: string;
+  schedule: Date;
+  costCategory: string;
+  costValue: number;
+}
+
 interface EventInputProps {
   id: string;
   label: string;
@@ -7,6 +17,7 @@ interface EventInputProps {
     ref: React.MutableRefObject<string>,
   ) => void;
   inputText: string;
+  register: UseFormRegister<FormValues>;
 }
 import RequiredDot from '../requiredDot/RequiredDot.tsx';
 
