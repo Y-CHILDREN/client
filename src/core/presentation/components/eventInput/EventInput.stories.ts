@@ -39,10 +39,9 @@ const meta = {
 } satisfies Meta<typeof EventInput>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
 // 기본 스토리 설정
-export const Basic: Story = {
+export const Basic: StoryObj = {
   args: {
     label: 'Event Label',
     // 스토리북에선 useRef를 직접쓸 수 없어서 (최상위가 아니라) 아래처럼 해야한다.
@@ -51,7 +50,7 @@ export const Basic: Story = {
 };
 
 // 커스텀 라벨 스토리
-export const CustomLabel: Story = {
+export const CustomLabel: StoryObj = {
   args: {
     label: 'Custom Event Input',
     inputRef: { current: '' } as MutableRefObject<string>,
@@ -59,7 +58,7 @@ export const CustomLabel: Story = {
 };
 
 // onChange 핸들러 시연 스토리
-export const WithOnChangeHandler: Story = {
+export const WithOnChangeHandler: StoryObj = {
   args: {
     label: 'Input with Change Handler',
     onChange: fn(),

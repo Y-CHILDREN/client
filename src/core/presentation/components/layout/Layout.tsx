@@ -1,10 +1,12 @@
 import React from 'react';
 import './Layout.css';
-
+import { useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import Footer from './Footer';
 
 const Layout: React.FC = () => {
+  const location = useLocation();
+  console.log(location.pathname);
   return (
     <div className="container">
       {/*Main content*/}
@@ -12,7 +14,7 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}
-      <Footer />
+      {location.pathname !== '/trip/event/add' && <Footer />}
     </div>
   );
 };

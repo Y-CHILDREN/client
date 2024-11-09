@@ -8,6 +8,7 @@ interface EventInputProps {
   ) => void;
   inputText: string;
 }
+import RequiredDot from '../requiredDot/RequiredDot.tsx';
 
 const EventInput: React.FC<EventInputProps> = ({
   id,
@@ -16,13 +17,14 @@ const EventInput: React.FC<EventInputProps> = ({
   onChange,
   inputText,
 }) => {
-  return id === 'place' ? (
-    <section className="flex flex-col">
-      <label className="" htmlFor={id}>
-        {label}
-      </label>
+  return (
+    <article className="flex flex-col w-full items-start gap-[10px]">
+      <div className="flex">
+        <label htmlFor={id}>{label}</label>
+        <RequiredDot />
+      </div>
       <input
-        className="w-24 p-3 "
+        className={`form-input-radius ${id === 'place' ? 'w-[95%]' : 'w-full'}`}
         id={id}
         placeholder={inputText}
         type="text"
@@ -30,21 +32,7 @@ const EventInput: React.FC<EventInputProps> = ({
           onChange(e, inputRef)
         }
       />
-    </section>
-  ) : (
-    <section className="flex flex-col">
-      <label className="" htmlFor={id}>
-        {label}
-      </label>
-      <input
-        id={id}
-        placeholder={inputText}
-        type="text"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onChange(e, inputRef)
-        }
-      />
-    </section>
+    </article>
   );
 };
 

@@ -1,15 +1,17 @@
-import { IoClose } from 'react-icons/io5';
-
 interface AddEventHeaderProps {
   message: string;
 }
 
 const AddEventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
   return (
-    <section className="flex items-center justify-between px-3 pb-10 text-black">
-      <IoClose color="black" />
-      <div className="flex justify-center flex-grow ">
-        <p>{message}</p>
+    <section className="flex items-center h-[60px] px-3 border-b-2 border-gray-200 ">
+      <img
+        className="cursor-pointer"
+        src="/src/core/presentation/assets/addEventForm/xIcon.svg"
+        alt="닫기 아이콘"
+      />
+      <div className="flex justify-center flex-grow">
+        <p className="text-lg font-bold">{message}</p>
       </div>
     </section>
   );
