@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/stores/authStore';
-import { getUserById } from '../../data/infrastructure/services/userRepositoryImpl';
+import { getUserById } from '../../data/infrastructure/services/userService';
 import './Login.css';
 
 const Login: React.FC = () => {

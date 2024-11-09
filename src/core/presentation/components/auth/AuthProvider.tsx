@@ -1,5 +1,5 @@
 import { useAuthStore } from '../../hooks/stores/authStore';
-import { getUserById } from '../../../data/infrastructure/services/userRepositoryImpl';
+import { getUserById } from '../../../data/infrastructure/services/userService';
 import { useEffect } from 'react';
 
 interface AuthProviderProps {
