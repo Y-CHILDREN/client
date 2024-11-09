@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { X } from 'lucide-react';
+import Avatar from 'react-avatar';
 
 import TripData from '../../../domain/entities/trip.ts';
 import User from '../../../domain/entities/user.ts';
-import useTripStore from '../../hooks/stores/tripStore.ts';
+import {
+  regions,
+  subregions,
+  Region,
+} from '../../../domain/entities/regions.ts';
 import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import DropDown from '../dropDown/DropDown.tsx';
 import SearchInputComponent from '../Search/SearchInputComponent.tsx';
+import useTripStore from '../../hooks/stores/tripStore.ts';
+import { useAuthStore } from '../../hooks/stores/authStore.ts';
 
 interface Props {
   onClose: () => void;
+  onSubmit: () => void;
 }
 
-const CreateTrip: React.FC<Props> = ({ onClose }) => {
+const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   // Multi-Step status
-  const { step, setStep, resetStep } = useTripStore();
+  const { step, setStep } = useTripStore();
+
+  // User
+  const { user } = useAuthStore();
 
   // DatePicker status
   const [dateRange, setDateRange] = useState<{
@@ -24,27 +36,8 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const { start, end } = dateRange;
 
   // Destination dropDown status
-  // Region 타입 정의.
-  type Region = 'domestic' | 'overseas';
-
   const [region, setRegion] = useState<Region | ''>('');
   const [subregion, setSubregion] = useState('');
-
-  const regions: Array<{ label: string; value: string }> = [
-    { label: '국내', value: 'domestic' },
-    { label: '국외', value: 'overseas' },
-  ];
-
-  const subregions: Record<Region, Array<{ label: string; value: string }>> = {
-    domestic: [
-      { label: '서울', value: 'seoul' },
-      { label: '부산', value: 'busan' },
-    ],
-    overseas: [
-      { label: '일본', value: 'japan' },
-      { label: '중국', value: 'china' },
-    ],
-  };
 
   const subregionOptions = region ? subregions[region] : [];
 
@@ -55,10 +48,16 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     start_date: undefined,
     end_date: undefined,
     members: [],
+    created_by: '',
   });
 
   // member status
   const [members, setMembers] = useState<User[]>([]);
+
+  // error message
+  const [errors, setErrors] = useState<{ [key in keyof TripData]?: string }>(
+    {},
+  );
 
   // logging
   useEffect(() => {
@@ -66,16 +65,42 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
     // console.log('start:', start);
     // console.log('end:', end);
     // console.log('members:', members);
-    // console.log('Updated tripData:', tripData);
-  }, [tripData, dateRange, start, end, members]);
+    console.log('Updated tripData:', tripData);
+  }, [tripData, dateRange, start, end, members, step, errors]);
+
+  // 유효성 검사 함수
+  const validateFields = () => {
+    const newErrors: { [key in keyof TripData]?: string } = {};
+
+    if (step === 1) {
+      if (!tripData.destination) newErrors.destination = '목적지를 입력하세요.';
+    } else if (step === 2) {
+      if (!tripData.start_date)
+        newErrors.start_date = '시작 날짜를 선택하세요.';
+      if (!tripData.end_date) newErrors.end_date = '종료 날짜를 선택하세요.';
+    } else if (step === 3) {
+      if (tripData.members.length === 0)
+        newErrors.members = '적어도 한 명의 멤버를 추가하세요.';
+    } else if (step === 4) {
+      if (!tripData.title) newErrors.title = '제목을 입력하세요.';
+    }
+
+    setErrors(newErrors);
+    console.log('newErrors:', newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // next 멀티스탭 핸들러.
   const handleNextStep = () => {
-    setStep('next');
+    if (validateFields()) {
+      console.log('다음 단계');
+      setStep('next');
+    }
   };
 
   // previous 멀티스탭 핸들러.
   const handlePreviousStep = () => {
+    console.log('이전 단계');
     setStep('previous');
   };
 
@@ -146,7 +171,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // enter로 다음 스텝 이동 핸들러.
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.keyCode === 13) {
+    if (event.key === 'Enter') {
       // 엔터 키 코드
       event.preventDefault(); // 기본 제출 동작 방지
       if (step < 4) {
@@ -159,7 +184,6 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 닫기 핸들러.
   const handleClose = () => {
-    resetStep(); // step 값을 1로 초기화.
     onClose();
   };
 
@@ -167,15 +191,26 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const handleRegionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRegion = event.target.value as Region | '';
     setRegion(newRegion);
-    if (!newRegion) {
-      setSubregion('');
-    }
+    setSubregion('');
+
+    // region 재선택시 목적지 값 초기화.
+    setTripData((prev) => ({
+      ...prev,
+      destination: '',
+    }));
   };
 
   const handleSubregionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    setSubregion(event.target.value);
+    const newSubregion = event.target.value;
+    setSubregion(newSubregion);
+
+    // subregion 선택 시 tripData.destination 업데이트
+    setTripData((prev) => ({
+      ...prev,
+      destination: `${region === 'domestic' ? 'domestic' : 'overseas'} - ${newSubregion}`,
+    }));
   };
 
   // 멤버 추가 핸들러.
@@ -185,15 +220,29 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
       const newMembers = users.filter(
         (user) => !prevMembers.some((member) => member.email === user.email),
       );
-      // console.log('newMembers:', newMembers);
-      return [...prevMembers, ...newMembers];
+      const updatedMembers = [...prevMembers, ...newMembers];
+
+      // 여행 정보 업데이트
+      setTripData((prev) => ({
+        ...prev,
+        members: updatedMembers.map((member) => member.email),
+      }));
+      return updatedMembers;
     });
-    // console.log('members:', members);
   };
 
   // 멤버 제거 핸들러.
   const handleRemoveMember = (email: string) => {
-    setMembers((prev) => prev.filter((member) => member.email !== email));
+    setMembers((prev) => {
+      const updatedMembers = prev.filter((member) => member.email !== email);
+
+      // 여행 정보 업데이트
+      setTripData((prev) => ({
+        ...prev,
+        members: updatedMembers.map((member) => member.email),
+      }));
+      return updatedMembers;
+    });
   };
 
   // 전체 멤버 제거 핸들러.
@@ -203,33 +252,53 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 폼 제출 핸들러.
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    if (validateFields()) {
+      event.preventDefault();
 
-    // formatting
-    const tripDetails = {
-      title: tripData.title,
-      destination: tripData.destination,
-      start_date: tripData.start_date,
-      end_date: tripData.end_date,
-      members: members.map((member) => member.email), // 이메일만 전송.
-    };
+      // formatting
+      const tripDetails = {
+        title: tripData.title,
+        destination: tripData.destination,
+        start_date: tripData.start_date,
+        end_date: tripData.end_date,
+        members: members.map((member) => member.email), // 이메일만 전송.
+        created_by: user?.email,
+      };
 
-    // 서버 전송.
-    try {
-      const response = await axios.post(`my server api`, tripDetails);
-      console.log('Trip created:', response.data);
-    } catch (error) {
-      console.error('Error creating trip:', error);
+      // 서버 전송.
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/trips/`,
+          tripDetails,
+        );
+        console.log('Trip created:', response.data);
+        onSubmit();
+      } catch (error) {
+        console.error('Error creating trip:', error);
+      }
     }
   };
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between">
-        <button onClick={handleClose} className="mb-4">
-          <span className="text-xl font-semibold">X</span>
+    <div className="w-full h-full max-w-md bg-white min-h-[600px] flex flex-col">
+      <div className="flex items-center p-4 border-b relative">
+        <button
+          onClick={handleClose}
+          className="absolute left-4 p-2 hover:bg-gray-50 rounded-full transition-colors"
+        >
+          <X className="h-4 w-4 text-gray-600" />
+          <span className="sr-only">닫기</span>
         </button>
+        <h1 className="text-lg font-medium w-full text-center">
+          여행 추가하기
+        </h1>
       </div>
+
+      <div
+        style={{ width: `${(step / 4) * 100}%` }} // 진행도 표시
+        className="h-0.5 bg-[#92e7c5] rounded transition-all duration-1000 w-full"
+      />
+
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -237,60 +306,63 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
             handleSubmit(event);
           }
         }}
+        className="flex-1 flex flex-col"
       >
         {step === 1 && (
-          <div>
-            <h2>여행 이름을 적어주세요.</h2>
-            <input
-              type="text"
-              name="title"
-              value={tripData.title}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="여행 제목을 입력하세요"
-              className="p-2 border rounded"
-            />
-            <button type="button" onClick={handleNextStep} className="ml-2">
-              다음
-            </button>
+          <div className="flex-1 flex flex-col p-6">
+            <div className="space-y-8">
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-medium">어디로 떠나시나요?</span>
+                <span className="text-[#92e7c5] text-sm">필수</span>
+              </div>
+              <div className="flex gap-3">
+                <DropDown
+                  label="Region"
+                  value={region}
+                  onChange={handleRegionChange}
+                  options={regions}
+                  placeholder="국내/해외"
+                  className="flex-1"
+                />
+                <DropDown
+                  label="Subregion"
+                  value={subregion}
+                  onChange={handleSubregionChange}
+                  options={
+                    subregionOptions.length > 0
+                      ? subregionOptions
+                      : [{ label: '국내/해외 옵션을 선택하세요', value: '' }]
+                  }
+                  placeholder="국가/도시 선택"
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            {errors.destination && (
+              <p className="mt-2 text-red-500 text-sm">{errors.destination}</p>
+            )}
+            <div className="p-6 mt-auto">
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                >
+                  다음
+                </button>
+              </div>
+            </div>
           </div>
         )}
         {step === 2 && (
-          <div>
-            <h2>목적지를 입력하세요.</h2>
-            <div className="flex justify-center">
-              <DropDown
-                label="Region"
-                value={region}
-                onChange={handleRegionChange}
-                options={regions}
-                placeholder="국내/해외"
-                className="mx-3"
-              />
-              <DropDown
-                label="Subregion"
-                value={subregion}
-                onChange={handleSubregionChange}
-                options={
-                  subregionOptions.length > 0
-                    ? subregionOptions
-                    : [{ label: '국내/해외 옵션을 선택하세요', value: '' }]
-                }
-                placeholder="국가/도시 선택"
-              />
-            </div>
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
-              이전
-            </button>
-            <button type="button" onClick={handleNextStep} className="ml-2">
-              다음
-            </button>
-          </div>
-        )}
-        {step === 3 && (
-          <div>
-            <div>
-              <h2>여행 일정을 선택해주세요.</h2>
+          <div className="flex-1 flex flex-col p-6">
+            <div className="flex-1 space-y-6">
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-medium">
+                  여행 일정을 선택해 주세요
+                </span>
+                <span className="text-[#92e7c5] text-sm">필수</span>
+              </div>
               <DatePickerComponent
                 startDate={start}
                 endDate={end}
@@ -300,38 +372,183 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
                 showMonthDropdown
                 showYearDropdown
                 className="w-full"
-                label="여행 일정"
               />
             </div>
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
-              이전
-            </button>
-            <button type="button" onClick={handleNextStep} className="ml-2">
-              다음
-            </button>
+
+            <div className="p-6 mt-auto">
+              {errors.end_date && (
+                <p className="mt-2 text-red-500 text-sm">{errors.end_date}</p>
+              )}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  style={{ flex: 1 }}
+                >
+                  이전
+                </button>
+                <button
+                  type="button"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  style={{ flex: 2 }}
+                >
+                  다음
+                </button>
+              </div>
+            </div>
           </div>
         )}
+
+        {step === 3 && (
+          <div className="flex-1 flex flex-col p-6">
+            <div className="flex-1 pae-y-6">
+              <div className="flex flex-col space-y-2 text-left mb-4">
+                <span className="text-xl font-medium">누구와 함께 가나요?</span>
+                <span className="text-sm text-gray-500">
+                  일행을 추가하면 여행 계획을 실시간으로 공유할 수 있어요!
+                </span>
+              </div>
+              <div className="relative mb-4">
+                <SearchInputComponent
+                  onMembersSelected={handleAddMember}
+                  onRemoveMember={handleRemoveMember}
+                  selectedMembers={members}
+                  placeholder="이메일로 친구 검색"
+                />
+              </div>
+              <div className="flex justify-end mb-1">
+                <button
+                  onClick={handleClearAllMembers}
+                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                >
+                  전체 삭제
+                </button>
+              </div>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {members.map((member) => (
+                  <div
+                    key={member.email}
+                    className="flex items-center justify-between p-1 bg-white border rounded-lg shadow-sm"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Avatar
+                        src={member.user_image}
+                        name={member.nickname}
+                        size="28"
+                        round
+                        className="flex-shrink-0"
+                      />
+                      <span className="text-sm font-medium">
+                        {member.nickname}{' '}
+                        <span className="text-gray-500">({member.email})</span>
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveMember(member.email)}
+                      className="p-1 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 mt-auto">
+              {errors.members && (
+                <p className="mt-2 text-red-500 text-sm">{errors.members}</p>
+              )}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  style={{ flex: 1 }}
+                >
+                  이전
+                </button>
+                <button
+                  type="button"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  style={{ flex: 2 }}
+                >
+                  다음
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {step === 4 && (
-          <div className="flex flex-col">
-            <h2>누구와 함께 가나요?</h2>
-            <input
-              type="text"
-              name="member"
-              value={tripData.member}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              placeholder="같이 여행할 친구를 추가하세요."
-              className="p-2 border rounded"
-            />
-            <button type="button" onClick={handlePreviousStep} className="ml-2">
-              이전
-            </button>
-            <button type="submit" className="m-2">
-              여행 생성
-            </button>
-            {/* 여행 생성 마지막 단계가 끝난 후 생성된 여행의 여행 디테일 페이지로 연결. */}
+          <div className="flex-1 flex flex-col p-6">
+            <div className="space-y-6">
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-medium">
+                  마지막으로 여행의 이름을 적어 주세요.
+                </span>
+                <span className="text-[#92e7c5] text-sm">필수</span>
+              </div>
+              <input
+                type="text"
+                name="title"
+                value={tripData.title}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                placeholder="예) 제주도 가족여행"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#92e7c5]"
+              />
+            </div>
+
+            <div className="p-6 mt-auto">
+              {errors.title && (
+                <p className="mt-2 text-red-500 text-sm">{errors.title}</p>
+              )}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handlePreviousStep}
+                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  style={{ flex: 1 }}
+                >
+                  이전
+                </button>
+                <button
+                  type="submit"
+                  onClick={step < 4 ? handleNextStep : undefined}
+                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
+                  style={{ flex: 2 }}
+                >
+                  여행 저장
+                </button>
+              </div>
+            </div>
           </div>
         )}
+
+        {/*Step Button*/}
+        {/*<div className="p-6 mt-auto">*/}
+        {/*  <div className="flex gap-3">*/}
+        {/*    {step > 1 && (*/}
+        {/*      <button*/}
+        {/*        type="button"*/}
+        {/*        onClick={handlePreviousStep}*/}
+        {/*        className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"*/}
+        {/*      >*/}
+        {/*        이전*/}
+        {/*      </button>*/}
+        {/*    )}*/}
+        {/*    <button*/}
+        {/*      type={step === 4 ? 'submit' : 'button'}*/}
+        {/*      onClick={step < 4 ? handleNextStep : undefined}*/}
+        {/*      className="flex-1 px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"*/}
+        {/*    >*/}
+        {/*      {step === 4 ? '여행 저장' : '다음'}*/}
+        {/*    </button>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </form>
     </div>
   );
