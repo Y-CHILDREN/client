@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { X } from 'lucide-react';
+import Avatar from 'react-avatar';
 
 import TripData from '../../../domain/entities/trip.ts';
 import User from '../../../domain/entities/user.ts';
-import useTripStore from '../../hooks/stores/tripStore.ts';
+import {
+  regions,
+  subregions,
+  Region,
+} from '../../../domain/entities/regions.ts';
 import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import DropDown from '../dropDown/DropDown.tsx';
 import SearchInputComponent from '../Search/SearchInputComponent.tsx';
+import useTripStore from '../../hooks/stores/tripStore.ts';
 import { useAuthStore } from '../../hooks/stores/authStore.ts';
-import Avatar from 'react-avatar';
 
 interface Props {
   onClose: () => void;
+  onSubmit: () => void;
 }
 
-const CreateTrip: React.FC<Props> = ({ onClose }) => {
+const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   // Multi-Step status
-  const { step, setStep, resetStep } = useTripStore();
+  const { step, setStep } = useTripStore();
 
   // User
   const { user } = useAuthStore();
@@ -30,27 +36,8 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const { start, end } = dateRange;
 
   // Destination dropDown status
-  // Region 타입 정의.
-  type Region = 'domestic' | 'overseas';
-
   const [region, setRegion] = useState<Region | ''>('');
   const [subregion, setSubregion] = useState('');
-
-  const regions: Array<{ label: string; value: string }> = [
-    { label: '국내', value: 'domestic' },
-    { label: '국외', value: 'overseas' },
-  ];
-
-  const subregions: Record<Region, Array<{ label: string; value: string }>> = {
-    domestic: [
-      { label: '서울', value: 'seoul' },
-      { label: '부산', value: 'busan' },
-    ],
-    overseas: [
-      { label: '일본', value: 'japan' },
-      { label: '중국', value: 'china' },
-    ],
-  };
 
   const subregionOptions = region ? subregions[region] : [];
 
@@ -197,7 +184,6 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
 
   // 닫기 핸들러.
   const handleClose = () => {
-    resetStep(); // step 값을 1로 초기화.
     onClose();
   };
 
@@ -205,9 +191,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
   const handleRegionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRegion = event.target.value as Region | '';
     setRegion(newRegion);
-    if (!newRegion) {
-      setSubregion('');
-    }
+    setSubregion('');
 
     // region 재선택시 목적지 값 초기화.
     setTripData((prev) => ({
@@ -288,6 +272,7 @@ const CreateTrip: React.FC<Props> = ({ onClose }) => {
           tripDetails,
         );
         console.log('Trip created:', response.data);
+        onSubmit();
       } catch (error) {
         console.error('Error creating trip:', error);
       }

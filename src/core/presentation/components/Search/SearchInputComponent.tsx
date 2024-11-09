@@ -28,7 +28,7 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
   className,
 }) => {
   const [searchTerms, setSearchTerms] = useState<string[]>([]); // 검색 Input 값.
-  const debouncedSearchTerms = useDebounce<string[]>(searchTerms, 1000); // 1000ms 디바운스
+  const debouncedSearchTerms = useDebounce<string[]>(searchTerms, 500); // 1000ms 디바운스
   const [searchResults, setSearchResults] = useState<User[]>([]); // 검색 결과 목록 저장.
   const [options, setOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
