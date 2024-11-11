@@ -9,11 +9,12 @@ import {
   CircleDollarSign,
 } from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
 
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
-import Avatar from 'react-avatar';
 
 interface Cost {
   category: string;
@@ -168,7 +169,32 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     isSameDay(parseISO(event.start_date), selectedDate),
   );
 
+  // Map (Google Map api)
+  // 지도 표시 여부
+  const [showMap, setShowMap] = useState(false);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API || '',
+  });
+
+  // 지도 옵션 설정
+  const mapContainerStyle = {
+    width: '100%',
+    height: '100%',
+  };
+
+  // 지도 표시 위치
+  const mapCenter = {
+    lat: 33.489011,
+    lng: 126.498302,
+  };
+
   // 핸들러
+  const handleMapToggle = () => {
+    setShowMap(!showMap);
+  };
+
   const handleClose = () => {
     onClose();
   };
@@ -192,8 +218,12 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
             <X className="h-6 w-6" />
           </button>
           <div className="flex items-center gap-4">
-            <button className="bg-white">
-              <Map className="h-6 w-6" />
+            <button onClick={handleMapToggle} className="bg-white">
+              {showMap ? (
+                <List className="h-6 w-6" />
+              ) : (
+                <Map className="h-6 w-6" />
+              )}
             </button>
             <button className="bg-white">
               <MoreVertical className="h-6 w-6" />
@@ -271,7 +301,19 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
 
       {/* 이벤트 목록 */}
       <main className="flex-1">
-        {eventForSelectedDate.length > 0 ? (
+        {showMap ? (
+          isLoaded ? (
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={mapCenter}
+              zoom={10}
+            >
+              <Marker position={mapCenter} />
+            </GoogleMap>
+          ) : (
+            <div>Loading map...</div>
+          )
+        ) : eventForSelectedDate.length > 0 ? (
           <div className="flex flex-col">
             <div className="flex justify-between font-bold border-b border-gray-200 bg-gray-100">
               <h2>이벤트 일정</h2>
@@ -298,7 +340,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       </main>
 
       {/* 이벤트 추가 버튼 */}
-      <div className="absolute bottom-8  right-4">
+      <div className={`absolute bottom-8 ${showMap ? 'left-4' : 'right-4'}`}>
         <button
           onClick={handleCreateEvent}
           className="bg-[#92e7c5] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
