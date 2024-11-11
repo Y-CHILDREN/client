@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
-import { X, Map, MoreVertical, Plus } from 'lucide-react';
+import {
+  X,
+  Map,
+  MoreVertical,
+  Plus,
+  List,
+  Calendar,
+  CircleDollarSign,
+} from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
@@ -198,8 +206,9 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
 
           <div className="flex items-center justify-between text-sm text-gray-600 py-3">
             {/* 날짜, 경비 */}
-            <div className="flex flex-col items-center">
-              <span className="mr-auto">
+            <div className="flex flex-col items-center space-y-3">
+              <span className="flex items-center mr-auto">
+                <Calendar className="mr-2" />
                 {format(parseISO(tripScheduleData.start_date), 'yyyy. MM. dd', {
                   locale: ko,
                 })}{' '}
@@ -208,8 +217,9 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
                   locale: ko,
                 })}
               </span>
-              <span className="mr-auto">
-                Total Cost: <strong>{totalCost} 원</strong>
+              <span className="flex items-center mr-auto">
+                <CircleDollarSign className="mr-2" />{' '}
+                <strong>{totalCost} 원</strong>
               </span>
             </div>
 
@@ -283,7 +293,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
             ))}
           </div>
         ) : (
-          <p>이벤트를 추가해 주세요</p>
+          <p className="mt-4">일정을 추가해 주세요</p>
         )}
       </main>
 
