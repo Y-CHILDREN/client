@@ -24,9 +24,10 @@ interface TripEvent {
 
 interface TripDetailProps {
   onClose: () => void;
+  onCreateEvent: () => void;
 }
 
-const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
+const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
   // 상태 관리
   const [tripScheduleData, setTripScheduleData] = useState<Trip>({
     id: 1,
@@ -38,6 +39,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
       'kt44800325@gmail.com',
       'ghkdwodnjs123@naver.com',
       'ghkdwodnjs@naver.com',
+      'pack@naver.com',
     ],
     created_by: 'kt44800325@gmail.com',
   });
@@ -116,6 +118,20 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
         '1//0e-1UcIDy2ik0CgYIARAAGA4SNwF-L9IrQjKLMVENaGMaSrpTfZRZWhiZCMn19K1p9HsAGqGHhoNrS9UYHS_7Q8fTR9AceoOyXJ0',
       trip_history: [1],
     },
+    {
+      id: '5',
+      provider: 'naver',
+      email: 'pack@naver.com',
+      user_image:
+        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
+      nickname: 'Rodaju',
+      user_memo: '',
+      access_token:
+        'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
+      refresh_token:
+        '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
+      trip_history: [1],
+    },
   ]);
 
   // tripSchedule.members 와 members에서 일치하는 멤버 필터링
@@ -147,6 +163,10 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
   // 핸들러
   const handleClose = () => {
     onClose();
+  };
+
+  const handleCreateEvent = () => {
+    onCreateEvent();
   };
 
   // useEffect
@@ -195,7 +215,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
 
             {/* 멤버 아바타 */}
             <div className="flex -space-x-2">
-              {members.slice(0, 3).map((member, index) => (
+              {filteredMembers.slice(0, 3).map((member, index) => (
                 <Avatar
                   key={member.id}
                   name={member.nickname}
@@ -205,9 +225,9 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
                   color={`hsl(${index * 60}, 70%, 85%)`}
                 />
               ))}
-              {members.length > 3 && (
+              {filteredMembers.length > 3 && (
                 <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-sm text-gray-600">
-                  +{members.length - 3}
+                  +{filteredMembers.length - 3}
                 </div>
               )}
             </div>
@@ -269,7 +289,10 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose }) => {
 
       {/* 이벤트 추가 버튼 */}
       <div className="absolute bottom-8  right-4">
-        <button className="bg-[#92e7c5] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200">
+        <button
+          onClick={handleCreateEvent}
+          className="bg-[#92e7c5] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
+        >
           <Plus className="h-5 w-5 mr-2" />
           이벤트 추가
         </button>

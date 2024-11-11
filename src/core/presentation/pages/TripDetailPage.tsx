@@ -9,5 +9,9 @@ export function TripDetailPage() {
     navigate('/home');
   };
 
-  return <TripDetail onClose={handleClose} />;
+  const handleCreateEvent = () => {
+    navigate('/home');
+  };
+
+  return <TripDetail onClose={handleClose} onCreateEvent={handleCreateEvent} />;
 }
