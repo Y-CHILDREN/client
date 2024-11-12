@@ -35,6 +35,11 @@ const Login: React.FC = () => {
     const tokenParam = urlParams.get('token');
     const userParam = urlParams.get('user');
 
+    if (user) {
+      navigate('/home', { replace: true });
+      return;
+    }
+
     if (tokenParam && userParam) {
       try {
         const parsedUser = JSON.parse(decodeURIComponent(userParam));
@@ -60,7 +65,7 @@ const Login: React.FC = () => {
         setError('로그인 처리 중 오류가 발생했습니다.');
       }
     }
-  }, [navigate, setUser, setToken]);
+  }, [user, navigate, setUser, setToken]);
 
   const handleGoogleLogin = () => {
     window.location.href = callbackUrls.google;
