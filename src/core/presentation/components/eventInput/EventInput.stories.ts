@@ -27,15 +27,10 @@ const meta = {
     // controls 패널에서 label을 텍스트로 입력할 수 있는 UI를 제공한다.
     label: { control: 'text', description: '입력 필드 라벨 텍스트' },
     // action 패널에 changed 기록이 남게 한다.
-    onChange: { action: 'changed', description: '입력 내용이 변경될 때 호출' },
-    inputRef: {
-      control: false,
-      description: '입력 필드의 참조 객체',
-    },
   },
   // args는 story에서 사용할 동적으로 변하는 값(props, inputs, styles)들의 기본값을 설정해주는 것
   // fn()은 이벤트 핸들러를 추적해서 Actions 패널에서 확인할 수 있도록 해준다.
-  args: { label: 'Event Label', onChange: fn() },
+  args: { label: 'Event Label' },
 } satisfies Meta<typeof EventInput>;
 
 export default meta;

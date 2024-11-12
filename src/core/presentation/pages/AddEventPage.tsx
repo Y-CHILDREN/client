@@ -13,50 +13,39 @@ interface FormValues {
   costCategory: string;
   costValue: number;
 }
-
 const AddEventPage: React.FC = () => {
-  const { register, handleSubmit } = useForm();
-  const eventName = useRef<string>('');
+  const { register, handleSubmit } = useForm<FormValues>();
   const location = useRef<string>('');
-  const onChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    ref: React.MutableRefObject<string>,
-  ) => {
-    ref.current = e.target.value;
-  };
 
   const handleAddressSearch = () => {
     console.log('검색할 주소:', location.current);
+  };
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
   };
 
   return (
     <>
       <AddEventHeader message="이벤트 추가하기" />
-      <form
-        className="h-full"
-        onSubmit={handleSubmit((data) => alert(JSON.stringify(data)))}
-      >
+      <form className="h-full" onSubmit={handleSubmit(onSubmit)}>
         <section className="flex flex-col w-full h-full px-[20px] py-[20px] gap-[24px]">
           <EventInput
             register={register}
-            id="event name"
+            id="eventName"
             label="이벤트 이름"
-            inputRef={eventName}
-            onChange={onChange}
             inputText="이벤트 이름을 입력해 주세요."
           />
           <div className="flex justify-between w-full">
             <EventInput
               register={register}
-              id="place"
+              id="location"
               label="장소"
-              inputRef={location}
-              onChange={onChange}
               inputText="주소 입력"
             />
             <button
               className="mt-[35px] bg-gray-100 w-[120px] h-[50px] text-[15px]"
               onClick={handleAddressSearch}
+              type="button"
             >
               주소 검색
             </button>

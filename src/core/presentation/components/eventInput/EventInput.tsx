@@ -9,13 +9,9 @@ interface FormValues {
 }
 
 interface EventInputProps {
-  id: string;
+  id: keyof FormValues;
   label: string;
-  inputRef: React.MutableRefObject<string>;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    ref: React.MutableRefObject<string>,
-  ) => void;
+
   inputText: string;
   register: UseFormRegister<FormValues>;
 }
@@ -24,9 +20,8 @@ import RequiredDot from '../requiredDot/RequiredDot.tsx';
 const EventInput: React.FC<EventInputProps> = ({
   id,
   label,
-  inputRef,
-  onChange,
   inputText,
+  register,
 }) => {
   return (
     <article className="flex flex-col w-full items-start gap-[10px]">
@@ -35,13 +30,11 @@ const EventInput: React.FC<EventInputProps> = ({
         <RequiredDot />
       </div>
       <input
-        className={`form-input-radius ${id === 'place' ? 'w-[95%]' : 'w-full'}`}
+        className={`form-input-radius ${id === 'location' ? 'w-[95%]' : 'w-full'}`}
         id={id}
         placeholder={inputText}
         type="text"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onChange(e, inputRef)
-        }
+        {...register(id)} // register를 사용하여 입력 필드를 등록합니다.
       />
     </article>
   );
