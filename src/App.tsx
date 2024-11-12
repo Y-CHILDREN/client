@@ -42,6 +42,7 @@ const App: React.FC = () => {
               <Route path="/mypage" element={<Mypage />} />
               <Route path="/mytrips" element={<Mytrips />} />
               <Route path="/deletecomplete" element={<DeleteCompletePage />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
             </Route>
           </Routes>
         </AuthProvider>
