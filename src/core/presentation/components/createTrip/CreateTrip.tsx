@@ -3,7 +3,7 @@ import axios from 'axios';
 import { X } from 'lucide-react';
 import Avatar from 'react-avatar';
 
-import TripData from '../../../domain/entities/trip.ts';
+import { CreatedTrip } from '../../../domain/entities/trip.ts';
 import User from '../../../domain/entities/user.ts';
 import {
   regions,
@@ -42,7 +42,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   const subregionOptions = region ? subregions[region] : [];
 
   // Data status
-  const [tripData, setTripData] = useState<TripData>({
+  const [tripData, setTripData] = useState<CreatedTrip>({
     title: '',
     destination: '',
     start_date: undefined,
@@ -55,7 +55,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   const [members, setMembers] = useState<User[]>([]);
 
   // error message
-  const [errors, setErrors] = useState<{ [key in keyof TripData]?: string }>(
+  const [errors, setErrors] = useState<{ [key in keyof CreatedTrip]?: string }>(
     {},
   );
 
@@ -70,7 +70,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
   // 유효성 검사 함수
   const validateFields = () => {
-    const newErrors: { [key in keyof TripData]?: string } = {};
+    const newErrors: { [key in keyof CreatedTrip]?: string } = {};
 
     if (step === 1) {
       if (!tripData.destination) newErrors.destination = '목적지를 입력하세요.';
