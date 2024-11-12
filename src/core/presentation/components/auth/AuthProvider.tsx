@@ -1,4 +1,5 @@
 import { useAuthStore } from '../../hooks/stores/authStore';
+import { useUserTripStore } from '../../hooks/stores/userTripStore';
 import { getUserById } from '../../../data/infrastructure/services/userService';
 import { useEffect } from 'react';
 
@@ -8,6 +9,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUser, setLoading, setAuthenticated } = useAuthStore();
+  const { setTripData } = useUserTripStore();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -27,8 +29,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(updatedUser);
           setAuthenticated(true);
         }
+
+        try {
+          const response = await fetch(
+            `http://localhost:3000/trips/user/${storedUserId}`,
+          );
+          if (!response.ok) {
+            throw new Error('여행 데이터를 불러오는데 실패했습니다.');
+          }
+          const tripData = await response.json();
+          if (Array.isArray(tripData)) {
+            setTripData(tripData);
+          } else {
+            console.error('Trip data is not an array:', tripData);
+          }
+        } catch (error) {
+          console.error('Trip data fetch error:', error);
+        }
       } catch (error) {
-        console.error('사용자 정보 불러오기 실패:', error);
+        console.error('여행 데이터를 불러오는데 실패했습니다.', error);
         setAuthenticated(false);
       } finally {
         setLoading(false);
@@ -36,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [setTripData]);
 
   return <>{children}</>;
 };
