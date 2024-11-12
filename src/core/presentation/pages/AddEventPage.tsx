@@ -14,7 +14,7 @@ interface FormValues {
   costValue: number;
 }
 const AddEventPage: React.FC = () => {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit, setValue } = useForm<FormValues>();
   const location = useRef<string>('');
 
   const handleAddressSearch = () => {
@@ -51,7 +51,7 @@ const AddEventPage: React.FC = () => {
             </button>
           </div>
           <AddEventCalenderInput />
-          <AddEventCostInput />
+          <AddEventCostInput register={register} setValue={setValue} />
           <div className="mt-auto">
             <AddEventPostButton text={'추가 완료'} />
           </div>

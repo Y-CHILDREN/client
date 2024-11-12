@@ -1,6 +1,23 @@
+import { UseFormRegister } from 'react-hook-form';
+import { UseFormSetValue } from 'react-hook-form';
+interface FormValues {
+  eventName: string;
+  location: string;
+  schedule: Date;
+  costCategory: string;
+  costValue: number;
+}
+interface AddEventCostInputProps {
+  register: UseFormRegister<FormValues>;
+  setValue: UseFormSetValue<FormValues>;
+}
+
 import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
 import { useState } from 'react';
-const AddEventCostInput: React.FC = () => {
+const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
+  register,
+  setValue,
+}) => {
   const [costInputs, setCostInputs] = useState([{ id: Date.now() }]);
   const addCostInput = () => {
     setCostInputs([...costInputs, { id: Date.now() }]); // 새로운 입력 필드 추가
@@ -12,13 +29,17 @@ const AddEventCostInput: React.FC = () => {
       {costInputs.map((costInput) => {
         const { id } = costInput;
         return (
-          <div key={id} className="flex justify-between w-full gap-3 pt-3">
-            <EventFormDropDown />
+          <div key={id} className="flex justify-between w-full gap-2 pt-3">
+            <EventFormDropDown setValue={setValue} />
             <div className="flex w-[40%] form-input-radius">
-              <input className="w-full no-spinner" type="number" />
+              <input
+                className="w-full no-spinner"
+                type="number"
+                {...register(`costValue`)}
+              />
               <p>원</p>
             </div>
-            <button className="p-0 border-none outline-none cursor-pointer bg-inherit">
+            <button className="p-0 border-none outline-none cursor-pointer bg-inherit ">
               <img
                 src="/src/core/presentation/assets/addEventForm/trashIcon.svg"
                 alt="쓰레기통 아이콘"

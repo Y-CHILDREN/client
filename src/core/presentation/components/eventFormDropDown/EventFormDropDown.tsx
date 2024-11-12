@@ -1,6 +1,19 @@
 import { useState } from 'react';
+import { UseFormSetValue } from 'react-hook-form';
 
-const EventFormDropDown: React.FC = () => {
+interface FormValues {
+  eventName: string;
+  location: string;
+  schedule: Date;
+  costCategory: string;
+  costValue: number;
+}
+
+interface EventFormDropDownProps {
+  setValue: UseFormSetValue<FormValues>;
+}
+
+const EventFormDropDown: React.FC<EventFormDropDownProps> = ({ setValue }) => {
   const [isView, setView] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('항목 선택');
 
@@ -11,12 +24,14 @@ const EventFormDropDown: React.FC = () => {
     { id: 4, label: '기념품' },
   ];
 
-  const dropDownHandler: () => void = () => {
+  const dropDownHandler = () => {
     setView(!isView);
   };
+
   const categoryHandler = (value: string) => {
     setCategory(value);
     setView(!isView);
+    setValue('costCategory', value); // 수정된 부분
   };
 
   return (
@@ -37,7 +52,7 @@ const EventFormDropDown: React.FC = () => {
         />
       </button>
       {isView && (
-        <ul className="cursor-pointer w-full absolute top-[60px] bg-white form-input-radius text-start  z-20">
+        <ul className="cursor-pointer w-full absolute top-[60px] bg-white form-input-radius text-start z-20">
           {dropMenu.map(({ id, label }) => (
             <li
               onClick={() => categoryHandler(label)}
