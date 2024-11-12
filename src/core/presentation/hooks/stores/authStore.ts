@@ -1,44 +1,39 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import User from '../../../domain/entities/user';
 
 interface AuthState {
   user: User | null;
   token: string | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
   setUser: (user: User) => void;
   setToken: (token: string) => void;
+  setLoading: (loading: boolean) => void;
+  setAuthenticated: (authenticated: boolean) => void;
   clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      setUser: (user) => {
-        console.log('Setting user:', user);
-        localStorage.setItem('userId', user.id);
-        set({ user });
-      },
-      setToken: (token) => {
-        console.log('Setting token:', token);
-        // 쿠키와 localStorage 모두 설정
-        document.cookie = `token=${token}; path=/; max-age=1800; secure; samesite=strict`;
-        set({ token });
-      },
-      clearAuth: () => {
-        // 쿠키 삭제
-        document.cookie = 'token=; path=/; max-age=0';
-        document.cookie = 'connect.sid=; path=/; max-age=0';
-        // localStorage 항목 삭제
-        localStorage.removeItem('userId');
-        set({ user: null, token: null });
-      },
-    }),
-    {
-      name: 'auth-storage',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ user: state.user, token: state.token }),
-    },
-  ),
-);
+export const useAuthStore = create<AuthState>()((set) => ({
+  user: null,
+  token: null,
+  isLoading: true,
+  isAuthenticated: false,
+  setUser: (user) => {
+    localStorage.setItem('userId', user.id);
+    set({ user, isAuthenticated: true });
+  },
+  setToken: (token) => {
+    localStorage.setItem('token', token);
+    document.cookie = `token=${token}; path=/; max-age=1800; secure; samesite=strict`;
+    set({ token });
+  },
+  setLoading: (loading) => set({ isLoading: loading }),
+  setAuthenticated: (authenticated) => set({ isAuthenticated: authenticated }),
+  clearAuth: () => {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('token');
+    document.cookie = 'token=; path=/; max-age=0';
+    document.cookie = 'connect.sid=; path=/; max-age=0';
+    set({ user: null, token: null, isAuthenticated: false });
+  },
+}));

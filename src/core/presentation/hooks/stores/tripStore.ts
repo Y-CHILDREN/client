@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface TripStore {
   step: number;
   setStep: (direction: 'next' | 'previous') => void;
+  resetStep: () => void;
 }
 
 const useTripStore = create<TripStore>((set) => ({
@@ -14,6 +15,9 @@ const useTripStore = create<TripStore>((set) => ({
     set((state) => ({
       step: direction === 'next' ? state.step + 1 : state.step - 1,
     })),
+
+  // reset
+  resetStep: () => set({ step: 1 }),
 }));
 
 export default useTripStore;

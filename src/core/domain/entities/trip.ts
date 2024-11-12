@@ -1,11 +1,18 @@
-import User from './user.ts';
+export interface Trip {
+  id: number;
+  title: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  members: string[];
+  created_by: string;
+}
 
-interface Trip {
+export interface CreatedTrip {
   title: string;
   destination: string;
   start_date?: Date;
   end_date?: Date;
-  members: User[];
+  members: string[];
+  created_by: string;
 }
-
-export default Trip;
