@@ -129,7 +129,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="src/core/presentation/assets/loginPage/Google Logo.svg"
+                  src="/assets/loginPage/GoogleLogo.svg"
                   alt="구글 로고"
                 />
               </button>
@@ -140,7 +140,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="src/core/presentation/assets/loginPage/logo-kakao.svg"
+                  src="/assets/loginPage/logo-kakao.svg"
                   alt="카카오 로고"
                 />
               </button>
@@ -151,7 +151,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="src/core/presentation/assets/loginPage/logo-naver.svg"
+                  src="/assets/loginPage/logo-naver.svg"
                   alt="네이버 로고"
                 />
               </button>
