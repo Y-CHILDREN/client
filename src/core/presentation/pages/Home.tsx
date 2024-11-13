@@ -3,24 +3,43 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../hooks/stores/authStore';
 import IntroMessage from '../components/home/IntroMessage';
 import OngoingTrip from '../components/home/OngoingTrip';
-import UpcomingTrip from '../components/home/UpcomingTrip';
+import TripList from '../components/home/TripList';
+
+interface TripData {
+  name: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  id: number;
+}
+
+// interface OngoingTripProps {
+//   hasOngoingTrip: boolean;
+//   ongoingTripData?: TripData;
+// }
 
 const Home: React.FC = () => {
   const { user } = useAuthStore();
   const [hasOngoingTrip, setHasOngoingTrip] = useState<boolean>(false);
-  const [ongoingTripData, setOngoingTripData] = useState<object>({});
+  const [ongoingTripData, setOngoingTripData] = useState<TripData | undefined>(
+    undefined,
+  );
   const [hasUpcomingTrip, setHasUpcomingTrip] = useState<boolean>(false);
-  const [upcomingTripData, setUpcomingTripData] = useState<Array<object>>([]);
+  const [upcomingTripData, setUpcomingTripData] = useState<TripData[]>([]);
   const [hasPastTrip, setHasPastTrip] = useState<boolean>(false);
-  const [pastTripData, setPastTripData] = useState<Array<object>>([]);
+  const [pastTripData, setPastTripData] = useState<TripData[]>([]);
 
   useEffect(() => {
     const checkTripData = async () => {
       try {
-        //일단 유저 3번으로 설정해둠. 나중에 수정 요망.${user.id}
-        const response = await fetch(`http://localhost:3000/trips/user/${3}`);
+        if (!user) return;
+
+        const response = await fetch(
+          `http://localhost:3000/trips/user/${user.id}`,
+        );
         const data = await response.json();
-        //OngoingTrip에 넘겨줄 데이터
+
+        //OngoingTrip 유무 확인 & 넘겨줄 데이터 생성
         const currentDate = new Date();
         const ongoingTripIndex = data.findIndex((trip: any) => {
           const startDate = new Date(trip.start_date);
@@ -30,11 +49,11 @@ const Home: React.FC = () => {
         setHasOngoingTrip(ongoingTripIndex !== -1);
         setOngoingTripData(data[ongoingTripIndex]);
 
-        //UpcomingTrip에 넘겨줄 데이터
+        //UpcomingTrip 유무 확인 & 넘겨줄 데이터 생성
         const UpcomingTripIndex = data
-          .map((trip: any, index: number) => {
+          .map((trip: any) => {
             const startDate = new Date(trip.start_date);
-            return startDate > currentDate ? index : -1;
+            return startDate > currentDate ? trip.id : -1;
           })
           .filter((index: number) => index !== -1);
         setHasUpcomingTrip(UpcomingTripIndex.length > 0);
@@ -42,11 +61,11 @@ const Home: React.FC = () => {
           data.filter((trip: any) => UpcomingTripIndex.includes(trip.id)),
         );
 
-        //PastTrip에 넘겨줄 데이터
+        //PastTrip 유무 확인 & 넘겨줄 데이터 생성
         const PastTripIndex = data
-          .map((trip: any, index: number) => {
+          .map((trip: any) => {
             const endDate = new Date(trip.end_date);
-            return endDate < currentDate ? index : -1;
+            return endDate < currentDate ? trip.id : -1;
           })
           .filter((index: number) => index !== -1);
         setHasPastTrip(PastTripIndex.length > 0);
@@ -68,34 +87,28 @@ const Home: React.FC = () => {
   console.log('pastTripData is', pastTripData);
 
   return (
-    <div className="flex w-[375px] h-[812px] flex-col items-start bg-white border shadow relative">
-      {/* header */}
-      <div className="flex h-[60px] px-5 items-center gap-2 shrink-0 self-stretch bg-white">
+    <>
+      <div className="flex h-[60px] px-5 items-center gap-2 shrink-0 self-stretch bg-white relative">
         <p className="text-black text-center font-pretendard text-[18px] font-semibold leading-[24px]">
           JTRIP
         </p>
       </div>
-      <div>
+      <div className="flex flex-col items-start pb-6 flex-1 self-stretch bg-white">
         {/* contents */}
         <div>
-          {/* title */}
-          <div>
-            <IntroMessage
-              userName={user?.nickname ?? '비회원'}
-              hasOngoingTrip={hasOngoingTrip}
-            />
-          </div>
-          {/* section */}
+          <IntroMessage
+            userName={user?.nickname ?? '비회원'}
+            hasOngoingTrip={hasOngoingTrip}
+          />
           <div>
             <OngoingTrip
               hasOngoingTrip={hasOngoingTrip}
-              ongoingTripData={ongoingTripData}
+              ongoingTripData={ongoingTripData!}
             />
           </div>
-          {/* trips */}
           <div>
             <div>
-              <UpcomingTrip
+              <TripList
                 hasUpcomingTrip={hasUpcomingTrip}
                 hasPastTrip={hasPastTrip}
                 upcomingTripData={upcomingTripData}
@@ -103,15 +116,14 @@ const Home: React.FC = () => {
               />
             </div>
           </div>
-          {/* button */}
           <Link to="/create-trip">
-            <button className="flex px-5 pl-4 py-3 items-center gap-2 absolute right-5 bottom-[84px] rounded-[160px] bg-[#3ACC97] text-white shadow-[0px_0px_4px_0px_rgba(0,0,0,0.08),0px_4px_8px_0px_rgba(0,0,0,0.08),0px_6px_12px_0px_rgba(0,0,0,0.12)]">
+            <button className="flex px-5 pl-4 py-3 items-center gap-2 absolute right-5 bottom-[60px] rounded-[160px] bg-[#3ACC97] text-white shadow-[0px_0px_4px_0px_rgba(0,0,0,0.08),0px_4px_8px_0px_rgba(0,0,0,0.08),0px_6px_12px_0px_rgba(0,0,0,0.12)]">
               + 새로운 여행
             </button>
           </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
