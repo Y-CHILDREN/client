@@ -2,7 +2,7 @@ import Header from '../components/layout/Header';
 import {
   logout,
   deleteUser,
-} from '../../data/infrastructure/services/userRepositoryImpl';
+} from '../../data/infrastructure/services/userService';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,12 +40,12 @@ const Mypage = () => {
       <Header>마이페이지</Header>
       <div className="flex p-[32px_24px_28px_24px] flex-col items-start gap-6 flex-[1_0_0] self-stretch relative">
         <img
-          src="src/core/presentation/assets/mypage/Group2.png"
+          src="/assets/mypage/Group2.png"
           alt="Group2"
           className="absolute w-[80px] h-[76px] left-[223.932px] top-[6.262px] transform -rotate-[-2.231deg]"
         />
         <img
-          src="src/core/presentation/assets/mypage/Group.png"
+          src="/assets/mypage/Group.png"
           alt="Group"
           className="absolute w-[80px] h-[100px] left-[273.932px] top-[63.262px] transform -rotate-[-3.231deg]"
         />
@@ -71,7 +71,7 @@ const Mypage = () => {
             <div className="flex items-center flex-1 gap-3">
               <div className="w-[40px] h-[40px] ">
                 <img
-                  src="src/core/presentation/assets/mypage/tripIcon.png"
+                  src="/assets/mypage/tripIcon.png"
                   alt="로고"
                   className="bg-white w-[40px] h-[40px] rounded-[4px] p-[4px]"
                 />
@@ -83,7 +83,7 @@ const Mypage = () => {
             </div>
             <div className="w-[20px] h-[20px] flex-shrink_0">
               <img
-                src="src/core/presentation/assets/mypage/share.svg"
+                src="/assets/mypage/share.svg"
                 alt=""
                 className="flex w-[32px] h-[32px] justify-center items-center gap-[10px]"
               />
