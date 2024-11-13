@@ -14,6 +14,7 @@ import Home from './core/presentation/pages/Home';
 import LoginLayout from './core/presentation/components/layout/LoginLayout';
 import Mypage from './core/presentation/pages/Mypage';
 import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
+import AddEventPage from './core/presentation/pages/AddEventPage.tsx';
 import Mytrips from './core/presentation/pages/Mytrips';
 import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
 import { ProtectedRoute } from './routers/ProtectedRouter';
@@ -24,6 +25,21 @@ const App: React.FC = () => {
   return (
     <>
       <Router>
+
+        <Routes>
+          <Route element={<LoginLayout />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
+          <Route element={<Layout />}>
+            <Route path="/zustand" element={<ZustandPractice />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/create-trip" element={<CreateTripPage />} />
+
+            <Route path="/mypage" element={<Mypage />} />
+            <Route path="/mytrips" element={<Mytrips />} />
+          </Route>
+        </Routes>
+
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
@@ -38,15 +54,19 @@ const App: React.FC = () => {
               }
             >
               <Route path="/zustand" element={<ZustandPractice />} />
+              <Route path="/trip/event/add" element={<AddEventPage />} />
               <Route path="/home" element={<Home />} />
               <Route path="/create-trip" element={<CreateTripPage />} />
               <Route path="/mypage" element={<Mypage />} />
               <Route path="/mytrips" element={<Mytrips />} />
               <Route path="/deletecomplete" element={<DeleteCompletePage />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
               <Route path="/trip-detail" element={<TripDetailPage />} />
+
             </Route>
           </Routes>
         </AuthProvider>
+
       </Router>
     </>
   );

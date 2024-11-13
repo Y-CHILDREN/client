@@ -11,6 +11,9 @@ export default {
       fontFamily: {
         pretendard: ['Pretendard'],
       },
+      colors: {
+        'dot-color': '#3ACC97',
+      },
       keyframes: {
         fadeIn: {
           '0%': {
