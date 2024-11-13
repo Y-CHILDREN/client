@@ -120,15 +120,15 @@ const Login: React.FC = () => {
           </div>
           <div className="flex flex-col items-center gap-[24px] self-stretch">
             <div className="flex justify-center items-center gap-[16px] self-stretch">
-              <div className="h-[1px] flex-[1_0_0] bg-[rgba(255,255,255,0.4)]"></div>
+              <div className="h-[1px] flex-[1_0_0] bg-black"></div>
               <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-[#333333]">
                 간편 로그인으로 여행 시작하기
               </div>
-              <div className="h-[1px] flex-[1_0_0] bg-[rgba(255,255,255,0.4)]"></div>
+              <div className="h-[1px] flex-[1_0_0] bg-black"></div>
             </div>
             <div className="flex items-center gap-[20px]">
               <button
-                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-white p-0
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[rgba(210,210,210,0.4)] p-0
             "
                 onClick={handleGoogleLogin}
               >

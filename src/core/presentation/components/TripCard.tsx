@@ -1,9 +1,11 @@
-import Trip from '../../domain/entities/trip';
+import { Trip } from '../../domain/entities/trip';
 import { useUserTripStore } from '../hooks/stores/userTripStore';
+import { useNavigate } from 'react-router-dom';
 interface TripCardProps {
   trip: Trip;
 }
 const TripCard = ({ trip }: TripCardProps) => {
+  const navigate = useNavigate();
   const { getDday } = useUserTripStore();
 
   const formatDate = (dateString: string | Date | undefined) => {
@@ -11,8 +13,15 @@ const TripCard = ({ trip }: TripCardProps) => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
+  const handleNavigation = () => {
+    navigate('/trip-detail');
+  };
+
   return (
-    <div className="flex items-center self-stretch gap-5 p-4 rounded-xl bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.04),0px_0px_4px_0px_rgba(0,0,0,0.04)]">
+    <div
+      className="flex items-center self-stretch gap-5 p-4 rounded-xl bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.04),0px_0px_4px_0px_rgba(0,0,0,0.04)]"
+      onClick={handleNavigation}
+    >
       <div className="w-[72px] h-[72px]">
         <img
           src="/assets/mytrips/tripCardImage.png"

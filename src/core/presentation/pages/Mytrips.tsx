@@ -2,7 +2,7 @@ import Header from '../components/layout/Header';
 import TripCard from '../components/TripCard';
 import { useState } from 'react';
 import { useUserTripStore } from '../hooks/stores/userTripStore';
-import Trip from '../../domain/entities/trip';
+import { Trip } from '../../domain/entities/trip';
 
 type TabType = '예정된 여행' | '여행중' | '완료된 여행';
 
@@ -35,7 +35,7 @@ function Mytrips() {
   return (
     <>
       <Header>내 여행</Header>
-      <div className="flex w-[375px] p-[0px_20px] items-start">
+      <div className="flex w-full p-[0px_20px] items-start">
         {['예정된 여행', '여행중', '완료된 여행'].map((tab) => (
           <div
             key={tab}
