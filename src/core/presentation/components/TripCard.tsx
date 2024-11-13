@@ -1,4 +1,4 @@
-import Trip from '../../domain/entities/trip';
+import { Trip } from '../../domain/entities/trip';
 import { useUserTripStore } from '../hooks/stores/userTripStore';
 interface TripCardProps {
   trip: Trip;

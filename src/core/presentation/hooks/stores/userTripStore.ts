@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import Trip from '../../../domain/entities/trip';
+import { Trip } from '../../../domain/entities/trip';
 
 interface UserTripState {
   tripData: Trip[];
