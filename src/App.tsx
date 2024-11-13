@@ -18,6 +18,7 @@ import Mytrips from './core/presentation/pages/Mytrips';
 import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
 import { ProtectedRoute } from './routers/ProtectedRouter';
 import DeleteCompletePage from './core/presentation/pages/DeleteCompletePage';
+import { TripDetailPage } from './core/presentation/pages/TripDetailPage';
 
 const App: React.FC = () => {
   return (
@@ -43,6 +44,8 @@ const App: React.FC = () => {
               <Route path="/mytrips" element={<Mytrips />} />
               <Route path="/deletecomplete" element={<DeleteCompletePage />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
+              <Route path="/trip-detail" element={<TripDetailPage />} />
+
             </Route>
           </Routes>
         </AuthProvider>

@@ -1,14 +1,25 @@
 .container {
-  /* height: 100vh; */
-  height: 812px;
+  height: 100vh;
   width: calc(100vh * 9 / 16);
   max-width: 600px; /* 최대 너비 제한 */
   min-width: 420px;
   margin: 0 auto; /* 수평 중앙 정렬 */
-  background-color: #ffff; /* 배경색 설정 */
+  background-color: #ffffff; /* 배경색 설정 */
   color: black;
   display: flex;
   flex-direction: column;
+  box-shadow: -10px 0 15px -10px rgba(0, 0, 0, 0.2), /* 왼쪽 그림자 */
+  10px 0 15px -10px rgba(0, 0, 0, 0.2); /* 오른쪽 그림자 */
+  overflow-y: scroll; /* 스크롤 가능 설정 */
+
+  /* 스크롤바 숨김 스타일 */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  /* 웹킷 브라우저 (Chrome, Safari) 스크롤바 숨김 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .footer {
