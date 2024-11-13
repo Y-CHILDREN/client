@@ -9,15 +9,15 @@ const Footer: React.FC = () => {
   const getIconSrc = (path: string) => {
     return location.pathname === path
       ? path === '/home'
-        ? 'src/core/presentation/assets/navigation/onHouse.svg'
+        ? '/assets/navigation/onHouse.svg'
         : path === '/mytrips'
-          ? 'src/core/presentation/assets/navigation/onSuitcaseRolling.svg'
-          : 'src/core/presentation/assets/navigation/onUser.svg'
+          ? '/assets/navigation/onSuitcaseRolling.svg'
+          : '/assets/navigation/onUser.svg'
       : path === '/home'
-        ? 'src/core/presentation/assets/navigation/offHouse.svg'
+        ? '/assets/navigation/offHouse.svg'
         : path === '/mytrips'
-          ? 'src/core/presentation/assets/navigation/offSuitcaseRolling.svg'
-          : 'src/core/presentation/assets/navigation/offUser.svg';
+          ? '/assets/navigation/offSuitcaseRolling.svg'
+          : '/assets/navigation/offUser.svg';
   };
 
   const handleNavigation = (path: string) => {

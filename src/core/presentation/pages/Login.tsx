@@ -35,6 +35,11 @@ const Login: React.FC = () => {
     const tokenParam = urlParams.get('token');
     const userParam = urlParams.get('user');
 
+    if (user) {
+      navigate('/home', { replace: true });
+      return;
+    }
+
     if (tokenParam && userParam) {
       try {
         const parsedUser = JSON.parse(decodeURIComponent(userParam));
@@ -60,7 +65,7 @@ const Login: React.FC = () => {
         setError('로그인 처리 중 오류가 발생했습니다.');
       }
     }
-  }, [navigate, setUser, setToken]);
+  }, [user, navigate, setUser, setToken]);
 
   const handleGoogleLogin = () => {
     window.location.href = callbackUrls.google;
@@ -129,7 +134,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="src/core/presentation/assets/loginPage/Google Logo.svg"
+                  src="/assets/loginPage/GoogleLogo.svg"
                   alt="구글 로고"
                 />
               </button>
@@ -140,7 +145,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="src/core/presentation/assets/loginPage/logo-kakao.svg"
+                  src="/assets/loginPage/logo-kakao.svg"
                   alt="카카오 로고"
                 />
               </button>
@@ -151,7 +156,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="src/core/presentation/assets/loginPage/logo-naver.svg"
+                  src="/assets/loginPage/logo-naver.svg"
                   alt="네이버 로고"
                 />
               </button>
