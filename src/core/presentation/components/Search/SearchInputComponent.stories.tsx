@@ -24,7 +24,7 @@ export default meta;
 // 더미 사용자 데이터
 const dummyUsers: User[] = [
   {
-    id: 1,
+    id: '1',
     provider: 'google',
     email: 'alice@example.com',
     user_image: 'https://example.com/image1.jpg',
@@ -35,7 +35,7 @@ const dummyUsers: User[] = [
     trip_history: [1, 2, 3],
   },
   {
-    id: 2,
+    id: '2',
     provider: 'facebook',
     email: 'bob@example.com',
     user_image: 'https://example.com/image2.jpg',
@@ -46,7 +46,7 @@ const dummyUsers: User[] = [
     trip_history: [1],
   },
   {
-    id: 3,
+    id: '3',
     provider: 'twitter',
     email: 'charlie@example.com',
     user_image: 'https://example.com/image3.jpg',
