@@ -39,7 +39,7 @@ const App: React.FC = () => {
               }
             >
               <Route path="/zustand" element={<ZustandPractice />} />
-              <Route path="/trip/event/add" element={<AddEventPage />} />
+              <Route path="/add-event" element={<AddEventPage />} />
               <Route path="/home" element={<Home />} />
               <Route path="/create-trip" element={<CreateTripPage />} />
               <Route path="/mypage" element={<Mypage />} />

@@ -13,7 +13,7 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}
-      {location.pathname !== '/trip/event/add' && <Footer />}
+      {location.pathname !== '/add-event' && <Footer />}
     </div>
   );
 };
