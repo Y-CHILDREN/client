@@ -29,6 +29,8 @@ interface TripEvent {
   start_date: string;
   end_date: string;
   cost: Cost[];
+  latitude?: number;
+  longitude?: number;
 }
 
 interface TripDetailProps {
@@ -66,15 +68,26 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
         { category: '식비', cost: 30000 },
         { category: '교통비', cost: 1500 },
       ],
+      latitude: 33.2541,
+      longitude: 126.5602,
     },
     {
       trip_event_id: 2,
       trip_id: 1,
       title: '서울 여행',
       destination: '서울 광화문',
-      start_date: new Date('2024-10-18').toISOString(),
+      start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-19').toISOString(),
       cost: [{ category: '식비', cost: 50000 }],
+    },
+    {
+      trip_event_id: 3,
+      trip_id: 1,
+      title: '한라산 등반',
+      destination: '한라산',
+      start_date: new Date('2024-10-17').toISOString(),
+      end_date: new Date('2024-10-17').toISOString(),
+      cost: [{ category: '입장료', cost: 10000 }],
     },
   ]);
 
@@ -104,7 +117,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       provider: 'naver',
       email: 'ghkdwodnjs123@naver.com',
       user_image:
-        'data:image/jpeg;base64,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',
+        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
       nickname: 'Wanny123',
       user_memo: '',
       access_token:
@@ -118,7 +131,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       provider: 'google',
       email: 'kt44800325@gmail.com',
       user_image:
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAMAAzAMBIgACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAABQYBAwQHAgj/xAAyEAACAgEDAwMDAwIGAwAAAAAAAQIDBAUREiExQRMiUQYUYTJxgcHwM0JSgqGxFRYj/8QAGQEBAAMBAQAAAAAAAAAAAAAAAAIDBAUB/8QAIxEBAAICAgICAgMAAAAAAAAAAAECAxESIQQxIkETFDJhcf/aAAwDAQACEQMRAD8A9xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4nJQXKUkorvufZEa1PnKujw1yf8AQjadRtKteU6SsZKUU090/KMlY0XUJUZ7xJS3rl2X+llnR5S/KOnt6TSdSyACaAAAAAAAAAAAAAAAAAAAAAAAAAYBrvthRXK2ySjCK3bfhHm49yf4+20k2+iRX9WyYTylKuSkklFuL32ZBa39TX5d06MbeGP2fHpKRH6TZZjScYyaanycX8swZfLrvjDfi8a0RylyajqNuHqdkpRcYront4PRdA1WnVcONtMt9ujKXqNdWXCSsS5b99uvc7PpeK0jJ4+ryjPo4vwKZYrfUek81IvT+18XYyYi94poydBzQAAAAAAAAAAAAAAAAAAAAAIjWNUnhWKuEerjvyZLnDqmBDOp4vpNfpZG+9dJU1vtCPXsmD6uuX42I3WtTytRxYKFka4KXvjFP3fgiNcpy9Od0nzjNL9e3ZGNGzPWwnCXu5S5bmHLa3HW3QpjrGrRDlsokpSjJPlJe2UV1TXV/wDTOrToPKyXFzUbFWkvy0dn/wAqaHkZE/RjBp+q30T8L+Toxngag/vNOurnKv8AxFW+sW/DRkphme2jJk+kZr+q26bnU4tGPXLItinN2P2xbT2S/fi+psxK/uftr432KdsFbs/HXsZ1uvCzczEuyq1O2r2P3OO8X4e35JTT8OGTfbbCcIqMOKhFbJL4Lr8Z1FYUfKvcrnhzVmPXKL3TiupuOLSKft8Gut9+rO06dP4w5tvcgAJPAAAAAAAAAAAAAAAAAAAAABw6pp9Oo406bo7qS2KNH6cek5F83u4Nezc9GZz5uNDKpdc13XRlGbDF469r8OecfX08yyNtUq91sKKsaznVz34zls4vl/D6flGnQ9Ho0+qyVeW3lWQipTg20q4b7Jvy+rJ/KwI4LnXTGNkU93GXk6NNqx6YuUqYqc+zijDXnHwbbTWflCFtonTROd1Sm5cdrFLr3+Cz6NBSjK+xcFKXFJ/k1Sjhpb2Llxe/Hv1NGpZfONcIPhX32RopWte1d7zk6hcoJKKS7JGSM0PNeTjqM/1w6PfyShrrPKNsNq8Z0AAkiAAAAAAAAAAAAAAAAAAAAAMHLqGVDEoc59fhfJ1Nlf1u3laovf8ABVlvwrtZjrysisuUrlKztJ9dvj+0RE7blKUtpuPJJpPsv72Jri5RXdfn5NU0oz9vST/BzeUzO3Q6jpxaXdZZBxvUoyb6Jo7bsTaalF9EZrXG2LnJM6W95N/5TTTUwqmdS+9EvdGUvU6RftLUuxTpc+SlDbbwWzFm541cn3cS7Bb3VRnjvk3AIGhnAAAAAAAAAAAAAAAAAAAAAGu2ShCUm0lt5KbmZCszWoS5dej+Cwa5lKFbpT6yKlLemcZbrqc/y8nfFt8bH1tISthGOzk9vlnJkPm36E48mvPY5rcvFUnK6bm13SXSJvx40XQhLFmpR7rYopHOV8/CNt+JXKSXLq13OyVa23b6CuLqSctt2Yyd1CcvCW5simoZpvuWifPdek4pb+S06Y3LCr5NN7dWjz7Cnl6jZdNWxrx4ycVFR3b/ACXD6XvjLHnVGbfB7EcFvnMGavwToANrIAAAAAAAAAAAAAAAAAGq++uiLnbZGEV5YGzyfM5qEZSl2RXNU+r8LEi1jxndZ46bR3KtP6j1HVbnGdiqq36RgzPk8itOvtfj8e1u/pN5uS8jLlOTTTlsRWpXKuW0KpT4rdpPodFUu0dlv5bOXV4y9WMYynHkusotbHNyTy3LfjjXTowvtrcF+yKbi94/HQ0aHwpnLg0oJ9Euxxy+6xafW48oRXvSWzaOHByGrrIpvg5Np7eG+hLFeI7MmOZ+12jcrbUo9ePV/sRmu6nHH0+3j+qUfac+Fnp42RJuSnGPDdfkretWXXWejVJt7+1y+C+c3SqMXaS0bPlVjehGS5Pdze/llx+iY1+nfOEm5SlvLcoui6QqqJzvt5zcm+5ffo6iNVdzitm9um+5Dx5mcsbS8iIjH0sy7GTC7GTqOYAAAAAAAAAAAAAAAAwyp/Wsb5VR42ThBL/Ki2MxKMZLaS3X5RDJXnGk6W4zt+fNUjqU5Sx6p3ZW73gq1vt+7J36Z0bUcSj7vU6o0xa9lT6yb/J7A8WrxXFfwQ31Bol2fjwjjXqmUJb9YctzNbxoiuvbVHlbnUqhTmqUnw68H7os7c+V84VSqx4vdd9+qOTL+ntTozXdTbSoL9W0Hu/+SRyVZj4VULn7/lGXJimle19ckTbpx40dnKv3Tm+7fVFftm63Jw7rbfYsGnXP7jaS6cf6Fafp25LqXKLc+7RXiiZhbaYi3buyMp41VaUVxl1/cjsaqyy/1JttPtuYzJLIvlTtKUK/ZHbfqbYRy3KCoo41r577F345VzeITdGJ6da3l1e+z+C3fSkK4Rs4J7tLf4KnLJrVMIb7TS69Sd+lM+quxwnJLfy2QwzFc2kcu7Y1zQMLbZbGTruYAAAAAAAAAAAAAAAAAAAYa3RkAR+fDjXKSju0t0vkqmqxhy43c+Xp+pY14S7F4nBTWzRwZWj4+TKUpuyMpQ4Nxm10KM2L8kaXYsvCe1Forh/5GVTjOLkk0orvun5/2sseFoFFqjbZTFya6vYka9Aw4ZCyH6tliXHedj+dyVhBQilFbJeCGHx/xrMufl6V/wD9ZoT5QhFfwar9AnFNwin08Is48GiaRKj8k7eX6rjxxPUryFCub6+/29Pk6NPi48ZQVb4xT3jLc9EnTXZ0srjL91ufNeLRW94U1x377RMv6kct7aP2utaatKVv2NXrfq2Owwuxk1xGo0yzO52AA9eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9k=',
+        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
       nickname: '오니',
       user_memo: '',
       access_token:
@@ -172,10 +185,11 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
   // Map (Google Map api)
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
+  const [mapMarkers, setMapMarkers] = useState([]);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API || '',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
   });
 
   // 지도 옵션 설정
@@ -204,9 +218,66 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
   };
 
   // useEffect
+  // 지도에 마커를 추가하는 로직
   useEffect(() => {
-    console.log('Filtered Members:', filteredMembers);
-  }, [filteredMembers]);
+    if (isLoaded) {
+      const geocoder = new window.google.maps.Geocoder();
+
+      // 좌표 없는 이벤트 목록
+      const eventsWithoutCoordinates = tripEvents.filter(
+        (event) =>
+          event.latitude === undefined || event.longitude === undefined,
+      );
+
+      if (eventsWithoutCoordinates.length > 0) {
+        const updatedEventsPromises = eventsWithoutCoordinates.map((event) => {
+          return new Promise<TripEvent>((resolve) => {
+            geocoder.geocode(
+              { address: event.destination },
+              (result, status) => {
+                if (result === null) {
+                  return console.log('result is null');
+                }
+
+                // result에 값이 존재하는지 확인
+                if (status === 'OK' && result[0]) {
+                  const { lat, lng } = result[0].geometry.location;
+                  resolve({
+                    ...event,
+                    latitude: lat(),
+                    longitude: lng(),
+                  });
+                } else {
+                  console.error(
+                    `Geocoding failed for ${event.destination}: `,
+                    status,
+                  );
+                  resolve(event); // 실패 시 원래 이벤트 반환
+                }
+              },
+            );
+          });
+        });
+
+        Promise.all(updatedEventsPromises).then((updatedEvents) => {
+          setTripEvents((prevEvents) =>
+            prevEvents.map(
+              (prevEvent) =>
+                updatedEvents.find(
+                  (e) => e.trip_event_id === prevEvent.trip_event_id,
+                ) || prevEvent,
+            ),
+          );
+        });
+      }
+    }
+  }, [isLoaded]);
+
+  // logging
+  useEffect(() => {
+    // console.log('Filtered Members:', filteredMembers);
+    console.log('eventForSelectedDate', eventForSelectedDate);
+  }, [filteredMembers, eventForSelectedDate]);
 
   return (
     <div className="flex flex-col w-full h-full max-w-[420px] bg-white min-h-[600px] relative">
@@ -308,7 +379,16 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
               center={mapCenter}
               zoom={10}
             >
-              <Marker position={mapCenter} />
+              {eventForSelectedDate.map((event) =>
+                event.latitude !== undefined &&
+                event.longitude !== undefined ? (
+                  <Marker
+                    key={event.trip_event_id}
+                    position={{ lat: event.latitude, lng: event.longitude }}
+                    title={event.title}
+                  />
+                ) : null,
+              )}
             </GoogleMap>
           ) : (
             <div>Loading map...</div>
