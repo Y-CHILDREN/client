@@ -22,14 +22,13 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
   const addCostInput = () => {
     setCostInputs([...costInputs, { id: Date.now() }]); // 새로운 입력 필드 추가
   };
-  // 스타일 깨짐
   return (
     <article className="flex flex-col items-start">
       <p>경비</p>
       {costInputs.map((costInput) => {
         const { id } = costInput;
         return (
-          <div key={id} className="flex justify-between w-full gap-2 pt-3">
+          <div key={id} className="flex justify-between w-full pt-3">
             <EventFormDropDown setValue={setValue} />
             <div className="flex w-[40%] form-input-radius">
               <input
