@@ -10,7 +10,7 @@ export function TripDetailPage() {
   };
 
   const handleCreateEvent = () => {
-    navigate('/home');
+    navigate('/add-event');
   };
 
   return <TripDetail onClose={handleClose} onCreateEvent={handleCreateEvent} />;
