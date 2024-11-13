@@ -1,8 +1,8 @@
 // OngoingTrip.tsx
 import React from 'react';
 import Beach from '../../assets/home/Beach.png';
-import { Button } from '@/components/ui/button.tsx';
-import { Card } from '@/components/ui/card.tsx';
+import { Button } from '@/core/presentation/components/ui/button';
+import { Card } from '@/core/presentation/components/ui/card';
 import { Link } from 'react-router-dom';
 import TripThumbnail from './TripThumbnail';
 
@@ -27,32 +27,31 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
           (1000 * 60 * 60 * 24),
       )
     : 0;
-  console.log(dayCount);
   return (
     <div className="flex px-6 items-center self-stretch">
       {/* 진행중인 여행 있는지 여부에 따라 다른 콘텐츠 노출 */}
       {hasOngoingTrip ? (
         <Link to={`/trip/${ongoingTripData.id}`}>
-          <Card className="relative flex w-[327px] h-[327px] p-0 overflow-hidden rounded-xl">
-            {/* flex-col  items-start  */}
-            <div className="w-full h-full relative">
-              <TripThumbnail
-                className="object-cover"
-                destination={ongoingTripData.destination}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
-              {/* 여행 시작 전이면 버튼 표시 안하게끔 함
-            {dayCount > 0 && <button>여행 {dayCount} 일차</button>} */}
-              <div className="absolute left-4 top-4">
-                <span className="rounded-md bg-black/30 px-2.5 py-1.5 flex items-center truncate text-white font-pretendard text-sm font-normal leading-5 line-clamp-1">
-                  여행 {dayCount}일차
+          {/* 카드*/}
+          <div className="relative w-[372px] h-[372px] flex flex-col items-start gap-[215px] flex-1 self-stretch rounded-xl">
+            <TripThumbnail
+              className="flex flex-col items-start self-stretch h-full rounded-xl"
+              destination={ongoingTripData.destination}
+            />
+            <div className="absolute flex flex-col justify-between items-start w-full h-full p-6 bg-gradient-to-b from-transparent from-40% to-black/[0.72] to-100% absolute rounded-xl">
+              <div className="flex justify-center items-center py-[6px] px-[10px] rounded-[6px] bg-black/[0.32] text-white">
+                <span className="font-pretendard text-sm font-normal leading-5">
+                  여행&nbsp;
+                </span>
+                <span className="font-pretendard text-sm font-semibold leading-5">
+                  {dayCount}일차
                 </span>
               </div>
-              <div className="absolute bottom-4 left-4 right-4 space-y-1">
-                <h3 className="text-lg font-semibold text-white text-left leading-6 overflow-hidden truncate font-pretendard">
+              <div className="flex flex-col items-start gap-1 self-stretch text-white">
+                <h3 className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-lg font-semibold leading-6">
                   {ongoingTripData.name}
                 </h3>
-                <p className="text-sm text-white text-left font-pretendard font-normal leading-5 overflow-hidden truncate">
+                <time className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-sm font-normal leading-5">
                   {new Date(ongoingTripData.start_date).toLocaleDateString(
                     'ko-KR',
                   )}
@@ -60,10 +59,10 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
                   {new Date(ongoingTripData.end_date).toLocaleDateString(
                     'ko-KR',
                   )}
-                </p>
+                </time>
               </div>
             </div>
-          </Card>
+          </div>
         </Link>
       ) : (
         /* 진행중인 콘텐츠 없을 때 */

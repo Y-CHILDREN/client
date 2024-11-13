@@ -2,9 +2,9 @@
 //이미지 장소별로 추가
 import LA from '../../assets/home/LA.jpg';
 import China from '../../assets/home/China.jpg';
-import Japan from '../../assets/home/Japan.jpeg';
+import Japan from '../../assets/home/Japan.jpg';
 import Seoul from '../../assets/home/Seoul.jpg';
-import Busan from '../../assets/home/Busan.jpeg';
+import Busan from '../../assets/home/Busan.jpg';
 
 interface TripThumbnailProps {
   destination: string;
@@ -27,10 +27,11 @@ const TripThumbnail: React.FC<TripThumbnailProps> = ({
   const imageSource = imageMap[city.charAt(0).toUpperCase() + city.slice(1)]; // "seoul" -> "Seoul"
 
   return (
-    <img
-      src={imageSource || LA} // 매칭되는 이미지가 없을 경우 LA를 기본값으로 사용
-      alt={destination}
-      className={className}
+    <div
+      className={`${className} absolute w-full h-full bg-cover bg-center`}
+      style={{
+        backgroundImage: `url(${imageSource})`,
+      }}
     />
   );
 };
