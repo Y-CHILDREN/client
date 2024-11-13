@@ -18,7 +18,6 @@ interface FormValues {
   costValue: number;
 }
 
-// Google Places Option 타입 정의
 interface Option {
   label: string;
   value: {
@@ -47,9 +46,7 @@ const AddEventPage: React.FC = () => {
         script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
         script.async = true;
         script.defer = true;
-        script.onload = () => {
-          setIsScriptLoaded(true);
-        };
+        script.onload = () => setIsScriptLoaded(true);
         document.head.appendChild(script);
       } else {
         setIsScriptLoaded(true);
@@ -62,17 +59,13 @@ const AddEventPage: React.FC = () => {
       const script = document.querySelector(
         'script[src*="maps.googleapis.com/maps/api"]',
       );
-      if (script) {
-        script.remove();
-      }
+      if (script) script.remove();
     };
   }, [googleMapsApiKey]);
 
-  const handleLocationSelect = (newValue: any) => {
+  const handleLocationSelect = (newValue: Option | null) => {
     setLocationValue(newValue);
-    if (newValue) {
-      setValue('location', newValue.label);
-    }
+    if (newValue) setValue('location', newValue.label);
   };
 
   const onSubmit = (data: FormValues) => {
@@ -135,7 +128,7 @@ const AddEventPage: React.FC = () => {
           <AddEventCalenderInput />
           <AddEventCostInput register={register} setValue={setValue} />
           <div className="mt-auto">
-            <AddEventPostButton text={'추가 완료'} />
+            <AddEventPostButton text="추가 완료" />
           </div>
         </section>
       </form>
