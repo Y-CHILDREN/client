@@ -8,8 +8,10 @@
   color: black;
   display: flex;
   flex-direction: column;
-  box-shadow: -10px 0 15px -10px rgba(0, 0, 0, 0.2), /* 왼쪽 그림자 */
-  10px 0 15px -10px rgba(0, 0, 0, 0.2); /* 오른쪽 그림자 */
+  position: relative;
+  box-shadow:
+    -10px 0 15px -10px rgba(0, 0, 0, 0.2),
+    /* 왼쪽 그림자 */ 10px 0 15px -10px rgba(0, 0, 0, 0.2); /* 오른쪽 그림자 */
   overflow-y: scroll; /* 스크롤 가능 설정 */
 
   /* 스크롤바 숨김 스타일 */
