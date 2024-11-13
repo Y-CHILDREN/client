@@ -23,7 +23,7 @@ const TripThumbnail: React.FC<TripThumbnailProps> = ({
   destination,
   className,
 }) => {
-  const city = destination.split(' ')[2]; // "domestic seoul" -> "seoul"
+  const city = destination.split(' ')[1]; // "domestic seoul" -> "seoul"
   const imageSource = imageMap[city.charAt(0).toUpperCase() + city.slice(1)]; // "seoul" -> "Seoul"
 
   return (
