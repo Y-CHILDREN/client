@@ -98,7 +98,7 @@ const AddEventPage: React.FC = () => {
                   styles: {
                     container: (provided) => ({
                       ...provided,
-                      width: '100%',
+                      width: '380px',
                     }),
                     control: (provided) => ({
                       ...provided,
