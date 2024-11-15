@@ -248,6 +248,12 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   // 전체 멤버 제거 핸들러.
   const handleClearAllMembers = () => {
     setMembers([]); // 빈 배열로 선언.
+
+    // tripData.members도 초기화
+    setTripData((prev) => ({
+      ...prev,
+      members: [],
+    }));
   };
 
   // 폼 제출 핸들러.
