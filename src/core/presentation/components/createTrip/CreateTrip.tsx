@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { X } from 'lucide-react';
 import Avatar from 'react-avatar';
@@ -47,12 +48,12 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
     destination: '',
     start_date: undefined,
     end_date: undefined,
-    members: [],
-    created_by: '',
+    members: user ? [user.email] : [],
+    created_by: user?.email || '',
   });
 
   // member status
-  const [members, setMembers] = useState<User[]>([]);
+  const [members, setMembers] = useState<User[]>(user ? [user] : []);
 
   // error message
   const [errors, setErrors] = useState<{ [key in keyof CreatedTrip]?: string }>(
@@ -68,6 +69,21 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
     console.log('Updated tripData:', tripData);
   }, [tripData, dateRange, start, end, members, step, errors]);
 
+  // 사용자 정보가 없을 경우 처리(로그인 단계에서 유저 정보 확인)
+  useEffect(() => {
+    if (!user) {
+      throw new Error('로그인 상태가 아닙니다.');
+    }
+  }, [user]);
+
+  // tripData와 members 동기화
+  useEffect(() => {
+    setTripData((prev) => ({
+      ...prev,
+      members: members.map((member) => member.email),
+    }));
+  }, [members]);
+
   // 유효성 검사 함수
   const validateFields = () => {
     const newErrors: { [key in keyof CreatedTrip]?: string } = {};
@@ -80,7 +96,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
       if (!tripData.end_date) newErrors.end_date = '종료 날짜를 선택하세요.';
     } else if (step === 3) {
       if (tripData.members.length === 0)
-        newErrors.members = '적어도 한 명의 멤버를 추가하세요.';
+        newErrors.members = '적어도 한 명의 멤버를 추가하세요. (본인은 필수)';
     } else if (step === 4) {
       if (!tripData.title) newErrors.title = '제목을 입력하세요.';
     }
@@ -215,26 +231,44 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
   // 멤버 추가 핸들러.
   const handleAddMember = (users: User[]) => {
+    if (!user) {
+      return <Navigate to="/login" replace />; // 리다이렉션 처리
+    }
+
     // console.log('users:', users);
     setMembers((prevMembers) => {
-      const newMembers = users.filter(
-        (user) => !prevMembers.some((member) => member.email === user.email),
+      const newMembers = [...prevMembers, ...users].filter(
+        (member, index, array) =>
+          array.findIndex((m) => m.email === member.email) === index,
       );
-      const updatedMembers = [...prevMembers, ...newMembers];
+
+      // 작성자 이메일 유지
+      const ensuredMembers = newMembers.some(
+        (member) => member.email === user.email,
+      )
+        ? newMembers
+        : [user!, ...newMembers];
 
       // 여행 정보 업데이트
       setTripData((prev) => ({
         ...prev,
-        members: updatedMembers.map((member) => member.email),
+        members: ensuredMembers.map((member) => member.email),
       }));
-      return updatedMembers;
+      return ensuredMembers;
     });
   };
 
   // 멤버 제거 핸들러.
   const handleRemoveMember = (email: string) => {
+    if (!user) {
+      return <Navigate to="/login" replace />; // 리다이렉션 처리
+    }
+
+    // 작성자는 제거되지 않도록 필터링
     setMembers((prev) => {
-      const updatedMembers = prev.filter((member) => member.email !== email);
+      const updatedMembers = prev.filter(
+        (member) => member.email !== email || member.email === user.email,
+      );
 
       // 여행 정보 업데이트
       setTripData((prev) => ({
@@ -247,13 +281,16 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
   // 전체 멤버 제거 핸들러.
   const handleClearAllMembers = () => {
-    setMembers([]); // 빈 배열로 선언.
+    if (user) {
+      // 작성자만 유지
+      setMembers([user]); // 빈 배열로 선언.
 
-    // tripData.members도 초기화
-    setTripData((prev) => ({
-      ...prev,
-      members: [],
-    }));
+      // tripData.members도 초기화
+      setTripData((prev) => ({
+        ...prev,
+        members: [user.email],
+      }));
+    }
   };
 
   // 폼 제출 핸들러.
