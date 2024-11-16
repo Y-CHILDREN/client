@@ -2,14 +2,13 @@
 import React from 'react';
 import Beach from '../../assets/home/Beach.png';
 import { Button } from '@/core/presentation/components/ui/button';
-import { Card } from '@/core/presentation/components/ui/card';
 import { Link } from 'react-router-dom';
 import TripThumbnail from './TripThumbnail';
 
 interface OngoingTripProps {
   hasOngoingTrip: boolean;
   ongoingTripData: {
-    name: string;
+    title: string;
     destination: string;
     start_date: string;
     end_date: string;
@@ -49,7 +48,7 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
               </div>
               <div className="flex flex-col items-start gap-1 self-stretch text-white">
                 <h3 className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-lg font-semibold leading-6">
-                  {ongoingTripData.name}
+                  {ongoingTripData.title}
                 </h3>
                 <time className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-sm font-normal leading-5">
                   {new Date(ongoingTripData.start_date).toLocaleDateString(
@@ -66,7 +65,7 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
         </Link>
       ) : (
         /* 진행중인 콘텐츠 없을 때 */
-        <Card className="w-[327px] h-[327px] p-6 pt-8 pb-6 flex-col flex-1 gap-4 items-center roudned-xl bg-gray-100">
+        <div className="relative w-[327px] h-[327px] p-[32px_24px_24px_24px] flex flex-col items-center gap-4 flex-1 self-stretch rounded-xl bg-[#F5F6F6]">
           <div className="flex flex-col items-center gap-2 flex-1 self-stretch">
             <div className="flex flex-col items-center gap-2 flex-1 self-stretch">
               <p className="text-gray-900 text-center font-pretendard text-base font-semibold leading-6">
@@ -88,7 +87,7 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
               </Button>
             </Link>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );

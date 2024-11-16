@@ -1,8 +1,6 @@
-.container {
+.wrapper {
   height: 100vh;
-  width: calc(100vh * 9 / 16);
-  max-width: 600px; /* 최대 너비 제한 */
-  min-width: 420px;
+  width: 420px; /* 최대 너비 제한 */
   margin: 0 auto; /* 수평 중앙 정렬 */
   background-color: #ffffff; /* 배경색 설정 */
   color: black;
@@ -12,7 +10,7 @@
   box-shadow:
     -10px 0 15px -10px rgba(0, 0, 0, 0.2),
     /* 왼쪽 그림자 */ 10px 0 15px -10px rgba(0, 0, 0, 0.2); /* 오른쪽 그림자 */
-  overflow-y: scroll; /* 스크롤 가능 설정 */
+  overflow-y: hidden;
 
   /* 스크롤바 숨김 스타일 */
   -ms-overflow-style: none; /* IE and Edge */
@@ -29,10 +27,4 @@
   width: 100%; /* 부모 컨테이너의 너비와 일치 */
   background-color: #cac7c7;
   text-align: center;
-}
-
-@media (orientation: landscape) {
-  .container {
-    width: 100vw; /* 랜드스케이프 모드에서 너비 조정 */
-  }
 }

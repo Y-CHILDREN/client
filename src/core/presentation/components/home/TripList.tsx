@@ -9,7 +9,7 @@ import {
 import TripCard from './TripCard';
 
 interface TripData {
-  name: string;
+  title: string;
   start_date: string;
   destination: string;
   id: number;
@@ -34,33 +34,50 @@ const TripList: React.FC<TripListProps> = ({
         <TabsList className="flex px-6 pt-8 pb-4 items-start gap-6 self-stretch">
           <TabsTrigger
             value="upcoming"
-            className="px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] focus:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
+            className="px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] data-[state=active]:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
           >
-            다가오는 여행
+            <span>다가오는 여행</span>
+            <div className="relative w-full flex justify-center">
+              <div className="w-[4px] h-[4px] bg-black rounded-full" />
+            </div>
           </TabsTrigger>
           <TabsTrigger
             value="past"
-            className="px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] focus:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
+            className="px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] data-[state=active]:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
           >
             다녀온 여행
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="upcoming" className="mt-6">
-          <div className="flex px-6 justify-center items-center gap-3 flex-1">
-            <div className="flex h-[148px] p-[50px_48px] flex-col justify-center items-center gap-4 flex-1 rounded-xl border border-dashed border-[#DCDEE0] bg-white">
-              <p className="text-[#545759] text-center font-pretendard text-sm font-normal leading-5">
-                예정된 여행이 없어요.
-              </p>
+        <TabsContent value="upcoming">
+          {hasUpcomingTrip ? (
+            <div className="flex flex-row pl-6 items-start gap-3 self-stretch overflow-x-auto">
+              {upcomingTripData.map((item) => (
+                <Link to={`/trip/${item.id}`}>
+                  <TripCard
+                    tripName={item.title}
+                    tripDate={new Date(item.start_date)}
+                    destination={item.destination}
+                  />
+                </Link>
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="flex px-6 justify-center items-center gap-3 flex-1">
+              <div className="flex h-[148px] p-[50px_48px] flex-col justify-center items-center gap-4 flex-1 rounded-xl border border-dashed border-[#DCDEE0] bg-white">
+                <p className="text-[#545759] text-center font-pretendard text-sm font-normal leading-5">
+                  예정된 여행이 없어요.
+                </p>
+              </div>
+            </div>
+          )}
         </TabsContent>
-        <TabsContent value="past" className="mt-6">
+        <TabsContent value="past">
           {hasPastTrip ? (
-            <div className="flex flex-row pl-6 items-start gap-3 self-stretch">
+            <div className="flex flex-row pl-6 box-border items-start gap-3 self-stretch overflow-hidden">
               {pastTripData.map((item) => (
                 <Link to={`/trip/${item.id}`}>
                   <TripCard
-                    tripName={item.name}
+                    tripName={item.title}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />
