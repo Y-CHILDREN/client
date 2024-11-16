@@ -35,6 +35,7 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchUsers = async () => {
       if (debouncedSearchTerms.length === 0) {
@@ -47,7 +48,7 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
       try {
         console.log('debouncedSearchTerms', debouncedSearchTerms);
         const response = await axios.get<User[]>(
-          `http://localhost:3000/users/emails/${debouncedSearchTerms}`,
+          `${apiUrl}/users/emails/${debouncedSearchTerms}`,
         );
         setSearchResults(response.data);
         console.log('SearchResults:', response.data);
@@ -111,7 +112,7 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
 
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <Search className="absolute w-4 h-4 text-gray-400 -translate-y-1/2 left-3 top-1/2" />
       <input
         type="text"
         placeholder={placeholder}
@@ -121,7 +122,7 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
         className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#92e7c5]"
       />
       {isLoading && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className="absolute -translate-y-1/2 right-3 top-1/2">
           Loading...
         </div>
       )}
