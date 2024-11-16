@@ -6,17 +6,12 @@ import OngoingTrip from '../components/home/OngoingTrip';
 import TripList from '../components/home/TripList';
 
 interface TripData {
-  name: string;
+  title: string;
   destination: string;
   start_date: string;
   end_date: string;
   id: number;
 }
-
-// interface OngoingTripProps {
-//   hasOngoingTrip: boolean;
-//   ongoingTripData?: TripData;
-// }
 
 const Home: React.FC = () => {
   const { user } = useAuthStore();
@@ -81,11 +76,6 @@ const Home: React.FC = () => {
     checkTripData();
   }, []);
 
-  console.log('hasUpcomingTrip is', hasUpcomingTrip);
-  console.log('upcomingTripData is', upcomingTripData);
-  console.log('hasPastTrip is', hasPastTrip);
-  console.log('pastTripData is', pastTripData);
-
   return (
     <>
       <div className="flex h-[60px] px-5 items-center gap-2 shrink-0 self-stretch bg-white relative">
@@ -95,7 +85,7 @@ const Home: React.FC = () => {
       </div>
       <div className="flex flex-col items-start pb-6 flex-1 self-stretch bg-white">
         {/* contents */}
-        <div>
+        <div className="w-full">
           <IntroMessage
             userName={user?.nickname ?? '비회원'}
             hasOngoingTrip={hasOngoingTrip}
