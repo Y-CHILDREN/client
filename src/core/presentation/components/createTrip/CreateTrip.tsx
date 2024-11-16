@@ -279,7 +279,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   };
 
   return (
-    <div className="w-full h-full max-w-[420px] bg-white min-h-[600px] flex flex-col">
+    <div className="w-full h-full bg-white min-h-[600px] flex flex-col">
       <div className="relative flex items-center p-4 border-b">
         <button
           onClick={handleClose}
