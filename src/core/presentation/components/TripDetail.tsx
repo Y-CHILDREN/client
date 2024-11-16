@@ -394,23 +394,29 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
             <div>Loading map...</div>
           )
         ) : eventForSelectedDate.length > 0 ? (
-          <div className="flex flex-col">
-            <div className="flex justify-between font-bold border-b border-gray-200 bg-gray-100">
-              <h2>이벤트 일정</h2>
-              <p>장소</p>
-              <span>비용</span>
-            </div>
+          <div className="flex flex-col space-y-2 p-4">
             {eventForSelectedDate.map((event, index) => (
-              <div key={index} className="flex justify-between">
-                <h2>{event.title}</h2>
-                <p>{event.destination}</p>
-                <span>
-                  비용:{' '}
-                  {event.cost
-                    .reduce((acc, costItem) => acc + costItem.cost, 0)
-                    .toLocaleString()}{' '}
-                  원
-                </span>
+              <div key={event.trip_event_id} className="p-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#92e7c5] text-white">
+                      {index + 1}
+                    </div>
+                    <div className="text-sm font-medium text-gray-500">
+                      {format(event.start_date, 'HH:mm', { locale: ko })}
+                    </div>
+                  </div>
+                  <div className="flex-1 space-y-2 justify-items-start border border-gray-200 rounded-lg shadow-lg p-3">
+                    <div className="font-medium">{event.title}</div>
+                    <div className="text-sm text-gray-600">
+                      {event.destination} ·{' '}
+                      {event.cost
+                        .reduce((sum, item) => sum + item.cost, 0)
+                        .toLocaleString()}{' '}
+                      원
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
