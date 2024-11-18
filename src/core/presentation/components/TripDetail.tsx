@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   X,
   Map,
@@ -10,6 +10,8 @@ import {
   ChevronUp,
   ChevronDown,
   Copy,
+  Pencil,
+  Trash,
 } from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -222,6 +224,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
   type Toast = { message: string; type: 'success' | 'error' };
   const [toast, setToast] = useState<Toast | null>(null);
 
+  // 드롭다운 버튼 (MoreVertical)
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRefMoreVertical = useRef<HTMLDivElement>(null);
+
   // 핸들러
   // 맵, 리스트 전환 버튼 핸들러
   const handleMapToggle = () => {
@@ -327,6 +333,21 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, [isLoaded]);
 
+  // 추가 기능 버튼 외부 클릭시 닫기.
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRefMoreVertical.current &&
+        !dropdownRefMoreVertical.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // logging
   useEffect(() => {
     // console.log('Filtered Members:', filteredMembers);
@@ -338,11 +359,18 @@ const TripDetail: React.FC<TripDetailProps> = ({
       {/* 헤더 */}
       <header className="px-4 space-y-4">
         {/* 닫기, 지도, 추가기능 버튼 */}
-        <div className="flex justify-between items-center pt-2">
-          <button onClick={handleClose} className="p-1 bg-white">
+        <div className="flex justify-between items-center pt-2 relative">
+          <button
+            onClick={handleClose}
+            className="p-2 hover:bg-gray-100 rounded-lg"
+          >
             <X className="h-6 w-6" />
           </button>
-          <div className="flex items-center gap-4">
+          <div
+            className="flex items-center gap-4"
+            ref={dropdownRefMoreVertical}
+          >
+            {/* 맵 버튼 */}
             <button onClick={handleMapToggle} className="bg-white">
               {showMap ? (
                 <List className="h-6 w-6" />
@@ -350,9 +378,38 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 <Map className="h-6 w-6" />
               )}
             </button>
-            <button className="bg-white">
+
+            {/* 추가기능 버튼 */}
+            <button
+              className="bg-white"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
               <MoreVertical className="h-6 w-6" />
             </button>
+            {showDropdown && (
+              <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <button
+                  onClick={() => {
+                    // onEditTrip();
+                    setShowDropdown(false);
+                  }}
+                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <Pencil className="w-4 h-4 mr-2" />
+                  수정
+                </button>
+                <button
+                  onClick={() => {
+                    // onDeleteTrip();
+                    setShowDropdown(false);
+                  }}
+                  className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  삭제
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="space-y-3">
