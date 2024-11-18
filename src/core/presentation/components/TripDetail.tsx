@@ -52,7 +52,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   onDeleteEvent = () => {},
 }) => {
   // 상태 관리
-  const [tripScheduleData, setTripScheduleData] = useState<Trip>({
+  const tripScheduleData: Trip = {
     id: 1,
     title: '제주도 여행',
     destination: '제주도 서귀포시',
@@ -65,7 +65,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       'pack@naver.com',
     ],
     created_by: 'kt44800325@gmail.com',
-  });
+  };
 
   // tripEvents
   const [tripEvents, setTripEvents] = useState<TripEvent[]>([
@@ -109,7 +109,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, 0);
 
   // 멤버
-  const [members, setMembers] = useState<User[]>([
+  const members: User[] = [
     {
       id: '2',
       provider: 'naver',
@@ -166,7 +166,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
         '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
       trip_history: [1],
     },
-  ]);
+  ];
 
   // tripSchedule.members 와 members에서 일치하는 멤버 필터링
   const filteredMembers = members.filter((member) =>
@@ -197,7 +197,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // Map (Google Map api)
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
-  const [mapMarkers, setMapMarkers] = useState([]);
+  // const [mapMarkers, setMapMarkers] = useState([]);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
