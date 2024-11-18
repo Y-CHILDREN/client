@@ -355,7 +355,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, [filteredMembers, eventForSelectedDate]);
 
   return (
-    <div className="flex flex-col w-full h-full max-w-[420px] bg-white min-h-[600px] relative">
+    <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
       {/* 헤더 */}
       <header className="px-4 space-y-4">
         {/* 닫기, 지도, 추가기능 버튼 */}

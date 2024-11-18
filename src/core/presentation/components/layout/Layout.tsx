@@ -7,9 +7,9 @@ import Footer from './Footer';
 const Layout: React.FC = () => {
   const location = useLocation();
   return (
-    <div className="container">
+    <div className="wrapper">
       {/*Main content*/}
-      <main className="flex-grow">
+      <main className="flex-grow overflow-y-auto overflow-x-hidden">
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}
