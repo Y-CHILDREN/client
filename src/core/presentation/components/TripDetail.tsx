@@ -429,7 +429,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
                       <div className="flex flex-col items-start">
                         <div className="font-medium">{event.title}</div>
                         <div className="text-sm text-gray-600">
-                          {event.destination} ·{' '}
+                          {event.destination.split(' ').slice(0, 2).join(' ')} ·{' '}
                           {event.cost
                             .reduce((sum, item) => sum + item.cost, 0)
                             .toLocaleString()}{' '}
