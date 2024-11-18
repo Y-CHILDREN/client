@@ -210,6 +210,11 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
   // 이벤트 목록 드롭다운.
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
 
+  // toast 팝업.
+  // 토스트 타입 정의
+  type Toast = { message: string; type: 'success' | 'error' };
+  const [toast, setToast] = useState<Toast | null>(null);
+
   // 핸들러
   // 맵, 리스트 전환 버튼 핸들러
   const handleMapToggle = () => {
@@ -226,7 +231,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     onCreateEvent();
   };
 
-  // 리스트 확장 버튼
+  // 리스트 확장 버튼 핸들러
   const handleExpandEvent = (eventId: number) => {
     setExpandedEvents((prev) =>
       prev.includes(eventId)
@@ -235,7 +240,31 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     );
   };
 
+  // 주소 복사 버튼 핸들러
+  const handleCopyAddress = async (address: string) => {
+    if (!navigator.clipboard) {
+      setToast({ message: '클립보드 API를 지원하지 않습니다.', type: 'error' });
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(address);
+      setToast({ message: '주소가 복사되었습니다.', type: 'success' });
+    } catch (error) {
+      console.error('Copy failed:', error);
+      setToast({ message: '주소 복사에 실패했습니다.', type: 'error' });
+    }
+  };
+
   // useEffect
+  // 토스트 팝업 노출 시간
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   // 지도에 마커를 추가하는 로직
   useEffect(() => {
     if (isLoaded) {
@@ -441,19 +470,24 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
                         onClick={() => handleExpandEvent(event.trip_event_id)}
                       >
                         {expandedEvents.includes(event.trip_event_id) ? (
-                          <ChevronUp className="w-6 h-6 text-gray-400" />
+                          <ChevronUp className="w-5 h-5 text-gray-400" />
                         ) : (
-                          <ChevronDown className="w-6 h-6 text-gray-400" />
+                          <ChevronDown className="w-5 h-5 text-gray-400" />
                         )}
                       </button>
                     </div>
                     {expandedEvents.includes(event.trip_event_id) && (
                       <div className="px-4 pb-4">
                         <div className="pt-4 border-t border-gray-100">
-                          <div className="flex justify-between items-center mb-4 text-gray-600 text-sm">
+                          <div className="flex justify-items-start items-center mb-4 text-gray-600 text-sm">
                             <span>{event.destination}</span>
-                            <button className="p-2 hover:bg-gray-100 rounded-lg">
-                              <Copy className="w-5 h-5 text-gray-400" />
+                            <button
+                              className="p-2 hover:bg-gray-100 rounded-lg"
+                              onClick={() =>
+                                handleCopyAddress(event.destination)
+                              }
+                            >
+                              <Copy className="w-4 h-4 text-gray-400" />
                             </button>
                           </div>
                           <div className="flex gap-3">
@@ -493,6 +527,19 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
           이벤트 추가
         </button>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg ${
+            toast.type === 'success'
+              ? 'bg-green-500 text-white'
+              : 'bg-red-500 text-white'
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 };
