@@ -7,6 +7,9 @@ import {
   List,
   Calendar,
   CircleDollarSign,
+  ChevronUp,
+  ChevronDown,
+  Copy,
 } from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -61,7 +64,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       trip_event_id: 1,
       trip_id: 1,
       title: '제주도 여행',
-      destination: '제주도 서귀포시',
+      destination: '제주 제주시 공항로 2',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-18').toISOString(),
       cost: [
@@ -74,8 +77,8 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     {
       trip_event_id: 2,
       trip_id: 1,
-      title: '서울 여행',
-      destination: '서울 광화문',
+      title: '제주 렌트',
+      destination: '제주 제주시 첨단로 242',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-19').toISOString(),
       cost: [{ category: '식비', cost: 50000 }],
@@ -83,8 +86,8 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     {
       trip_event_id: 3,
       trip_id: 1,
-      title: '한라산 등반',
-      destination: '한라산',
+      title: '제주도 맛집',
+      destination: '제주 제주시 조천읍 함덕로 40 2층 201호',
       start_date: new Date('2024-10-17').toISOString(),
       end_date: new Date('2024-10-17').toISOString(),
       cost: [{ category: '입장료', cost: 10000 }],
@@ -204,17 +207,32 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     lng: 126.498302,
   };
 
+  // 이벤트 목록 드롭다운.
+  const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
+
   // 핸들러
+  // 맵, 리스트 전환 버튼 핸들러
   const handleMapToggle = () => {
     setShowMap(!showMap);
   };
 
+  // 닫기 버튼 핸들러
   const handleClose = () => {
     onClose();
   };
 
+  // 이벤트 생성 버튼 핸들러
   const handleCreateEvent = () => {
     onCreateEvent();
+  };
+
+  // 리스트 확장 버튼
+  const handleExpandEvent = (eventId: number) => {
+    setExpandedEvents((prev) =>
+      prev.includes(eventId)
+        ? prev.filter((id) => id !== eventId)
+        : [...prev, eventId],
+    );
   };
 
   // useEffect
@@ -394,7 +412,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
             <div>Loading map...</div>
           )
         ) : eventForSelectedDate.length > 0 ? (
-          <div className="flex flex-col space-y-2 p-4">
+          <div className="flex flex-col gap-3 p-4 bg-gray-50">
             {eventForSelectedDate.map((event, index) => (
               <div key={event.trip_event_id} className="p-4">
                 <div className="flex items-center space-x-4">
@@ -406,15 +424,55 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
                       {format(event.start_date, 'HH:mm', { locale: ko })}
                     </div>
                   </div>
-                  <div className="flex-1 space-y-2 justify-items-start border border-gray-200 rounded-lg shadow-lg p-3">
-                    <div className="font-medium">{event.title}</div>
-                    <div className="text-sm text-gray-600">
-                      {event.destination} ·{' '}
-                      {event.cost
-                        .reduce((sum, item) => sum + item.cost, 0)
-                        .toLocaleString()}{' '}
-                      원
+                  <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3">
+                    <div className="flex flex-row justify-between items-center">
+                      <div className="flex flex-col items-start">
+                        <div className="font-medium">{event.title}</div>
+                        <div className="text-sm text-gray-600">
+                          {event.destination} ·{' '}
+                          {event.cost
+                            .reduce((sum, item) => sum + item.cost, 0)
+                            .toLocaleString()}{' '}
+                          원
+                        </div>
+                      </div>
+                      <button
+                        className="p-4"
+                        onClick={() => handleExpandEvent(event.trip_event_id)}
+                      >
+                        {expandedEvents.includes(event.trip_event_id) ? (
+                          <ChevronUp className="w-6 h-6 text-gray-400" />
+                        ) : (
+                          <ChevronDown className="w-6 h-6 text-gray-400" />
+                        )}
+                      </button>
                     </div>
+                    {expandedEvents.includes(event.trip_event_id) && (
+                      <div className="px-4 pb-4">
+                        <div className="pt-4 border-t border-gray-100">
+                          <div className="flex justify-between items-center mb-4 text-gray-600 text-sm">
+                            <span>{event.destination}</span>
+                            <button className="p-2 hover:bg-gray-100 rounded-lg">
+                              <Copy className="w-5 h-5 text-gray-400" />
+                            </button>
+                          </div>
+                          <div className="flex gap-3">
+                            <button
+                              className="flex-1 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-sm"
+                              // onClick={() => onEditEvent(event.trip_event_id)}
+                            >
+                              수정
+                            </button>
+                            <button
+                              className="flex-1 py-3 border border-red-200 rounded-lg hover:bg-red-50 text-red-500 text-sm"
+                              // onClick={() => onDeleteEvent(event.trip_event_id)}
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
