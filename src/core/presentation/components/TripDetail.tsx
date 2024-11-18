@@ -39,9 +39,16 @@ interface TripEvent {
 interface TripDetailProps {
   onClose: () => void;
   onCreateEvent: () => void;
+  onEditEvent: (eventId: number) => void;
+  onDeleteEvent: (eventId: number) => void;
 }
 
-const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
+const TripDetail: React.FC<TripDetailProps> = ({
+  onClose,
+  onCreateEvent,
+  onEditEvent = () => {},
+  onDeleteEvent = () => {},
+}) => {
   // 상태 관리
   const [tripScheduleData, setTripScheduleData] = useState<Trip>({
     id: 1,
@@ -493,13 +500,13 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
                           <div className="flex gap-3">
                             <button
                               className="flex-1 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-sm"
-                              // onClick={() => onEditEvent(event.trip_event_id)}
+                              onClick={() => onEditEvent(event.trip_event_id)}
                             >
                               수정
                             </button>
                             <button
                               className="flex-1 py-3 border border-red-200 rounded-lg hover:bg-red-50 text-red-500 text-sm"
-                              // onClick={() => onDeleteEvent(event.trip_event_id)}
+                              onClick={() => onDeleteEvent(event.trip_event_id)}
                             >
                               삭제
                             </button>
