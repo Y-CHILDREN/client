@@ -30,6 +30,12 @@ const Login: React.FC = () => {
       : import.meta.env.VITE_LOCAL_NAVER_CALLBACK_URL,
   };
 
+  const SOCIALLOGIN_LOGO = {
+    google: '/assets/loginPage/logo_google.svg',
+    kakao: '/assets/loginPage/logo_kakao.svg',
+    naver: '/assets/loginPage/logo_naver.svg',
+  } as const;
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenParam = urlParams.get('token');
@@ -136,7 +142,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="/assets/loginPage/GoogleLogo.svg"
+                  src={SOCIALLOGIN_LOGO.google}
                   alt="구글 로고"
                 />
               </button>
@@ -147,7 +153,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="/assets/loginPage/logo-kakao.svg"
+                  src={SOCIALLOGIN_LOGO.kakao}
                   alt="카카오 로고"
                 />
               </button>
@@ -158,7 +164,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="/assets/loginPage/logo-naver.svg"
+                  src={SOCIALLOGIN_LOGO.naver}
                   alt="네이버 로고"
                 />
               </button>
