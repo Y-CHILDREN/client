@@ -6,6 +6,8 @@ const DeleteCompletePage = () => {
   const navigate = useNavigate();
   const { clearAuth } = useAuthStore();
 
+  const backgroundImg = '/assets/deleteCompletePage/bg_delPage.gif';
+
   const handleConfirm = () => {
     clearAuth();
     navigate('/login', { replace: true });
@@ -16,7 +18,7 @@ const DeleteCompletePage = () => {
       <Header>회원 탈퇴</Header>
       <div className="flex flex-col items-center justify-center p-6 ">
         <div className="h-[500px] flex items-center justify-center ">
-          <img src="/assets/deleteCompletePage/byebye.gif" alt="byebye" />
+          <img src={backgroundImg} alt="byebye" />
         </div>
         <div className="flex flex-col items-center gap-6 text-center">
           <h2 className="text-xl font-bold">회원 탈퇴가 완료되었습니다</h2>

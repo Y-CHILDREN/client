@@ -30,6 +30,12 @@ const Login: React.FC = () => {
       : import.meta.env.VITE_LOCAL_NAVER_CALLBACK_URL,
   };
 
+  const SOCIALLOGIN_LOGO = {
+    google: '/assets/loginPage/logo_google.svg',
+    kakao: '/assets/loginPage/logo_kakao.svg',
+    naver: '/assets/loginPage/logo_naver.svg',
+  } as const;
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenParam = urlParams.get('token');
@@ -107,7 +113,8 @@ const Login: React.FC = () => {
             <div className="flex flex-col w-[112px] h-[120px] items-center text-center text-[32px] font-bold leading-[40px] font-pretendard">
               {!showFinal &&
                 textList.map((text, index) => (
-                  <h2 key={index} className="text-[#333333] fade-in text-2x1">
+                  // <h2 key={index} className="text-[#333333] fade-in text-2x1">
+                  <h2 key={index} className="text-[#ffffff] fade-in text-2x1">
                     {text}
                   </h2>
                 ))}
@@ -120,11 +127,12 @@ const Login: React.FC = () => {
           </div>
           <div className="flex flex-col items-center gap-[24px] self-stretch">
             <div className="flex justify-center items-center gap-[16px] self-stretch">
-              <div className="h-[1px] flex-[1_0_0] bg-black"></div>
-              <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-[#333333]">
+              <div className="h-[1px] flex-[1_0_0] bg-white"></div>
+              {/* <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-[#333333]"> */}
+              <div className="font-pretendard text-[14px] font-semibold leading-[20px] text-[#ffffff]">
                 간편 로그인으로 여행 시작하기
               </div>
-              <div className="h-[1px] flex-[1_0_0] bg-black"></div>
+              <div className="h-[1px] flex-[1_0_0] bg-white"></div>
             </div>
             <div className="flex items-center gap-[20px]">
               <button
@@ -134,7 +142,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="/assets/loginPage/GoogleLogo.svg"
+                  src={SOCIALLOGIN_LOGO.google}
                   alt="구글 로고"
                 />
               </button>
@@ -145,7 +153,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="/assets/loginPage/logo-kakao.svg"
+                  src={SOCIALLOGIN_LOGO.kakao}
                   alt="카카오 로고"
                 />
               </button>
@@ -156,7 +164,7 @@ const Login: React.FC = () => {
               >
                 <img
                   className="w-[24px] h-[25px]"
-                  src="/assets/loginPage/logo-naver.svg"
+                  src={SOCIALLOGIN_LOGO.naver}
                   alt="네이버 로고"
                 />
               </button>
