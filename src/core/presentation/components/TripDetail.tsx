@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   X,
   Map,
@@ -7,6 +7,11 @@ import {
   List,
   Calendar,
   CircleDollarSign,
+  ChevronUp,
+  ChevronDown,
+  Copy,
+  Pencil,
+  Trash,
 } from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -36,11 +41,18 @@ interface TripEvent {
 interface TripDetailProps {
   onClose: () => void;
   onCreateEvent: () => void;
+  onEditEvent: (eventId: number) => void;
+  onDeleteEvent: (eventId: number) => void;
 }
 
-const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
+const TripDetail: React.FC<TripDetailProps> = ({
+  onClose,
+  onCreateEvent,
+  onEditEvent = () => {},
+  onDeleteEvent = () => {},
+}) => {
   // 상태 관리
-  const [tripScheduleData, setTripScheduleData] = useState<Trip>({
+  const tripScheduleData: Trip = {
     id: 1,
     title: '제주도 여행',
     destination: '제주도 서귀포시',
@@ -53,7 +65,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       'pack@naver.com',
     ],
     created_by: 'kt44800325@gmail.com',
-  });
+  };
 
   // tripEvents
   const [tripEvents, setTripEvents] = useState<TripEvent[]>([
@@ -61,7 +73,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       trip_event_id: 1,
       trip_id: 1,
       title: '제주도 여행',
-      destination: '제주도 서귀포시',
+      destination: '제주 제주시 공항로 2',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-18').toISOString(),
       cost: [
@@ -74,8 +86,8 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     {
       trip_event_id: 2,
       trip_id: 1,
-      title: '서울 여행',
-      destination: '서울 광화문',
+      title: '제주 렌트',
+      destination: '제주 제주시 첨단로 242',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-19').toISOString(),
       cost: [{ category: '식비', cost: 50000 }],
@@ -83,8 +95,8 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     {
       trip_event_id: 3,
       trip_id: 1,
-      title: '한라산 등반',
-      destination: '한라산',
+      title: '제주도 맛집',
+      destination: '제주 제주시 조천읍 함덕로 40 2층 201호',
       start_date: new Date('2024-10-17').toISOString(),
       end_date: new Date('2024-10-17').toISOString(),
       cost: [{ category: '입장료', cost: 10000 }],
@@ -97,7 +109,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
   }, 0);
 
   // 멤버
-  const [members, setMembers] = useState<User[]>([
+  const members: User[] = [
     {
       id: '2',
       provider: 'naver',
@@ -154,7 +166,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
         '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
       trip_history: [1],
     },
-  ]);
+  ];
 
   // tripSchedule.members 와 members에서 일치하는 멤버 필터링
   const filteredMembers = members.filter((member) =>
@@ -185,7 +197,7 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
   // Map (Google Map api)
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
-  const [mapMarkers, setMapMarkers] = useState([]);
+  // const [mapMarkers, setMapMarkers] = useState([]);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -204,20 +216,68 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     lng: 126.498302,
   };
 
+  // 이벤트 목록 드롭다운.
+  const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
+
+  // toast 팝업.
+  // 토스트 타입 정의
+  type Toast = { message: string; type: 'success' | 'error' };
+  const [toast, setToast] = useState<Toast | null>(null);
+
+  // 드롭다운 버튼 (MoreVertical)
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRefMoreVertical = useRef<HTMLDivElement>(null);
+
   // 핸들러
+  // 맵, 리스트 전환 버튼 핸들러
   const handleMapToggle = () => {
     setShowMap(!showMap);
   };
 
+  // 닫기 버튼 핸들러
   const handleClose = () => {
     onClose();
   };
 
+  // 이벤트 생성 버튼 핸들러
   const handleCreateEvent = () => {
     onCreateEvent();
   };
 
+  // 리스트 확장 버튼 핸들러
+  const handleExpandEvent = (eventId: number) => {
+    setExpandedEvents((prev) =>
+      prev.includes(eventId)
+        ? prev.filter((id) => id !== eventId)
+        : [...prev, eventId],
+    );
+  };
+
+  // 주소 복사 버튼 핸들러
+  const handleCopyAddress = async (address: string) => {
+    if (!navigator.clipboard) {
+      setToast({ message: '클립보드 API를 지원하지 않습니다.', type: 'error' });
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(address);
+      setToast({ message: '주소가 복사되었습니다.', type: 'success' });
+    } catch (error) {
+      console.error('Copy failed:', error);
+      setToast({ message: '주소 복사에 실패했습니다.', type: 'error' });
+    }
+  };
+
   // useEffect
+  // 토스트 팝업 노출 시간
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   // 지도에 마커를 추가하는 로직
   useEffect(() => {
     if (isLoaded) {
@@ -273,6 +333,21 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
     }
   }, [isLoaded]);
 
+  // 추가 기능 버튼 외부 클릭시 닫기.
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRefMoreVertical.current &&
+        !dropdownRefMoreVertical.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // logging
   useEffect(() => {
     // console.log('Filtered Members:', filteredMembers);
@@ -284,11 +359,18 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
       {/* 헤더 */}
       <header className="px-4 space-y-4">
         {/* 닫기, 지도, 추가기능 버튼 */}
-        <div className="flex justify-between items-center pt-2">
-          <button onClick={handleClose} className="p-1 bg-white">
+        <div className="flex justify-between items-center pt-2 relative">
+          <button
+            onClick={handleClose}
+            className="p-2 hover:bg-gray-100 rounded-lg"
+          >
             <X className="h-6 w-6" />
           </button>
-          <div className="flex items-center gap-4">
+          <div
+            className="flex items-center gap-4"
+            ref={dropdownRefMoreVertical}
+          >
+            {/* 맵 버튼 */}
             <button onClick={handleMapToggle} className="bg-white">
               {showMap ? (
                 <List className="h-6 w-6" />
@@ -296,9 +378,38 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
                 <Map className="h-6 w-6" />
               )}
             </button>
-            <button className="bg-white">
+
+            {/* 추가기능 버튼 */}
+            <button
+              className="bg-white"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
               <MoreVertical className="h-6 w-6" />
             </button>
+            {showDropdown && (
+              <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <button
+                  onClick={() => {
+                    // onEditTrip();
+                    setShowDropdown(false);
+                  }}
+                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <Pencil className="w-4 h-4 mr-2" />
+                  수정
+                </button>
+                <button
+                  onClick={() => {
+                    // onDeleteTrip();
+                    setShowDropdown(false);
+                  }}
+                  className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  삭제
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="space-y-3">
@@ -394,23 +505,74 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
             <div>Loading map...</div>
           )
         ) : eventForSelectedDate.length > 0 ? (
-          <div className="flex flex-col">
-            <div className="flex justify-between font-bold border-b border-gray-200 bg-gray-100">
-              <h2>이벤트 일정</h2>
-              <p>장소</p>
-              <span>비용</span>
-            </div>
+          <div className="flex flex-col gap-3 p-4 bg-gray-50">
             {eventForSelectedDate.map((event, index) => (
-              <div key={index} className="flex justify-between">
-                <h2>{event.title}</h2>
-                <p>{event.destination}</p>
-                <span>
-                  비용:{' '}
-                  {event.cost
-                    .reduce((acc, costItem) => acc + costItem.cost, 0)
-                    .toLocaleString()}{' '}
-                  원
-                </span>
+              <div key={event.trip_event_id} className="p-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#92e7c5] text-white">
+                      {index + 1}
+                    </div>
+                    <div className="text-sm font-medium text-gray-500">
+                      {format(event.start_date, 'HH:mm', { locale: ko })}
+                    </div>
+                  </div>
+                  <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3">
+                    <div className="flex flex-row justify-between items-center">
+                      <div className="flex flex-col items-start">
+                        <div className="font-medium">{event.title}</div>
+                        <div className="text-sm text-gray-600">
+                          {event.destination.split(' ').slice(0, 2).join(' ')} ·{' '}
+                          {event.cost
+                            .reduce((sum, item) => sum + item.cost, 0)
+                            .toLocaleString()}{' '}
+                          원
+                        </div>
+                      </div>
+                      <button
+                        className="p-4"
+                        onClick={() => handleExpandEvent(event.trip_event_id)}
+                      >
+                        {expandedEvents.includes(event.trip_event_id) ? (
+                          <ChevronUp className="w-5 h-5 text-gray-400" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5 text-gray-400" />
+                        )}
+                      </button>
+                    </div>
+                    {expandedEvents.includes(event.trip_event_id) && (
+                      <div className="px-4 pb-4">
+                        <div className="pt-4 border-t border-gray-100">
+                          <div className="flex justify-items-start items-center mb-4 text-gray-600 text-sm">
+                            <span>{event.destination}</span>
+                            <button
+                              className="p-2 hover:bg-gray-100 rounded-lg"
+                              onClick={() =>
+                                handleCopyAddress(event.destination)
+                              }
+                            >
+                              <Copy className="w-4 h-4 text-gray-400" />
+                            </button>
+                          </div>
+                          <div className="flex gap-3">
+                            <button
+                              className="flex-1 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-sm"
+                              onClick={() => onEditEvent(event.trip_event_id)}
+                            >
+                              수정
+                            </button>
+                            <button
+                              className="flex-1 py-3 border border-red-200 rounded-lg hover:bg-red-50 text-red-500 text-sm"
+                              onClick={() => onDeleteEvent(event.trip_event_id)}
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -429,6 +591,19 @@ const TripDetail: React.FC<TripDetailProps> = ({ onClose, onCreateEvent }) => {
           이벤트 추가
         </button>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-lg ${
+            toast.type === 'success'
+              ? 'bg-green-500 text-white'
+              : 'bg-red-500 text-white'
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 };
