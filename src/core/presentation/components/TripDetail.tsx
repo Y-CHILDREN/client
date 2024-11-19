@@ -17,6 +17,7 @@ import { format, isSameDay, parseISO } from 'date-fns';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
+import MarkerPin from '../../../../public/assets/map/MarkerPin.svg';
 
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
@@ -211,10 +212,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
   };
 
   // 지도 표시 위치
-  const mapCenter = {
-    lat: 33.489011,
-    lng: 126.498302,
-  };
+  const mapCenter = selectedEvent
+    ? { lat: selectedEvent.latitude!, lng: selectedEvent.longitude! }
+    : { lat: 33.3617, lng: 126.5292 };
 
   // 이벤트 목록 드롭다운.
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
@@ -488,15 +488,33 @@ const TripDetail: React.FC<TripDetailProps> = ({
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={mapCenter}
-              zoom={10}
+              zoom={13}
+              options={{
+                zoomControl: false,
+                streetViewControl: false,
+                mapTypeControl: false,
+                fullscreenControl: false,
+              }}
             >
-              {eventForSelectedDate.map((event) =>
+              {eventForSelectedDate.map((event, index) =>
                 event.latitude !== undefined &&
                 event.longitude !== undefined ? (
                   <Marker
                     key={event.trip_event_id}
                     position={{ lat: event.latitude, lng: event.longitude }}
                     title={event.title}
+                    icon={{
+                      url: MarkerPin, // 커스텀 아이콘 경로
+                      scaledSize: new window.google.maps.Size(50, 50), // 아이콘 크기
+                      origin: new window.google.maps.Point(0, -5), // 아이콘의 원점
+                      anchor: new window.google.maps.Point(0, 0), // 아이콘의 고정 위치
+                    }}
+                    label={{
+                      text: `${index + 1}`,
+                      className:
+                        'bg-[#3ACC97] text-white rounded-full w-6 h-6 flex items-center justify-center',
+                    }}
+                    onClick={() => setSelectedEvent(event)}
                   />
                 ) : null,
               )}
