@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   X,
   Map,
@@ -17,7 +17,6 @@ import { format, isSameDay, parseISO } from 'date-fns';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
-import MarkerPin from '../../../../public/assets/map/MarkerPin.svg';
 
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
@@ -482,7 +481,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       </nav>
 
       {/* 이벤트 목록 */}
-      <main className="flex-1">
+      <main className="flex-1 relative">
         {showMap ? (
           isLoaded ? (
             <GoogleMap
@@ -504,7 +503,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     position={{ lat: event.latitude, lng: event.longitude }}
                     title={event.title}
                     icon={{
-                      url: MarkerPin, // 커스텀 아이콘 경로
+                      url: '/assets/map/MarkerPin.svg', // 커스텀 아이콘 경로
                       scaledSize: new window.google.maps.Size(50, 50), // 아이콘 크기
                       origin: new window.google.maps.Point(0, -5), // 아이콘의 원점
                       anchor: new window.google.maps.Point(0, 0), // 아이콘의 고정 위치
@@ -528,7 +527,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
               <div key={event.trip_event_id} className="p-4">
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#92e7c5] text-white">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
                       {index + 1}
                     </div>
                     <div className="text-sm font-medium text-gray-500">
@@ -597,6 +596,17 @@ const TripDetail: React.FC<TripDetailProps> = ({
         ) : (
           <p className="mt-4">일정을 추가해 주세요</p>
         )}
+
+        {/* 이벤트 추가 버튼 */}
+        <div className={`absolute right-4 ${showMap ? 'top-4' : 'bottom-8'}`}>
+          <button
+            onClick={handleCreateEvent}
+            className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            이벤트 추가
+          </button>
+        </div>
       </main>
 
       {/* 이벤트 추가 버튼 */}
