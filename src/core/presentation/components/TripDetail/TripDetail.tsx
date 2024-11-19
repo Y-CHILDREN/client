@@ -21,7 +21,7 @@ import { ko } from 'date-fns/locale';
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
 
-import EventCardRow from '@/core/presentation/components/eventCardRow/EventCardRow.tsx';
+import EventCardRow from '@/core/presentation/components/TripDetail/eventCardRow/EventCardRow.tsx';
 
 interface Cost {
   category: string;
