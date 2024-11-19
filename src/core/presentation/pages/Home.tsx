@@ -24,14 +24,14 @@ const Home: React.FC = () => {
   const [hasPastTrip, setHasPastTrip] = useState<boolean>(false);
   const [pastTripData, setPastTripData] = useState<TripData[]>([]);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const checkTripData = async () => {
       try {
         if (!user) return;
 
-        const response = await fetch(
-          `http://localhost:3000/trips/user/${user.id}`,
-        );
+        const response = await fetch(`${apiUrl}/trips/user/${user.id}`);
         const data = await response.json();
 
         //OngoingTrip 유무 확인 & 넘겨줄 데이터 생성
@@ -83,7 +83,7 @@ const Home: React.FC = () => {
           JTRIP
         </p>
       </div>
-      <div className="flex flex-col items-start pb-6 flex-1 self-stretch bg-white">
+      <div className="flex flex-col items-start self-stretch flex-1 pb-6 bg-white">
         {/* contents */}
         <div className="w-full">
           <IntroMessage

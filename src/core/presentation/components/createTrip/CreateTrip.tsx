@@ -26,6 +26,8 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   // Multi-Step status
   const { step, setStep } = useTripStore();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // User
   const { user } = useAuthStore();
 
@@ -310,10 +312,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
       // 서버 전송.
       try {
-        const response = await axios.post(
-          `http://localhost:3000/trips/`,
-          tripDetails,
-        );
+        const response = await axios.post(`${apiUrl}/trips/`, tripDetails);
         console.log('Trip created:', response.data);
         onSubmit();
       } catch (error) {
@@ -323,16 +322,17 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   };
 
   return (
+
     <div className="w-full h-full bg-white min-h-[600px] flex flex-col">
       <div className="flex items-center p-4 border-b relative">
         <button
           onClick={handleClose}
-          className="absolute left-4 p-2 hover:bg-gray-50 rounded-full transition-colors"
+          className="absolute p-2 transition-colors rounded-full left-4 hover:bg-gray-50"
         >
-          <X className="h-4 w-4 text-gray-600" />
+          <X className="w-4 h-4 text-gray-600" />
           <span className="sr-only">닫기</span>
         </button>
-        <h1 className="text-lg font-medium w-full text-center">
+        <h1 className="w-full text-lg font-medium text-center">
           여행 추가하기
         </h1>
       </div>
@@ -349,10 +349,10 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
             handleSubmit(event);
           }
         }}
-        className="flex-1 flex flex-col"
+        className="flex flex-col flex-1"
       >
         {step === 1 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="space-y-8">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">어디로 떠나시나요?</span>
@@ -382,7 +382,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               </div>
             </div>
             {errors.destination && (
-              <p className="mt-2 text-red-500 text-sm">{errors.destination}</p>
+              <p className="mt-2 text-sm text-red-500">{errors.destination}</p>
             )}
             <div className="p-6 mt-auto">
               <div className="flex gap-3">
@@ -398,7 +398,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
           </div>
         )}
         {step === 2 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="flex-1 space-y-6">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">
@@ -420,13 +420,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
             <div className="p-6 mt-auto">
               {errors.end_date && (
-                <p className="mt-2 text-red-500 text-sm">{errors.end_date}</p>
+                <p className="mt-2 text-sm text-red-500">{errors.end_date}</p>
               )}
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
                   style={{ flex: 1 }}
                 >
                   이전
@@ -445,9 +445,9 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         )}
 
         {step === 3 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="flex-1 pae-y-6">
-              <div className="flex flex-col space-y-2 text-left mb-4">
+              <div className="flex flex-col mb-4 space-y-2 text-left">
                 <span className="text-xl font-medium">누구와 함께 가나요?</span>
                 <span className="text-sm text-gray-500">
                   일행을 추가하면 여행 계획을 실시간으로 공유할 수 있어요!
@@ -464,12 +464,12 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               <div className="flex justify-end mb-1">
                 <button
                   onClick={handleClearAllMembers}
-                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                  className="px-3 py-1 text-sm text-gray-600 transition-colors rounded hover:text-gray-800 hover:bg-gray-100"
                 >
                   전체 삭제
                 </button>
               </div>
-              <div className="space-y-2 max-h-60 overflow-y-auto">
+              <div className="space-y-2 overflow-y-auto max-h-60">
                 {members.map((member) => (
                   <div
                     key={member.email}
@@ -490,9 +490,9 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                     </div>
                     <button
                       onClick={() => handleRemoveMember(member.email)}
-                      className="p-1 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors"
+                      className="p-1 text-gray-400 transition-colors rounded-full hover:text-red-600 hover:bg-red-100"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
@@ -501,13 +501,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
             <div className="p-6 mt-auto">
               {errors.members && (
-                <p className="mt-2 text-red-500 text-sm">{errors.members}</p>
+                <p className="mt-2 text-sm text-red-500">{errors.members}</p>
               )}
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
                   style={{ flex: 1 }}
                 >
                   이전
@@ -526,7 +526,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         )}
 
         {step === 4 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">
@@ -547,13 +547,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
             <div className="p-6 mt-auto">
               {errors.title && (
-                <p className="mt-2 text-red-500 text-sm">{errors.title}</p>
+                <p className="mt-2 text-sm text-red-500">{errors.title}</p>
               )}
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
                   style={{ flex: 1 }}
                 >
                   이전
@@ -578,7 +578,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         {/*      <button*/}
         {/*        type="button"*/}
         {/*        onClick={handlePreviousStep}*/}
-        {/*        className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"*/}
+        {/*        className="flex-1 px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"*/}
         {/*      >*/}
         {/*        이전*/}
         {/*      </button>*/}
