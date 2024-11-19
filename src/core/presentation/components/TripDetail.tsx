@@ -21,6 +21,8 @@ import { ko } from 'date-fns/locale';
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
 
+import EventCardRow from '@/core/presentation/components/eventCardRow/EventCardRow.tsx';
+
 interface Cost {
   category: string;
   cost: number;
@@ -36,6 +38,7 @@ interface TripEvent {
   cost: Cost[];
   latitude?: number;
   longitude?: number;
+  place_image?: string;
 }
 
 interface TripDetailProps {
@@ -68,6 +71,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   };
 
   // tripEvents
+  const [selectedEvent, setSelectedEvent] = useState<TripEvent | null>(null);
   const [tripEvents, setTripEvents] = useState<TripEvent[]>([
     {
       trip_event_id: 1,
@@ -82,6 +86,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       ],
       latitude: 33.2541,
       longitude: 126.5602,
+      place_image: 'https://placehold.co/400',
     },
     {
       trip_event_id: 2,
@@ -91,6 +96,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-19').toISOString(),
       cost: [{ category: '식비', cost: 50000 }],
+      place_image: 'https://placehold.co/400',
     },
     {
       trip_event_id: 3,
@@ -100,6 +106,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       start_date: new Date('2024-10-17').toISOString(),
       end_date: new Date('2024-10-17').toISOString(),
       cost: [{ category: '입장료', cost: 10000 }],
+      place_image: 'https://placehold.co/400',
     },
   ]);
 
@@ -609,16 +616,33 @@ const TripDetail: React.FC<TripDetailProps> = ({
         </div>
       </main>
 
-      {/* 이벤트 추가 버튼 */}
-      <div className={`absolute bottom-8 ${showMap ? 'left-4' : 'right-4'}`}>
-        <button
-          onClick={handleCreateEvent}
-          className="bg-[#92e7c5] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          이벤트 추가
-        </button>
-      </div>
+      {/* 하단 이벤트 목록 카드 */}
+      {showMap ? (
+        <div className="absolute bottom-0 left-0 right-0">
+          <div className="flex overflow-x-auto snap-x snap-mandatory py-4 px-2 hide-scrollbar min-w-[270px]">
+            {eventForSelectedDate.map((event, index) => (
+              <EventCardRow
+                key={event.trip_event_id}
+                index={index + 1}
+                title={event.title}
+                destination={event.destination}
+                startDate={event.start_date}
+                endDate={event.end_date}
+                image={event.place_image}
+                cost={event.cost.reduce((sum, item) => sum + item.cost, 0)}
+                isSelected={
+                  selectedEvent?.trip_event_id === event.trip_event_id
+                }
+                onClick={() => setSelectedEvent(event)}
+                onEdit={() => onEditEvent(event.trip_event_id)}
+                onDelete={() => onDeleteEvent(event.trip_event_id)}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
 
       {/* Toast Notification */}
       {toast && (
