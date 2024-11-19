@@ -60,7 +60,7 @@ const EventCardRow: React.FC<EventCardRowProps> = ({
           {/* Time and Number Badge */}
           <div className="flex items-center w-full relative">
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#3ACC97] text-white font-medium">
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white font-medium">
                 {index}
               </div>
               <div className="text-sm text-gray-500 whitespace-nowrap">

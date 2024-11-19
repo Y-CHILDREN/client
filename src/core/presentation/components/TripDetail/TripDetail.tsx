@@ -21,7 +21,7 @@ import { ko } from 'date-fns/locale';
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
 
-import EventCardRow from '@/core/presentation/components/TripDetail/eventCardRow/EventCardRow.tsx';
+import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 
 interface Cost {
   category: string;
@@ -503,8 +503,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
               }}
             >
               {eventForSelectedDate.map((event, index) =>
-                event.latitude !== undefined &&
-                event.longitude !== undefined ? (
+                event.latitude && event.longitude ? (
                   <Marker
                     key={event.trip_event_id}
                     position={{ lat: event.latitude, lng: event.longitude }}
@@ -619,26 +618,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
       {/* 하단 이벤트 목록 카드 */}
       {showMap ? (
         <div className="absolute bottom-0 left-0 right-0">
-          <div className="flex overflow-x-auto snap-x snap-mandatory py-4 px-2 hide-scrollbar min-w-[270px]">
-            {eventForSelectedDate.map((event, index) => (
-              <EventCardRow
-                key={event.trip_event_id}
-                index={index + 1}
-                title={event.title}
-                destination={event.destination}
-                startDate={event.start_date}
-                endDate={event.end_date}
-                image={event.place_image}
-                cost={event.cost.reduce((sum, item) => sum + item.cost, 0)}
-                isSelected={
-                  selectedEvent?.trip_event_id === event.trip_event_id
-                }
-                onClick={() => setSelectedEvent(event)}
-                onEdit={() => onEditEvent(event.trip_event_id)}
-                onDelete={() => onDeleteEvent(event.trip_event_id)}
-              />
-            ))}
-          </div>
+          <EventCardList
+            events={eventForSelectedDate}
+            selectedEvent={selectedEvent!}
+            setSelectedEvent={setSelectedEvent}
+            onEditEvent={onEditEvent}
+            onDeleteEvent={onDeleteEvent}
+          />
         </div>
       ) : (
         <></>
