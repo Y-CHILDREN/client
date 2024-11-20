@@ -55,7 +55,7 @@ const TripList: React.FC<TripListProps> = ({
           {hasUpcomingTrip ? (
             <div className="flex flex-row pl-6 items-start gap-3 self-stretch overflow-x-auto">
               {upcomingTripData.map((item) => (
-                <Link to={`/trip/${item.id}`}>
+                <Link to={`/trip/${item.id}`} key={item.id}>
                   <TripCard
                     tripName={item.name}
                     tripDate={new Date(item.start_date)}
@@ -78,7 +78,7 @@ const TripList: React.FC<TripListProps> = ({
           {hasPastTrip ? (
             <div className="flex flex-row pl-6 box-border items-start gap-3 self-stretch overflow-hidden">
               {pastTripData.map((item) => (
-                <Link to={`/trip/${item.id}`}>
+                <Link to={`/trip/${item.id}`} key={item.id}>
                   <TripCard
                     tripName={item.name}
                     tripDate={new Date(item.start_date)}
