@@ -14,7 +14,6 @@ import {
   Trash,
 } from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
 
@@ -22,6 +21,8 @@ import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
+import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
+import { useGoogleMapsStore } from '@/core/presentation/hooks/stores/googleMapsStore.ts';
 
 interface Cost {
   category: string;
@@ -84,8 +85,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
         { category: '식비', cost: 30000 },
         { category: '교통비', cost: 1500 },
       ],
-      latitude: 33.2541,
-      longitude: 126.5602,
       place_image: 'https://placehold.co/400',
     },
     {
@@ -106,6 +105,16 @@ const TripDetail: React.FC<TripDetailProps> = ({
       start_date: new Date('2024-10-17').toISOString(),
       end_date: new Date('2024-10-17').toISOString(),
       cost: [{ category: '입장료', cost: 10000 }],
+      place_image: 'https://placehold.co/400',
+    },
+    {
+      trip_event_id: 4,
+      trip_id: 1,
+      title: '아르떼뮤지엄',
+      destination: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
+      start_date: new Date('2024-10-16').toISOString(),
+      end_date: new Date('2024-10-16').toISOString(),
+      cost: [{ category: '입장료', cost: 17000 }],
       place_image: 'https://placehold.co/400',
     },
   ]);
@@ -198,18 +207,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   // 선택한 날짜에 대한 이벤트 목록 필터링
   const eventForSelectedDate = tripEvents.filter((event) =>
-    isSameDay(parseISO(event.start_date), selectedDate),
+    selectedDate ? isSameDay(parseISO(event.start_date), selectedDate) : false,
   );
 
   // Map (Google Map api)
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
-  // const [mapMarkers, setMapMarkers] = useState([]);
 
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-  });
+  const { isLoaded } = useGoogleMapsStore();
 
   // 지도 옵션 설정
   const mapContainerStyle = {
@@ -284,7 +289,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, [toast]);
 
-  // 지도에 마커를 추가하는 로직
+  // tripEvent에 위치 정보를 추가하는 로직
   useEffect(() => {
     if (isLoaded) {
       const geocoder = new window.google.maps.Geocoder();
@@ -325,6 +330,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           });
         });
 
+        // 모든 Geocoding 작업이 완료되면 상태 업데이트
         Promise.all(updatedEventsPromises).then((updatedEvents) => {
           setTripEvents((prevEvents) =>
             prevEvents.map(
@@ -337,7 +343,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
         });
       }
     }
-  }, [isLoaded]);
+  }, [isLoaded, tripEvents]);
 
   // 추가 기능 버튼 외부 클릭시 닫기.
   useEffect(() => {
@@ -358,7 +364,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   useEffect(() => {
     // console.log('Filtered Members:', filteredMembers);
     console.log('eventForSelectedDate', eventForSelectedDate);
-  }, [filteredMembers, eventForSelectedDate]);
+  }, [eventForSelectedDate]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
@@ -491,39 +497,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
       <main className="flex-1 relative">
         {showMap ? (
           isLoaded ? (
-            <GoogleMap
+            <MapWithMarkers
+              events={eventForSelectedDate}
+              mapCenter={mapCenter}
               mapContainerStyle={mapContainerStyle}
-              center={mapCenter}
-              zoom={13}
-              options={{
-                zoomControl: false,
-                streetViewControl: false,
-                mapTypeControl: false,
-                fullscreenControl: false,
-              }}
-            >
-              {eventForSelectedDate.map((event, index) =>
-                event.latitude && event.longitude ? (
-                  <Marker
-                    key={event.trip_event_id}
-                    position={{ lat: event.latitude, lng: event.longitude }}
-                    title={event.title}
-                    icon={{
-                      url: '/assets/map/MarkerPin.svg', // 커스텀 아이콘 경로
-                      scaledSize: new window.google.maps.Size(50, 50), // 아이콘 크기
-                      origin: new window.google.maps.Point(0, -5), // 아이콘의 원점
-                      anchor: new window.google.maps.Point(0, 0), // 아이콘의 고정 위치
-                    }}
-                    label={{
-                      text: `${index + 1}`,
-                      className:
-                        'bg-[#3ACC97] text-white rounded-full w-6 h-6 flex items-center justify-center',
-                    }}
-                    onClick={() => setSelectedEvent(event)}
-                  />
-                ) : null,
-              )}
-            </GoogleMap>
+              setSelectedEvent={setSelectedEvent}
+            />
           ) : (
             <div>Loading map...</div>
           )
