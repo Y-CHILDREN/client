@@ -5,7 +5,7 @@ import {
 } from '../../data/infrastructure/services/userService';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '../components/ui/ToastMessageProvider';
+import { useToast } from '../hooks/useToast';
 
 const Mypage = () => {
   const { user, clearAuth } = useAuthStore();

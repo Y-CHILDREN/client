@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
 type Toast = { message: string; type: 'success' | 'error' };
 
@@ -6,7 +6,9 @@ interface ToastContextType {
   showToast: (message: string, type: 'success' | 'error') => void;
 }
 
-const ToastMessage = createContext<ToastContextType | undefined>(undefined);
+export const ToastMessage = createContext<ToastContextType | undefined>(
+  undefined,
+);
 
 const ToastMessageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -39,11 +41,3 @@ const ToastMessageProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export default ToastMessageProvider;
-
-export const useToast = () => {
-  const context = useContext(ToastMessage);
-  if (!context) {
-    throw new Error('오류가 발생했습니다.');
-  }
-  return context;
-};
