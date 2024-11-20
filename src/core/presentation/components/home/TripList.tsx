@@ -9,7 +9,7 @@ import {
 import TripCard from './TripCard';
 
 interface TripData {
-  title: string;
+  name: string;
   start_date: string;
   destination: string;
   id: number;
@@ -57,7 +57,7 @@ const TripList: React.FC<TripListProps> = ({
               {upcomingTripData.map((item) => (
                 <Link to={`/trip/${item.id}`}>
                   <TripCard
-                    tripName={item.title}
+                    tripName={item.name}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />
@@ -80,7 +80,7 @@ const TripList: React.FC<TripListProps> = ({
               {pastTripData.map((item) => (
                 <Link to={`/trip/${item.id}`}>
                   <TripCard
-                    tripName={item.title}
+                    tripName={item.name}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />
