@@ -136,7 +136,7 @@ const Login: React.FC = () => {
             </div>
             <div className="flex items-center gap-[20px]">
               <button
-                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[rgba(210,210,210,0.4)] p-0
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#ffffff] p-0
             "
                 onClick={handleGoogleLogin}
               >
