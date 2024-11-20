@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { X } from 'lucide-react';
 import Avatar from 'react-avatar';
@@ -25,6 +26,8 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   // Multi-Step status
   const { step, setStep } = useTripStore();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // User
   const { user } = useAuthStore();
 
@@ -47,12 +50,12 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
     destination: '',
     start_date: undefined,
     end_date: undefined,
-    members: [],
-    created_by: '',
+    members: user ? [user.email] : [],
+    created_by: user?.email || '',
   });
 
   // member status
-  const [members, setMembers] = useState<User[]>([]);
+  const [members, setMembers] = useState<User[]>(user ? [user] : []);
 
   // error message
   const [errors, setErrors] = useState<{ [key in keyof CreatedTrip]?: string }>(
@@ -68,6 +71,21 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
     console.log('Updated tripData:', tripData);
   }, [tripData, dateRange, start, end, members, step, errors]);
 
+  // 사용자 정보가 없을 경우 처리(로그인 단계에서 유저 정보 확인)
+  useEffect(() => {
+    if (!user) {
+      throw new Error('로그인 상태가 아닙니다.');
+    }
+  }, [user]);
+
+  // tripData와 members 동기화
+  useEffect(() => {
+    setTripData((prev) => ({
+      ...prev,
+      members: members.map((member) => member.email),
+    }));
+  }, [members]);
+
   // 유효성 검사 함수
   const validateFields = () => {
     const newErrors: { [key in keyof CreatedTrip]?: string } = {};
@@ -80,7 +98,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
       if (!tripData.end_date) newErrors.end_date = '종료 날짜를 선택하세요.';
     } else if (step === 3) {
       if (tripData.members.length === 0)
-        newErrors.members = '적어도 한 명의 멤버를 추가하세요.';
+        newErrors.members = '적어도 한 명의 멤버를 추가하세요. (본인은 필수)';
     } else if (step === 4) {
       if (!tripData.title) newErrors.title = '제목을 입력하세요.';
     }
@@ -215,26 +233,44 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
   // 멤버 추가 핸들러.
   const handleAddMember = (users: User[]) => {
+    if (!user) {
+      return <Navigate to="/login" replace />; // 리다이렉션 처리
+    }
+
     // console.log('users:', users);
     setMembers((prevMembers) => {
-      const newMembers = users.filter(
-        (user) => !prevMembers.some((member) => member.email === user.email),
+      const newMembers = [...prevMembers, ...users].filter(
+        (member, index, array) =>
+          array.findIndex((m) => m.email === member.email) === index,
       );
-      const updatedMembers = [...prevMembers, ...newMembers];
+
+      // 작성자 이메일 유지
+      const ensuredMembers = newMembers.some(
+        (member) => member.email === user.email,
+      )
+        ? newMembers
+        : [user!, ...newMembers];
 
       // 여행 정보 업데이트
       setTripData((prev) => ({
         ...prev,
-        members: updatedMembers.map((member) => member.email),
+        members: ensuredMembers.map((member) => member.email),
       }));
-      return updatedMembers;
+      return ensuredMembers;
     });
   };
 
   // 멤버 제거 핸들러.
   const handleRemoveMember = (email: string) => {
+    if (!user) {
+      return <Navigate to="/login" replace />; // 리다이렉션 처리
+    }
+
+    // 작성자는 제거되지 않도록 필터링
     setMembers((prev) => {
-      const updatedMembers = prev.filter((member) => member.email !== email);
+      const updatedMembers = prev.filter(
+        (member) => member.email !== email || member.email === user.email,
+      );
 
       // 여행 정보 업데이트
       setTripData((prev) => ({
@@ -247,7 +283,16 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
   // 전체 멤버 제거 핸들러.
   const handleClearAllMembers = () => {
-    setMembers([]); // 빈 배열로 선언.
+    if (user) {
+      // 작성자만 유지
+      setMembers([user]); // 빈 배열로 선언.
+
+      // tripData.members도 초기화
+      setTripData((prev) => ({
+        ...prev,
+        members: [user.email],
+      }));
+    }
   };
 
   // 폼 제출 핸들러.
@@ -267,10 +312,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
       // 서버 전송.
       try {
-        const response = await axios.post(
-          `http://localhost:3000/trips/`,
-          tripDetails,
-        );
+        const response = await axios.post(`${apiUrl}/trips/`, tripDetails);
         console.log('Trip created:', response.data);
         onSubmit();
       } catch (error) {
@@ -280,16 +322,17 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   };
 
   return (
+
     <div className="w-full h-full bg-white min-h-[600px] flex flex-col">
       <div className="flex items-center p-4 border-b relative">
         <button
           onClick={handleClose}
-          className="absolute left-4 p-2 hover:bg-gray-50 rounded-full transition-colors"
+          className="absolute p-2 transition-colors rounded-full left-4 hover:bg-gray-50"
         >
-          <X className="h-4 w-4 text-gray-600" />
+          <X className="w-4 h-4 text-gray-600" />
           <span className="sr-only">닫기</span>
         </button>
-        <h1 className="text-lg font-medium w-full text-center">
+        <h1 className="w-full text-lg font-medium text-center">
           여행 추가하기
         </h1>
       </div>
@@ -306,10 +349,10 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
             handleSubmit(event);
           }
         }}
-        className="flex-1 flex flex-col"
+        className="flex flex-col flex-1"
       >
         {step === 1 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="space-y-8">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">어디로 떠나시나요?</span>
@@ -339,7 +382,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               </div>
             </div>
             {errors.destination && (
-              <p className="mt-2 text-red-500 text-sm">{errors.destination}</p>
+              <p className="mt-2 text-sm text-red-500">{errors.destination}</p>
             )}
             <div className="p-6 mt-auto">
               <div className="flex gap-3">
@@ -355,7 +398,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
           </div>
         )}
         {step === 2 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="flex-1 space-y-6">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">
@@ -377,13 +420,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
             <div className="p-6 mt-auto">
               {errors.end_date && (
-                <p className="mt-2 text-red-500 text-sm">{errors.end_date}</p>
+                <p className="mt-2 text-sm text-red-500">{errors.end_date}</p>
               )}
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
                   style={{ flex: 1 }}
                 >
                   이전
@@ -402,9 +445,9 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         )}
 
         {step === 3 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="flex-1 pae-y-6">
-              <div className="flex flex-col space-y-2 text-left mb-4">
+              <div className="flex flex-col mb-4 space-y-2 text-left">
                 <span className="text-xl font-medium">누구와 함께 가나요?</span>
                 <span className="text-sm text-gray-500">
                   일행을 추가하면 여행 계획을 실시간으로 공유할 수 있어요!
@@ -421,12 +464,12 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               <div className="flex justify-end mb-1">
                 <button
                   onClick={handleClearAllMembers}
-                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
+                  className="px-3 py-1 text-sm text-gray-600 transition-colors rounded hover:text-gray-800 hover:bg-gray-100"
                 >
                   전체 삭제
                 </button>
               </div>
-              <div className="space-y-2 max-h-60 overflow-y-auto">
+              <div className="space-y-2 overflow-y-auto max-h-60">
                 {members.map((member) => (
                   <div
                     key={member.email}
@@ -447,9 +490,9 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                     </div>
                     <button
                       onClick={() => handleRemoveMember(member.email)}
-                      className="p-1 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100 transition-colors"
+                      className="p-1 text-gray-400 transition-colors rounded-full hover:text-red-600 hover:bg-red-100"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
@@ -458,13 +501,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
             <div className="p-6 mt-auto">
               {errors.members && (
-                <p className="mt-2 text-red-500 text-sm">{errors.members}</p>
+                <p className="mt-2 text-sm text-red-500">{errors.members}</p>
               )}
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
                   style={{ flex: 1 }}
                 >
                   이전
@@ -483,7 +526,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         )}
 
         {step === 4 && (
-          <div className="flex-1 flex flex-col p-6">
+          <div className="flex flex-col flex-1 p-6">
             <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">
@@ -504,13 +547,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
 
             <div className="p-6 mt-auto">
               {errors.title && (
-                <p className="mt-2 text-red-500 text-sm">{errors.title}</p>
+                <p className="mt-2 text-sm text-red-500">{errors.title}</p>
               )}
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handlePreviousStep}
-                  className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"
                   style={{ flex: 1 }}
                 >
                   이전
@@ -535,7 +578,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         {/*      <button*/}
         {/*        type="button"*/}
         {/*        onClick={handlePreviousStep}*/}
-        {/*        className="flex-1 px-4 py-3 bg-gray-50 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors"*/}
+        {/*        className="flex-1 px-4 py-3 text-gray-900 transition-colors rounded-lg bg-gray-50 hover:bg-gray-100"*/}
         {/*      >*/}
         {/*        이전*/}
         {/*      </button>*/}
