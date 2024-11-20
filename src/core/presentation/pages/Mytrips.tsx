@@ -20,7 +20,7 @@ function Mytrips() {
           <div
             key={tab}
             onClick={() => setActiveTab(tab as TabType)}
-            className={`flex h-[48px] justify-center items-center gap-1 flex-1  px-4 py-2 ${
+            className={`flex h-[48px] justify-center items-center hover:cursor-pointer gap-1 flex-1  px-4 py-2 ${
               activeTab === tab
                 ? 'text-[#151616] border-b-[2px] border-[#222324]'
                 : 'text-[#AAADB0]'

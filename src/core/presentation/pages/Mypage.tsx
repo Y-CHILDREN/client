@@ -5,10 +5,14 @@ import {
 } from '../../data/infrastructure/services/userService';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
 
 const Mypage = () => {
   const { user, clearAuth } = useAuthStore();
   const navigate = useNavigate();
+  const { showToast } = useToast();
+
+  const copyLink = 'http://y-children.s3-website.ap-northeast-2.amazonaws.com';
 
   console.log('User Object:', user);
   console.log('User Image URL:', user?.user_image);
@@ -32,6 +36,15 @@ const Mypage = () => {
       navigate('/deletecomplete', { replace: true });
     } catch (error) {
       console.error('회원 삭제 실패:', error);
+    }
+  };
+
+  const handleCapyClipBoard = async (copyLink: string) => {
+    try {
+      await navigator.clipboard.writeText(copyLink);
+      showToast('링크 복사가 완료되었습니다.', 'success');
+    } catch (error) {
+      console.error('클립보드 복사 실패:', error);
     }
   };
 
@@ -67,7 +80,10 @@ const Mypage = () => {
               <p>{user?.email}</p>
             </div>
           </div>
-          <div className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2]">
+          <div
+            className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2] hover:cursor-pointer"
+            onClick={() => handleCapyClipBoard(copyLink)}
+          >
             <div className="flex items-center flex-1 gap-3">
               <div className="w-[40px] h-[40px] ">
                 <img

@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
   return (
     <div className="flex h-[64px] items-center flex-shrink-0 self-stretch bg-white border-t border-gray-200 ">
       <div
-        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]"
+        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0] hover:cursor-pointer"
         onClick={() => handleNavigation('/home')}
       >
         <img
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div
-        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]"
+        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0] hover:cursor-pointer"
         onClick={() => handleNavigation('/mytrips')}
       >
         <img
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div
-        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0]"
+        className="flex h-[64px] px-0 py-2 flex-col justify-center items-center gap-1 flex-[1_0_0] hover:cursor-pointer"
         onClick={() => handleNavigation('/mypage')}
       >
         <img
