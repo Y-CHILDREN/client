@@ -597,6 +597,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
         {showMap && (
           <div className="absolute bottom-0 left-0 right-0">
             <EventCardList
+              selectedDate={selectedDate}
               events={eventForSelectedDate}
               selectedEvent={selectedEvent!}
               setSelectedEvent={setSelectedEvent}

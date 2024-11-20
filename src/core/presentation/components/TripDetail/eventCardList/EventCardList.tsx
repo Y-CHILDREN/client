@@ -20,6 +20,7 @@ interface TripEvent {
 }
 
 interface Props {
+  selectedDate?: Date;
   events: TripEvent[];
   selectedEvent: TripEvent;
   setSelectedEvent: (event: TripEvent) => void;
@@ -28,6 +29,7 @@ interface Props {
 }
 
 const EventCardList: React.FC<Props> = ({
+  selectedDate,
   events,
   selectedEvent,
   setSelectedEvent,
