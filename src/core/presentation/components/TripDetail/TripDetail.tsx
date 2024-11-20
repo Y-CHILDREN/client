@@ -592,22 +592,20 @@ const TripDetail: React.FC<TripDetailProps> = ({
             이벤트 추가
           </button>
         </div>
-      </main>
 
-      {/* 하단 이벤트 목록 카드 */}
-      {showMap ? (
-        <div className="absolute bottom-0 left-0 right-0">
-          <EventCardList
-            events={eventForSelectedDate}
-            selectedEvent={selectedEvent!}
-            setSelectedEvent={setSelectedEvent}
-            onEditEvent={onEditEvent}
-            onDeleteEvent={onDeleteEvent}
-          />
-        </div>
-      ) : (
-        <></>
-      )}
+        {/* 하단 이벤트 목록 카드 */}
+        {showMap && (
+          <div className="absolute bottom-0 left-0 right-0">
+            <EventCardList
+              events={eventForSelectedDate}
+              selectedEvent={selectedEvent!}
+              setSelectedEvent={setSelectedEvent}
+              onEditEvent={onEditEvent}
+              onDeleteEvent={onDeleteEvent}
+            />
+          </div>
+        )}
+      </main>
 
       {/* Toast Notification */}
       {toast && (
