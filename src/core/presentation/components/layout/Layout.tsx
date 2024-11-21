@@ -9,7 +9,7 @@ const Layout: React.FC = () => {
   return (
     <div className="wrapper">
       {/*Main content*/}
-      <main className="flex-grow overflow-y-auto overflow-x-hidden">
+      <main className="flex-grow overflow-x-hidden overflow-y-auto bg-[#F5F6F6]">
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}
