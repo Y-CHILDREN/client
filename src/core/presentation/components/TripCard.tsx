@@ -19,7 +19,7 @@ const TripCard = ({ trip }: TripCardProps) => {
 
   return (
     <div
-      className="flex items-center self-stretch gap-5 p-4 rounded-xl bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.04),0px_0px_4px_0px_rgba(0,0,0,0.04)]"
+      className="flex items-center self-stretch gap-5 p-4 rounded-xl bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.04),0px_0px_4px_0px_rgba(0,0,0,0.04)] hover:cursor-pointer"
       onClick={handleNavigation}
     >
       <div className="w-[72px] h-[72px]">

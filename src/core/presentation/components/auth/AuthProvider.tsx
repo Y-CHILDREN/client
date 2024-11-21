@@ -11,6 +11,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUser, setLoading, setAuthenticated } = useAuthStore();
   const { setTripData } = useUserTripStore();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
@@ -31,9 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
 
         try {
-          const response = await fetch(
-            `http://localhost:3000/trips/user/${storedUserId}`,
-          );
+          const response = await fetch(`${apiUrl}/trips/user/${storedUserId}`);
           if (!response.ok) {
             throw new Error('여행 데이터를 불러오는데 실패했습니다.');
           }

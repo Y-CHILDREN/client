@@ -8,29 +8,9 @@ type TabType = '예정된 여행' | '여행중' | '완료된 여행';
 
 function Mytrips() {
   const [activeTab, setActiveTab] = useState<TabType>('예정된 여행');
-  const { tripData } = useUserTripStore();
+  const { getActiveTrips } = useUserTripStore();
 
-  const getActiveTrips = () =>
-    activeTab === '예정된 여행'
-      ? tripData.filter((trip) => {
-          const startDate = new Date(trip.start_date || '');
-          return startDate > new Date();
-        })
-      : activeTab === '여행중'
-        ? tripData.filter((trip) => {
-            const startDate = new Date(trip.start_date || '');
-            const endDate = new Date(trip.end_date || '');
-            const currentDate = new Date();
-            return currentDate >= startDate && currentDate <= endDate;
-          })
-        : activeTab === '완료된 여행'
-          ? tripData.filter((trip) => {
-              const endDate = new Date(trip.end_date || '');
-              return endDate < new Date();
-            })
-          : [];
-
-  const activeTrips = getActiveTrips();
+  const activeTrips = getActiveTrips(activeTab);
 
   return (
     <>
@@ -40,7 +20,7 @@ function Mytrips() {
           <div
             key={tab}
             onClick={() => setActiveTab(tab as TabType)}
-            className={`flex h-[48px] justify-center items-center gap-1 flex-1  px-4 py-2 ${
+            className={`flex h-[48px] justify-center items-center hover:cursor-pointer gap-1 flex-1  px-4 py-2 ${
               activeTab === tab
                 ? 'text-[#151616] border-b-[2px] border-[#222324]'
                 : 'text-[#AAADB0]'
