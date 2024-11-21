@@ -22,7 +22,19 @@ import DeleteCompletePage from './core/presentation/pages/DeleteCompletePage';
 import { TripDetailPage } from './core/presentation/pages/TripDetailPage';
 import ToastMessageProvider from './core/presentation/components/ui/ToastMessageProvider.tsx';
 
+import { useGoogleMapsLoader } from '@/core/presentation/hooks/useGoogleMapsLoader.ts';
+
 const App: React.FC = () => {
+  const { isLoaded, loadError } = useGoogleMapsLoader();
+
+  if (loadError) {
+    return <div>Error loading Google Maps</div>;
+  }
+
+  if (!isLoaded) {
+    return <div>Loading Google Maps...</div>;
+  }
+
   return (
     <>
       <Router>

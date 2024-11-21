@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   X,
   Map,
@@ -14,12 +14,15 @@ import {
   Trash,
 } from 'lucide-react';
 import { format, isSameDay, parseISO } from 'date-fns';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
 
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
+
+import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
+import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
+import { useGoogleMapsStore } from '@/core/presentation/hooks/stores/googleMapsStore.ts';
 
 interface Cost {
   category: string;
@@ -36,6 +39,7 @@ interface TripEvent {
   cost: Cost[];
   latitude?: number;
   longitude?: number;
+  place_image?: string;
 }
 
 interface TripDetailProps {
@@ -68,6 +72,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   };
 
   // tripEvents
+  const [selectedEvent, setSelectedEvent] = useState<TripEvent | null>(null);
   const [tripEvents, setTripEvents] = useState<TripEvent[]>([
     {
       trip_event_id: 1,
@@ -80,8 +85,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
         { category: '식비', cost: 30000 },
         { category: '교통비', cost: 1500 },
       ],
-      latitude: 33.2541,
-      longitude: 126.5602,
+      place_image: 'https://placehold.co/400',
     },
     {
       trip_event_id: 2,
@@ -91,6 +95,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-19').toISOString(),
       cost: [{ category: '식비', cost: 50000 }],
+      place_image: 'https://placehold.co/400',
     },
     {
       trip_event_id: 3,
@@ -100,6 +105,17 @@ const TripDetail: React.FC<TripDetailProps> = ({
       start_date: new Date('2024-10-17').toISOString(),
       end_date: new Date('2024-10-17').toISOString(),
       cost: [{ category: '입장료', cost: 10000 }],
+      place_image: 'https://placehold.co/400',
+    },
+    {
+      trip_event_id: 4,
+      trip_id: 1,
+      title: '아르떼뮤지엄',
+      destination: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
+      start_date: new Date('2024-10-16').toISOString(),
+      end_date: new Date('2024-10-16').toISOString(),
+      cost: [{ category: '입장료', cost: 17000 }],
+      place_image: 'https://placehold.co/400',
     },
   ]);
 
@@ -191,29 +207,19 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   // 선택한 날짜에 대한 이벤트 목록 필터링
   const eventForSelectedDate = tripEvents.filter((event) =>
-    isSameDay(parseISO(event.start_date), selectedDate),
+    selectedDate ? isSameDay(parseISO(event.start_date), selectedDate) : false,
   );
 
   // Map (Google Map api)
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
-  // const [mapMarkers, setMapMarkers] = useState([]);
 
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-  });
+  const { isLoaded } = useGoogleMapsStore();
 
   // 지도 옵션 설정
   const mapContainerStyle = {
     width: '100%',
     height: '100%',
-  };
-
-  // 지도 표시 위치
-  const mapCenter = {
-    lat: 33.489011,
-    lng: 126.498302,
   };
 
   // 이벤트 목록 드롭다운.
@@ -269,16 +275,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   };
 
-  // useEffect
-  // 토스트 팝업 노출 시간
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
-
-  // 지도에 마커를 추가하는 로직
+  // tripEvent에 위치 정보를 추가하는 로직
   useEffect(() => {
     if (isLoaded) {
       const geocoder = new window.google.maps.Geocoder();
@@ -319,6 +316,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           });
         });
 
+        // 모든 Geocoding 작업이 완료되면 상태 업데이트
         Promise.all(updatedEventsPromises).then((updatedEvents) => {
           setTripEvents((prevEvents) =>
             prevEvents.map(
@@ -331,7 +329,15 @@ const TripDetail: React.FC<TripDetailProps> = ({
         });
       }
     }
-  }, [isLoaded]);
+  }, [isLoaded, tripEvents]);
+
+  // 토스트 팝업 노출 시간
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   // 추가 기능 버튼 외부 클릭시 닫기.
   useEffect(() => {
@@ -352,7 +358,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
   useEffect(() => {
     // console.log('Filtered Members:', filteredMembers);
     console.log('eventForSelectedDate', eventForSelectedDate);
-  }, [filteredMembers, eventForSelectedDate]);
+    console.log('selectedEvent', selectedEvent);
+  }, [eventForSelectedDate]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
@@ -482,42 +489,32 @@ const TripDetail: React.FC<TripDetailProps> = ({
       </nav>
 
       {/* 이벤트 목록 */}
-      <main className="flex-1">
+      <main className="flex-1 relative">
         {showMap ? (
           isLoaded ? (
-            <GoogleMap
+            <MapWithMarkers
+              events={eventForSelectedDate}
               mapContainerStyle={mapContainerStyle}
-              center={mapCenter}
-              zoom={10}
-            >
-              {eventForSelectedDate.map((event) =>
-                event.latitude !== undefined &&
-                event.longitude !== undefined ? (
-                  <Marker
-                    key={event.trip_event_id}
-                    position={{ lat: event.latitude, lng: event.longitude }}
-                    title={event.title}
-                  />
-                ) : null,
-              )}
-            </GoogleMap>
+              selectedEvent={selectedEvent}
+              setSelectedEvent={setSelectedEvent}
+            />
           ) : (
             <div>Loading map...</div>
           )
         ) : eventForSelectedDate.length > 0 ? (
-          <div className="flex flex-col gap-3 p-4 bg-gray-50">
+          <div className="flex flex-col gap-3 p-4 mb-10 bg-gray-50">
             {eventForSelectedDate.map((event, index) => (
               <div key={event.trip_event_id} className="p-4">
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#92e7c5] text-white">
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
                       {index + 1}
                     </div>
                     <div className="text-sm font-medium text-gray-500">
                       {format(event.start_date, 'HH:mm', { locale: ko })}
                     </div>
                   </div>
-                  <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3">
+                  <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3 px-5">
                     <div className="flex flex-row justify-between items-center">
                       <div className="flex flex-col items-start">
                         <div className="font-medium">{event.title}</div>
@@ -541,9 +538,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                       </button>
                     </div>
                     {expandedEvents.includes(event.trip_event_id) && (
-                      <div className="px-4 pb-4">
-                        <div className="pt-4 border-t border-gray-100">
-                          <div className="flex justify-items-start items-center mb-4 text-gray-600 text-sm">
+                      <div className=" pb-1">
+                        <div className="pt-1 border-t border-gray-100">
+                          <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
                             <span>{event.destination}</span>
                             <button
                               className="p-2 hover:bg-gray-100 rounded-lg"
@@ -579,18 +576,32 @@ const TripDetail: React.FC<TripDetailProps> = ({
         ) : (
           <p className="mt-4">일정을 추가해 주세요</p>
         )}
-      </main>
 
-      {/* 이벤트 추가 버튼 */}
-      <div className={`absolute bottom-8 ${showMap ? 'left-4' : 'right-4'}`}>
-        <button
-          onClick={handleCreateEvent}
-          className="bg-[#92e7c5] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          이벤트 추가
-        </button>
-      </div>
+        {/* 이벤트 추가 버튼 */}
+        <div className={`absolute right-4 ${showMap ? 'top-4' : 'bottom-8'}`}>
+          <button
+            onClick={handleCreateEvent}
+            className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            이벤트 추가
+          </button>
+        </div>
+
+        {/* 하단 이벤트 목록 카드 */}
+        {showMap && (
+          <div className="absolute bottom-0 left-0 right-0">
+            <EventCardList
+              selectedDate={selectedDate}
+              events={eventForSelectedDate}
+              selectedEvent={selectedEvent!}
+              setSelectedEvent={setSelectedEvent}
+              onEditEvent={onEditEvent}
+              onDeleteEvent={onDeleteEvent}
+            />
+          </div>
+        )}
+      </main>
 
       {/* Toast Notification */}
       {toast && (
