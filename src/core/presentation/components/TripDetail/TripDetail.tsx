@@ -280,15 +280,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   };
 
-  // useEffect
-  // 토스트 팝업 노출 시간
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
-
   // tripEvent에 위치 정보를 추가하는 로직
   useEffect(() => {
     if (isLoaded) {
@@ -345,6 +336,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, [isLoaded, tripEvents]);
 
+  // 토스트 팝업 노출 시간
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   // 추가 기능 버튼 외부 클릭시 닫기.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -364,6 +363,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   useEffect(() => {
     // console.log('Filtered Members:', filteredMembers);
     console.log('eventForSelectedDate', eventForSelectedDate);
+    console.log('selectedEvent', selectedEvent);
   }, [eventForSelectedDate]);
 
   return (
@@ -507,7 +507,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             <div>Loading map...</div>
           )
         ) : eventForSelectedDate.length > 0 ? (
-          <div className="flex flex-col gap-3 p-4 bg-gray-50">
+          <div className="flex flex-col gap-3 p-4 mb-10 bg-gray-50">
             {eventForSelectedDate.map((event, index) => (
               <div key={event.trip_event_id} className="p-4">
                 <div className="flex items-center space-x-4">
@@ -519,7 +519,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                       {format(event.start_date, 'HH:mm', { locale: ko })}
                     </div>
                   </div>
-                  <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3">
+                  <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3 px-5">
                     <div className="flex flex-row justify-between items-center">
                       <div className="flex flex-col items-start">
                         <div className="font-medium">{event.title}</div>
@@ -543,9 +543,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                       </button>
                     </div>
                     {expandedEvents.includes(event.trip_event_id) && (
-                      <div className="px-4 pb-4">
-                        <div className="pt-4 border-t border-gray-100">
-                          <div className="flex justify-items-start items-center mb-4 text-gray-600 text-sm">
+                      <div className=" pb-1">
+                        <div className="pt-1 border-t border-gray-100">
+                          <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
                             <span>{event.destination}</span>
                             <button
                               className="p-2 hover:bg-gray-100 rounded-lg"
