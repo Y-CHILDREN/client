@@ -37,6 +37,7 @@ const EventCardList: React.FC<Props> = ({
   onDeleteEvent,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]); // 카드 요소 배열
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null); // 스크롤 지연을 줘서 상태 업데이트 빈도수를 줄인다.
 
   // 중앙에 가까운 카드 포커싱
@@ -67,6 +68,7 @@ const EventCardList: React.FC<Props> = ({
     }
   }, [events, setSelectedEvent]);
 
+  // 스크롤 debounce
   useEffect(() => {
     const container = containerRef.current;
 
@@ -97,26 +99,54 @@ const EventCardList: React.FC<Props> = ({
     }
   }, [selectedDate]);
 
+  // 이벤트 카드와 마커 동기화
+  useEffect(() => {
+    if (!containerRef.current || !selectedEvent) return;
+
+    // 선택된 이벤트의 카드 DOM 요소 가져오기
+    const selectedIndex = events.findIndex(
+      (event) => event.trip_event_id === selectedEvent.trip_event_id,
+    );
+    const selectedCard = cardRefs.current[selectedIndex];
+
+    if (selectedCard) {
+      const container = containerRef.current;
+
+      // 중앙으로 스크롤
+      container.scrollTo({
+        left:
+          selectedCard.offsetLeft -
+          container.offsetWidth / 2 +
+          selectedCard.offsetWidth / 2,
+        behavior: 'smooth',
+      });
+    }
+  }, [selectedEvent, events]);
+
   return (
     <div
       ref={containerRef}
       className="flex overflow-x-auto snap-x snap-mandatory py-4 px-2 hide-scrollbar min-w-[270px]"
     >
       {events.map((event, index) => (
-        <EventCardRow
+        <div
           key={event.trip_event_id}
-          index={index + 1}
-          title={event.title}
-          destination={event.destination}
-          startDate={event.start_date}
-          endDate={event.end_date}
-          image={event.place_image}
-          cost={event.cost.reduce((sum, item) => sum + item.cost, 0)}
-          isSelected={selectedEvent?.trip_event_id === event.trip_event_id}
-          onClick={() => setSelectedEvent(event)}
-          onEdit={() => onEditEvent(event.trip_event_id)}
-          onDelete={() => onDeleteEvent(event.trip_event_id)}
-        />
+          ref={(el) => (cardRefs.current[index] = el)}
+        >
+          <EventCardRow
+            index={index + 1}
+            title={event.title}
+            destination={event.destination}
+            startDate={event.start_date}
+            endDate={event.end_date}
+            image={event.place_image}
+            cost={event.cost.reduce((sum, item) => sum + item.cost, 0)}
+            isSelected={selectedEvent?.trip_event_id === event.trip_event_id}
+            onClick={() => setSelectedEvent(event)}
+            onEdit={() => onEditEvent(event.trip_event_id)}
+            onDelete={() => onDeleteEvent(event.trip_event_id)}
+          />
+        </div>
       ))}
     </div>
   );
