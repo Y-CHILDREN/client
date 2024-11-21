@@ -222,11 +222,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
     height: '100%',
   };
 
-  // 지도 표시 위치
-  const mapCenter = selectedEvent
-    ? { lat: selectedEvent.latitude!, lng: selectedEvent.longitude! }
-    : { lat: 33.3617, lng: 126.5292 };
-
   // 이벤트 목록 드롭다운.
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
 
@@ -499,8 +494,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
           isLoaded ? (
             <MapWithMarkers
               events={eventForSelectedDate}
-              mapCenter={mapCenter}
               mapContainerStyle={mapContainerStyle}
+              selectedEvent={selectedEvent}
               setSelectedEvent={setSelectedEvent}
             />
           ) : (

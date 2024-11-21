@@ -78,7 +78,7 @@ const EventCardList: React.FC<Props> = ({
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
       }
-      debounceTimeout.current = setTimeout(handleScroll, 100);
+      debounceTimeout.current = setTimeout(handleScroll, 10);
     };
 
     container.addEventListener('scroll', debouncedScroll);
