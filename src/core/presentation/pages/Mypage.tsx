@@ -109,13 +109,13 @@ const Mypage = () => {
 
         <div className="flex items-start self-stretch justify-center gap-3 ">
           <button
-            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2"
+            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-gray-200 text-[#545759] rounded-2"
             onClick={handleLogout}
           >
             로그아웃
           </button>
           <button
-            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2"
+            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-gray-200 text-[#545759] rounded-2"
             onClick={handleDelete}
           >
             회원탈퇴
