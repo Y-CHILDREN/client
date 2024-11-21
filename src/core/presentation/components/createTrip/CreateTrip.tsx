@@ -227,7 +227,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
     // subregion 선택 시 tripData.destination 업데이트
     setTripData((prev) => ({
       ...prev,
-      destination: `${region === 'domestic' ? 'domestic' : 'overseas'} - ${newSubregion}`,
+      destination: `${region === 'domestic' ? 'domestic' : 'overseas'} ${newSubregion}`,
     }));
   };
 

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import TripDetail from '../components/TripDetail.tsx';
+import TripDetail from '../components/TripDetail/TripDetail.tsx';
 
 export function TripDetailPage() {
   const navigate = useNavigate();
