@@ -3,12 +3,14 @@ import AddEventHeader from '../components/addEventHeader/AddEventHeader.tsx';
 import AddEventCalenderInput from '../components/addEventCalenderInput/AddEventCalenderInput.tsx';
 import AddEventCostInput from '../components/addEventCostInput/AddEventCostInput.tsx';
 import AddEventPostButton from '../components/addEventPostButton/AddEventPostButton.tsx';
+import RequiredDot from '../components/requiredDot/RequiredDot.tsx';
+import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
 
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import RequiredDot from '../components/requiredDot/RequiredDot.tsx';
+import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
 
 interface FormValues {
   eventName: string;
@@ -35,6 +37,7 @@ const AddEventPage: React.FC = () => {
   const [locationValue, setLocationValue] = useState<Option | null>(null);
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
@@ -72,10 +75,12 @@ const AddEventPage: React.FC = () => {
     console.log(data);
   };
 
+  const bottonSheetHandler = () => setIsBottomSheetOpen(true);
+
   return (
     <>
       <AddEventHeader message="이벤트 추가하기" />
-      <form className="h-full" onSubmit={handleSubmit(onSubmit)}>
+      <form className="w-full h-full" onSubmit={handleSubmit(onSubmit)}>
         <section className="flex flex-col w-full h-full px-[20px] py-[20px] gap-[24px]">
           <EventInput
             register={register}
@@ -125,12 +130,18 @@ const AddEventPage: React.FC = () => {
             )}
             <input type="hidden" {...register('location')} />
           </div>
-          <AddEventCalenderInput />
+          <AddEventCalenderInput openBottomSheet={bottonSheetHandler} />
           <AddEventCostInput register={register} setValue={setValue} />
           <div className="mt-auto">
             <AddEventPostButton text="추가 완료" />
           </div>
         </section>
+        <BottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+        >
+          <AddEventBottomSheetContent />
+        </BottomSheet>
       </form>
     </>
   );
