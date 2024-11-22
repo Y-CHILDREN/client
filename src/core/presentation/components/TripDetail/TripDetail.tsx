@@ -19,28 +19,11 @@ import { ko } from 'date-fns/locale';
 
 import { Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
+import { Event } from '@/core/domain/entities/event.ts';
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
 import { useGoogleMapsStore } from '@/core/presentation/hooks/stores/googleMapsStore.ts';
-
-interface Cost {
-  category: string;
-  cost: number;
-}
-
-interface TripEvent {
-  trip_event_id: number;
-  trip_id: number;
-  title: string;
-  destination: string;
-  start_date: string;
-  end_date: string;
-  cost: Cost[];
-  latitude?: number;
-  longitude?: number;
-  place_image?: string;
-}
 
 interface TripDetailProps {
   onClose: () => void;
@@ -72,56 +55,56 @@ const TripDetail: React.FC<TripDetailProps> = ({
   };
 
   // tripEvents
-  const [selectedEvent, setSelectedEvent] = useState<TripEvent | null>(null);
-  const [tripEvents, setTripEvents] = useState<TripEvent[]>([
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [tripEvents, setTripEvents] = useState<Event[]>([
     {
-      trip_event_id: 1,
+      event_id: 1,
       trip_id: 1,
-      title: '제주도 여행',
-      destination: '제주 제주시 공항로 2',
+      event_name: '제주도 여행',
+      location: '제주 제주시 공항로 2',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-18').toISOString(),
       cost: [
-        { category: '식비', cost: 30000 },
-        { category: '교통비', cost: 1500 },
+        { category: '식비', value: 30000 },
+        { category: '교통비', value: 1500 },
       ],
       place_image: 'https://placehold.co/400',
     },
     {
-      trip_event_id: 2,
+      event_id: 2,
       trip_id: 1,
-      title: '제주 렌트',
-      destination: '제주 제주시 첨단로 242',
+      event_name: '제주 렌트',
+      location: '제주 제주시 첨단로 242',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-19').toISOString(),
-      cost: [{ category: '식비', cost: 50000 }],
+      cost: [{ category: '식비', value: 50000 }],
       place_image: 'https://placehold.co/400',
     },
     {
-      trip_event_id: 3,
+      event_id: 3,
       trip_id: 1,
-      title: '제주도 맛집',
-      destination: '제주 제주시 조천읍 함덕로 40 2층 201호',
+      event_name: '제주도 맛집',
+      location: '제주 제주시 조천읍 함덕로 40 2층 201호',
       start_date: new Date('2024-10-17').toISOString(),
       end_date: new Date('2024-10-17').toISOString(),
-      cost: [{ category: '입장료', cost: 10000 }],
+      cost: [{ category: '입장료', value: 10000 }],
       place_image: 'https://placehold.co/400',
     },
     {
-      trip_event_id: 4,
+      event_id: 4,
       trip_id: 1,
-      title: '아르떼뮤지엄',
-      destination: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
+      event_name: '아르떼뮤지엄',
+      location: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
       start_date: new Date('2024-10-16').toISOString(),
       end_date: new Date('2024-10-16').toISOString(),
-      cost: [{ category: '입장료', cost: 17000 }],
+      cost: [{ category: '입장료', value: 17000 }],
       place_image: 'https://placehold.co/400',
     },
   ]);
 
   // 비용 합계 계산
   const totalCost = tripEvents.reduce((acc, event) => {
-    return acc + event.cost.reduce((sum, costItem) => sum + costItem.cost, 0);
+    return acc + event.cost.reduce((sum, costItem) => sum + costItem.value, 0);
   }, 0);
 
   // 멤버
@@ -288,31 +271,28 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
       if (eventsWithoutCoordinates.length > 0) {
         const updatedEventsPromises = eventsWithoutCoordinates.map((event) => {
-          return new Promise<TripEvent>((resolve) => {
-            geocoder.geocode(
-              { address: event.destination },
-              (result, status) => {
-                if (result === null) {
-                  return console.log('result is null');
-                }
+          return new Promise<Event>((resolve) => {
+            geocoder.geocode({ address: event.location }, (result, status) => {
+              if (result === null) {
+                return console.log('result is null');
+              }
 
-                // result에 값이 존재하는지 확인
-                if (status === 'OK' && result[0]) {
-                  const { lat, lng } = result[0].geometry.location;
-                  resolve({
-                    ...event,
-                    latitude: lat(),
-                    longitude: lng(),
-                  });
-                } else {
-                  console.error(
-                    `Geocoding failed for ${event.destination}: `,
-                    status,
-                  );
-                  resolve(event); // 실패 시 원래 이벤트 반환
-                }
-              },
-            );
+              // result에 값이 존재하는지 확인
+              if (status === 'OK' && result[0]) {
+                const { lat, lng } = result[0].geometry.location;
+                resolve({
+                  ...event,
+                  latitude: lat(),
+                  longitude: lng(),
+                });
+              } else {
+                console.error(
+                  `Geocoding failed for ${event.location}: `,
+                  status,
+                );
+                resolve(event); // 실패 시 원래 이벤트 반환
+              }
+            });
           });
         });
 
@@ -321,9 +301,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
           setTripEvents((prevEvents) =>
             prevEvents.map(
               (prevEvent) =>
-                updatedEvents.find(
-                  (e) => e.trip_event_id === prevEvent.trip_event_id,
-                ) || prevEvent,
+                updatedEvents.find((e) => e.event_id === prevEvent.event_id) ||
+                prevEvent,
             ),
           );
         });
@@ -504,7 +483,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
         ) : eventForSelectedDate.length > 0 ? (
           <div className="flex flex-col gap-3 p-4 mb-10 bg-gray-50">
             {eventForSelectedDate.map((event, index) => (
-              <div key={event.trip_event_id} className="p-4">
+              <div key={event.event_id} className="p-4">
                 <div className="flex items-center space-x-4">
                   <div className="flex flex-col items-center">
                     <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
@@ -517,36 +496,34 @@ const TripDetail: React.FC<TripDetailProps> = ({
                   <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3 px-5">
                     <div className="flex flex-row justify-between items-center">
                       <div className="flex flex-col items-start">
-                        <div className="font-medium">{event.title}</div>
+                        <div className="font-medium">{event.event_name}</div>
                         <div className="text-sm text-gray-600">
-                          {event.destination.split(' ').slice(0, 2).join(' ')} ·{' '}
+                          {event.location.split(' ').slice(0, 2).join(' ')} ·{' '}
                           {event.cost
-                            .reduce((sum, item) => sum + item.cost, 0)
+                            .reduce((sum, item) => sum + item.value, 0)
                             .toLocaleString()}{' '}
                           원
                         </div>
                       </div>
                       <button
                         className="p-4"
-                        onClick={() => handleExpandEvent(event.trip_event_id)}
+                        onClick={() => handleExpandEvent(event.event_id)}
                       >
-                        {expandedEvents.includes(event.trip_event_id) ? (
+                        {expandedEvents.includes(event.event_id) ? (
                           <ChevronUp className="w-5 h-5 text-gray-400" />
                         ) : (
                           <ChevronDown className="w-5 h-5 text-gray-400" />
                         )}
                       </button>
                     </div>
-                    {expandedEvents.includes(event.trip_event_id) && (
+                    {expandedEvents.includes(event.event_id) && (
                       <div className=" pb-1">
                         <div className="pt-1 border-t border-gray-100">
                           <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
-                            <span>{event.destination}</span>
+                            <span>{event.location}</span>
                             <button
                               className="p-2 hover:bg-gray-100 rounded-lg"
-                              onClick={() =>
-                                handleCopyAddress(event.destination)
-                              }
+                              onClick={() => handleCopyAddress(event.location)}
                             >
                               <Copy className="w-4 h-4 text-gray-400" />
                             </button>
@@ -554,13 +531,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
                           <div className="flex gap-3">
                             <button
                               className="flex-1 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-sm"
-                              onClick={() => onEditEvent(event.trip_event_id)}
+                              onClick={() => onEditEvent(event.event_id)}
                             >
                               수정
                             </button>
                             <button
                               className="flex-1 py-3 border border-red-200 rounded-lg hover:bg-red-50 text-red-500 text-sm"
-                              onClick={() => onDeleteEvent(event.trip_event_id)}
+                              onClick={() => onDeleteEvent(event.event_id)}
                             >
                               삭제
                             </button>

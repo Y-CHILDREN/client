@@ -1,30 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { GoogleMap } from '@react-google-maps/api';
 
-interface Cost {
-  category: string;
-  cost: number;
-}
-
-interface TripEvent {
-  trip_event_id: number;
-  trip_id: number;
-  title: string;
-  destination: string;
-  start_date: string;
-  end_date: string;
-  cost: Cost[];
-  latitude?: number;
-  longitude?: number;
-  place_image?: string;
-}
+import { Event } from '@/core/domain/entities/event.ts';
 
 interface MapWithMarkersProps {
-  events: TripEvent[];
+  events: Event[];
   mapCenter?: google.maps.LatLngLiteral;
   mapContainerStyle: { width: string; height: string };
-  selectedEvent?: TripEvent | null;
-  setSelectedEvent: (event: TripEvent) => void;
+  selectedEvent?: Event | null;
+  setSelectedEvent: (event: Event) => void;
 }
 
 const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
@@ -92,7 +76,7 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
           map: mapRef.current,
           position: { lat: event.latitude, lng: event.longitude },
           content: markerElement,
-          title: event.title,
+          title: event.event_name,
         });
 
         marker.addListener('gmp-click', () => {
