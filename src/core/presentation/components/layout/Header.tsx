@@ -6,7 +6,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
-    <div className="flex h-[48px] justify-center items-center flex-[1_0_0] rounded-[8px]">
+    <div className="flex h-[48px] justify-center items-center flex-[1_0_0] rounded-[8px] bg-white">
       <div className="text-center font-pretendard font-semibold text-[18px] leading-6 text-black">
         {children}
       </div>

@@ -15,7 +15,7 @@ function Mytrips() {
   return (
     <>
       <Header>내 여행</Header>
-      <div className="flex w-full p-[0px_20px] items-start">
+      <div className="flex w-full p-[0px_20px] items-start bg-white">
         {['예정된 여행', '여행중', '완료된 여행'].map((tab) => (
           <div
             key={tab}
@@ -30,7 +30,7 @@ function Mytrips() {
           </div>
         ))}
       </div>
-      <div className="flex flex-col items-start self-stretch flex-1 gap-3 p-5">
+      <div className="flex flex-col items-start self-stretch flex-1 gap-3 p-5 bg-[#F5F6F6]">
         {activeTrips.map((trip: Trip, index: number) => (
           <TripCard key={index} trip={trip} />
         ))}

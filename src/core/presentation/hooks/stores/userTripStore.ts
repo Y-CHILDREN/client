@@ -6,6 +6,7 @@ interface UserTripState {
   setTripData: (trip: Trip[]) => void;
   getDday: (trip: Trip) => string;
   getActiveTrips: (active: string) => Trip[];
+  getSelectedTripById: (id: number) => Trip | undefined;
 }
 
 export const useUserTripStore = create<UserTripState>()((set, get) => ({
@@ -54,5 +55,9 @@ export const useUserTripStore = create<UserTripState>()((set, get) => ({
               return endDate < new Date();
             })
           : [];
+  },
+
+  getSelectedTripById: (id: number) => {
+    return get().tripData.find((trip) => trip.id === id);
   },
 }));
