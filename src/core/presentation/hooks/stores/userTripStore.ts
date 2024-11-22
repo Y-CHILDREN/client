@@ -3,7 +3,7 @@ import { Trip } from '../../../domain/entities/trip';
 
 interface UserTripState {
   tripData: Trip[];
-  setTripData: (trip: Trip[]) => void;
+  setTripData: (trips: Trip[]) => void;
   getDday: (trip: Trip) => string;
   getActiveTrips: (active: string) => Trip[];
   getSelectedTripById: (id: number) => Trip | undefined;
@@ -11,8 +11,8 @@ interface UserTripState {
 
 export const useUserTripStore = create<UserTripState>()((set, get) => ({
   tripData: [],
-  setTripData: (trip: Trip[]) => {
-    set({ tripData: trip });
+  setTripData: (trips: Trip[]) => {
+    set({ tripData: trips });
   },
 
   getDday: (trip: Trip) => {
