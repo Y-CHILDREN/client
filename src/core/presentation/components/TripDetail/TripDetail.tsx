@@ -50,6 +50,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
     tripEvents, // 전체 이벤트
     fetchTripEvents, // event 조회.
     updateEventCoordinates, // event에 좌표 추가.
+    updateEventPhotos,
   } = useUserTripEventStore();
   const { getSelectedTripById } = useUserTripStore(); // trip_id로 tripData 조회.
 
@@ -74,8 +75,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       const profiles = await Promise.all(
         memberEmails.map(async (email) => {
           try {
-            const userInfo = await getUserByEmail(email);
-            return userInfo;
+            return await getUserByEmail(email);
           } catch (error) {
             console.error(`유저정보 가져오기 실패 ${email}:`, error);
             return null;
@@ -94,123 +94,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, [selectedTripId]);
 
-  // const [tripEvents, setTripEvents] = useState<Event[]>([
-  //   {
-  //     event_id: 1,
-  //     trip_id: 1,
-  //     event_name: '제주도 여행',
-  //     location: '제주 제주시 공항로 2',
-  //     start_date: new Date('2024-11-01').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [
-  //       { category: '식비', value: 30000 },
-  //       { category: '교통비', value: 1500 },
-  //     ],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  //   {
-  //     event_id: 2,
-  //     trip_id: 1,
-  //     event_name: '제주 렌트',
-  //     location: '제주 제주시 첨단로 242',
-  //     start_date: new Date('2024-11-01').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [{ category: '식비', value: 50000 }],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  //   {
-  //     event_id: 3,
-  //     trip_id: 1,
-  //     event_name: '제주도 맛집',
-  //     location: '제주 제주시 조천읍 함덕로 40 2층 201호',
-  //     start_date: new Date('2024-11-02').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [{ category: '입장료', value: 10000 }],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  //   {
-  //     event_id: 4,
-  //     trip_id: 1,
-  //     event_name: '아르떼뮤지엄',
-  //     location: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
-  //     start_date: new Date('2024-11-01').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [{ category: '입장료', value: 17000 }],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  // ]);
-
   // 비용 합계 계산
-  const totalCost = tripEvents.reduce((acc, event) => {
-    return acc + event.cost.reduce((sum, costItem) => sum + costItem.value, 0);
-  }, 0);
-
-  // 멤버
-  // const members: User[] = [
-  //   {
-  //     id: '2',
-  //     provider: 'naver',
-  //     email: 'ghkdwodnjs@naver.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: 'Wanny',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-  //     refresh_token:
-  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-  //     trip_history: [1],
-  //   },
-  //   {
-  //     id: '3',
-  //     provider: 'naver',
-  //     email: 'ghkdwodnjs123@naver.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: 'Wanny123',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-  //     refresh_token:
-  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-  //     trip_history: [1],
-  //   },
-  //   {
-  //     id: '4',
-  //     provider: 'google',
-  //     email: 'kt44800325@gmail.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: '오니',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AeDClZATQawfEtSOFBuLyj7BT9_-M08opxchQyiG2Txon7g2QeTqs8oCmSF7yvM-I4k6WBEXkbOn_a9uxDOPk_2rA1B4U8bzhWtzHY0Nksm2RxFLEp5sVTRIIVtwA9X8yq9MtU0KDgSEa2fbPw291lNY7vY3eovFs6K1dZDOaCgYKAV0SARESFQHGX2MiiiZY27UlPJgpQdO8D0Racw0175',
-  //     refresh_token:
-  //       '1//0e-1UcIDy2ik0CgYIARAAGA4SNwF-L9IrQjKLMVENaGMaSrpTfZRZWhiZCMn19K1p9HsAGqGHhoNrS9UYHS_7Q8fTR9AceoOyXJ0',
-  //     trip_history: [1],
-  //   },
-  //   {
-  //     id: '5',
-  //     provider: 'naver',
-  //     email: 'pack@naver.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: 'Rodaju',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-  //     refresh_token:
-  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-  //     trip_history: [1],
-  //   },
-  // ];
-
-  // tripSchedule.members 와 members에서 일치하는 멤버 필터링
-  // const filteredMembers = tripScheduleData
-  //   ? members.filter((member) =>
-  //       tripScheduleData.members.includes(member.email),
-  //     )
-  //   : [];
+  const totalCost = tripEvents
+    .reduce((acc, event) => {
+      return (
+        acc + event.cost.reduce((sum, costItem) => sum + costItem.value, 0)
+      );
+    }, 0)
+    .toLocaleString('ko-KR');
 
   // 날짜 선택
   const [selectedDate, setSelectedDate] = useState(
@@ -233,9 +124,16 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }
 
   // 선택한 날짜에 대한 이벤트 목록 필터링
-  const eventForSelectedDate = tripEvents.filter((event) =>
-    selectedDate ? isSameDay(parseISO(event.start_date), selectedDate) : false,
-  );
+  const eventForSelectedDate = tripEvents
+    .filter((event) =>
+      selectedDate
+        ? isSameDay(parseISO(event.start_date), selectedDate)
+        : false,
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
+    );
 
   // Map (Google Map api)
   // 지도 표시 여부
@@ -303,13 +201,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, []);
 
-  // tripEvent에 위치 정보를 추가하는 로직
+  // tripEvent에 위치 정보 && Place Image를 추가하는 로직
   useEffect(() => {
     const fetchAndUpdateEvents = async () => {
       try {
         if (selectedTripId) {
           await fetchTripEvents(selectedTripId); // 이벤트 데이터 가져오기
           await updateEventCoordinates(); // 좌표 업데이트
+          await updateEventPhotos(); // 사진 업데이트
         }
       } catch (error) {
         console.error('데이터 처리 중 오류:', error);
@@ -345,12 +244,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // logging
   useEffect(() => {
     // console.log('tripScheduleData:', tripScheduleData);
-    // console.log('tripEvents:', tripEvents);
+    console.log('tripEvents:', tripEvents);
     // console.log('showMap:', showMap);
     // console.log('Filtered Members:', filteredMembers);
     // console.log('eventForSelectedDate', eventForSelectedDate);
     // console.log('selectedEvent', selectedEvent);
-  }, [tripScheduleData, tripEvents, showMap]);
+  }, [tripEvents]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
@@ -519,18 +418,24 @@ const TripDetail: React.FC<TripDetailProps> = ({
                         </div>
                       </div>
                       <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
-                        <div className="flex flex-row items-center justify-between">
-                          <div className="flex flex-col items-start">
+                        <div className="flex flex-1 flex-row items-center justify-between">
+                          <div className="flex flex-col items-start w-full">
                             <div className="font-medium">
                               {event.event_name}
                             </div>
-                            <div className="text-sm text-gray-600">
-                              {event.location.split(' ').slice(0, 2).join(' ')}{' '}
-                              ·{' '}
-                              {event.cost
-                                .reduce((sum, item) => sum + item.value, 0)
-                                .toLocaleString()}{' '}
-                              원
+                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                              <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-28">
+                                {event.location
+                                  .split(' ')
+                                  .slice(0, 2)
+                                  .join(' ')}
+                              </div>
+                              <div className="ml-auto">
+                                {event.cost
+                                  .reduce((sum, item) => sum + item.value, 0)
+                                  .toLocaleString()}{' '}
+                                원
+                              </div>
                             </div>
                           </div>
                           <button

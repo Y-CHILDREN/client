@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface DatePickerProps {
   startDate?: Date;
@@ -69,7 +70,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                 type="button"
                 className={`p-1 ${prevMonthButtonDisabled ? 'text-gray-300' : 'text-gray-700'} text-xl font-medium`}
               >
-                &lt;
+                <ChevronLeft />
               </button>
               <button
                 onClick={increaseMonth}
@@ -77,7 +78,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
                 type="button"
                 className={`p-1 ${nextMonthButtonDisabled ? 'text-gray-300' : 'text-gray-700'} text-xl font-medium`}
               >
-                &gt;
+                <ChevronRight />
               </button>
             </div>
           </div>
