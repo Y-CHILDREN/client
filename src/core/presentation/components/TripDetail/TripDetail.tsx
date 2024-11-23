@@ -54,53 +54,54 @@ const TripDetail: React.FC<TripDetailProps> = ({
       ? getSelectedTripById(selectedTripId) // selectedTripId를 이용해 데이터 조회
       : undefined; // selectedTripId가 없으면 undefined
 
-  // tripEvents
+  // 선택 또는 포커싱된 이벤트
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [tripEvents, setTripEvents] = useState<Event[]>([
-    {
-      event_id: 1,
-      trip_id: 1,
-      event_name: '제주도 여행',
-      location: '제주 제주시 공항로 2',
-      start_date: new Date('2024-11-21').toISOString(),
-      end_date: new Date('2024-11-22').toISOString(),
-      cost: [
-        { category: '식비', value: 30000 },
-        { category: '교통비', value: 1500 },
-      ],
-      place_image: 'https://placehold.co/400',
-    },
-    {
-      event_id: 2,
-      trip_id: 1,
-      event_name: '제주 렌트',
-      location: '제주 제주시 첨단로 242',
-      start_date: new Date('2024-11-21').toISOString(),
-      end_date: new Date('2024-11-22').toISOString(),
-      cost: [{ category: '식비', value: 50000 }],
-      place_image: 'https://placehold.co/400',
-    },
-    {
-      event_id: 3,
-      trip_id: 1,
-      event_name: '제주도 맛집',
-      location: '제주 제주시 조천읍 함덕로 40 2층 201호',
-      start_date: new Date('2024-11-22').toISOString(),
-      end_date: new Date('2024-11-22').toISOString(),
-      cost: [{ category: '입장료', value: 10000 }],
-      place_image: 'https://placehold.co/400',
-    },
-    {
-      event_id: 4,
-      trip_id: 1,
-      event_name: '아르떼뮤지엄',
-      location: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
-      start_date: new Date('2024-11-21').toISOString(),
-      end_date: new Date('2024-11-22').toISOString(),
-      cost: [{ category: '입장료', value: 17000 }],
-      place_image: 'https://placehold.co/400',
-    },
-  ]);
+
+  // const [tripEvents, setTripEvents] = useState<Event[]>([
+  //   {
+  //     event_id: 1,
+  //     trip_id: 1,
+  //     event_name: '제주도 여행',
+  //     location: '제주 제주시 공항로 2',
+  //     start_date: new Date('2024-11-01').toISOString(),
+  //     end_date: new Date('2024-11-22').toISOString(),
+  //     cost: [
+  //       { category: '식비', value: 30000 },
+  //       { category: '교통비', value: 1500 },
+  //     ],
+  //     place_image: 'https://placehold.co/400',
+  //   },
+  //   {
+  //     event_id: 2,
+  //     trip_id: 1,
+  //     event_name: '제주 렌트',
+  //     location: '제주 제주시 첨단로 242',
+  //     start_date: new Date('2024-11-01').toISOString(),
+  //     end_date: new Date('2024-11-22').toISOString(),
+  //     cost: [{ category: '식비', value: 50000 }],
+  //     place_image: 'https://placehold.co/400',
+  //   },
+  //   {
+  //     event_id: 3,
+  //     trip_id: 1,
+  //     event_name: '제주도 맛집',
+  //     location: '제주 제주시 조천읍 함덕로 40 2층 201호',
+  //     start_date: new Date('2024-11-02').toISOString(),
+  //     end_date: new Date('2024-11-22').toISOString(),
+  //     cost: [{ category: '입장료', value: 10000 }],
+  //     place_image: 'https://placehold.co/400',
+  //   },
+  //   {
+  //     event_id: 4,
+  //     trip_id: 1,
+  //     event_name: '아르떼뮤지엄',
+  //     location: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
+  //     start_date: new Date('2024-11-01').toISOString(),
+  //     end_date: new Date('2024-11-22').toISOString(),
+  //     cost: [{ category: '입장료', value: 17000 }],
+  //     place_image: 'https://placehold.co/400',
+  //   },
+  // ]);
 
   // 비용 합계 계산
   const totalCost = tripEvents.reduce((acc, event) => {
@@ -257,6 +258,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
       setToast({ message: '주소 복사에 실패했습니다.', type: 'error' });
     }
   };
+
+  // 페이지 로드 시 이벤트 데이터 조회
+  useEffect(() => {
+    if (selectedTripId) {
+      fetchTripEvents(selectedTripId);
+    }
+  }, [selectedTripId]);
 
   // tripEvent에 위치 정보를 추가하는 로직
   useEffect(() => {
