@@ -1,5 +1,5 @@
 import EventInput from '../components/eventInput/EventInput.tsx';
-import AddEventHeader from '../components/addEventHeader/AddEventHeader.tsx';
+
 import AddEventCalenderInput from '../components/addEventCalenderInput/AddEventCalenderInput.tsx';
 import AddEventCostInput from '../components/addEventCostInput/AddEventCostInput.tsx';
 import AddEventPostButton from '../components/addEventPostButton/AddEventPostButton.tsx';
@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
 import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
+import AddEventHeader from '../components/addEventHeader/addEventHeader.tsx';
 
 export interface Cost {
   category: string;
