@@ -4,13 +4,13 @@ import AddEventCalenderInput from '../components/addEventCalenderInput/AddEventC
 import AddEventCostInput from '../components/addEventCostInput/AddEventCostInput.tsx';
 import AddEventPostButton from '../components/addEventPostButton/AddEventPostButton.tsx';
 import RequiredDot from '../components/requiredDot/RequiredDot.tsx';
-import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
 
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 import { useState, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
+import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
 
 export interface Cost {
   category: string;
@@ -38,7 +38,7 @@ interface Option {
 
 const AddEventPage: React.FC = () => {
   const methods = useForm<FormValues>();
-  const { register, handleSubmit, setValue, watch } = methods;
+  const { register, handleSubmit, setValue, watch, getValues } = methods;
 
   const [locationValue, setLocationValue] = useState<Option | null>(null);
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -143,7 +143,11 @@ const AddEventPage: React.FC = () => {
               openBottomSheet={bottomSheetHandler}
               data={dateRange}
             />
-            <AddEventCostInput register={register} setValue={setValue} />
+            <AddEventCostInput
+              register={register}
+              setValue={setValue}
+              getValues={getValues}
+            />
             <AddEventPostButton text="추가 완료" />
           </section>
           <BottomSheet
