@@ -35,7 +35,7 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
             </div>
             <button className="p-0 border-none outline-none cursor-pointer bg-inherit ">
               <img
-                src="/src/core/presentation/assets/addEventForm/trashIcon.svg"
+                src="/assets/addEventForm/trashIcon.svg"
                 alt="쓰레기통 아이콘"
               />
             </button>

@@ -33,20 +33,14 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
         onClick={openBottomSheet}
       >
         <p>{data?.start ? formattedStartDate : '시작 일시'}</p>
-        <img
-          src="/src/core/presentation/assets/addEventForm/calenderIcon.svg"
-          alt="달력 아이콘"
-        />
+        <img src="/assets/addEventForm/calenderIcon.svg" alt="달력 아이콘" />
       </button>
       <button
         className={`flex justify-between p-3 ${data?.start ? 'text-black' : 'text-gray-400'} bg-white border-2 border-gray-200 rounded-md text-start`}
         onClick={openBottomSheet}
       >
         <p>{data?.end ? formattedEndDate : '종료 일시'}</p>
-        <img
-          src="/src/core/presentation/assets/addEventForm/calenderIcon.svg"
-          alt="달력 아이콘"
-        />
+        <img src="/assets/addEventForm/calenderIcon.svg" alt="달력 아이콘" />
       </button>
     </article>
   );

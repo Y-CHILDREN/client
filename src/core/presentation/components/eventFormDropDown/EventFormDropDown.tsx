@@ -44,7 +44,7 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
         </p>
         <img
           className="w-6 h-6"
-          src="/src/core/presentation/assets/addEventForm/dropDownIcon.svg"
+          src="/assets/addEventForm/dropDownIcon.svg"
           alt="drop down 그림"
         />
       </button>
