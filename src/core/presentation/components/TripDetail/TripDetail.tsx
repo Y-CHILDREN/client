@@ -124,9 +124,16 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }
 
   // 선택한 날짜에 대한 이벤트 목록 필터링
-  const eventForSelectedDate = tripEvents.filter((event) =>
-    selectedDate ? isSameDay(parseISO(event.start_date), selectedDate) : false,
-  );
+  const eventForSelectedDate = tripEvents
+    .filter((event) =>
+      selectedDate
+        ? isSameDay(parseISO(event.start_date), selectedDate)
+        : false,
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
+    );
 
   // Map (Google Map api)
   // 지도 표시 여부
