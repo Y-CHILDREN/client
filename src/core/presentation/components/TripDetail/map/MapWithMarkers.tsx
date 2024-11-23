@@ -3,8 +3,6 @@ import { GoogleMap } from '@react-google-maps/api';
 
 import { Event } from '@/core/domain/entities/event.ts';
 
-import MarkerPin from '../../../../../../public/assets/map/MarkerPin.svg';
-
 interface MapWithMarkersProps {
   events: Event[];
   mapCenter?: google.maps.LatLngLiteral;
@@ -24,6 +22,8 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false); // 로드 완료 여부 상태 추가
+
+  const markerPinUrl = '/assets/map/MarkerPin.svg';
 
   const onLoad = React.useCallback((map: google.maps.Map) => {
     mapRef.current = map;
@@ -67,7 +67,7 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
         markerElement.style.height = '72px';
 
         const img = document.createElement('img');
-        img.src = MarkerPin;
+        img.src = markerPinUrl;
         img.style.width = '100%';
         img.style.height = '100%';
         markerElement.appendChild(img);
