@@ -1,29 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+
+import { Event } from '@/core/domain/entities/event.ts';
+
 import EventCardRow from '@/core/presentation/components/TripDetail/eventCardRow/EventCardRow.tsx';
-
-interface Cost {
-  category: string;
-  cost: number;
-}
-
-interface TripEvent {
-  trip_event_id: number;
-  trip_id: number;
-  title: string;
-  destination: string;
-  start_date: string;
-  end_date: string;
-  cost: Cost[];
-  latitude?: number;
-  longitude?: number;
-  place_image?: string;
-}
 
 interface Props {
   selectedDate?: Date;
-  events: TripEvent[];
-  selectedEvent: TripEvent;
-  setSelectedEvent: (event: TripEvent) => void;
+  events: Event[];
+  selectedEvent: Event;
+  setSelectedEvent: (event: Event) => void;
   onEditEvent: (eventId: number) => void;
   onDeleteEvent: (eventId: number) => void;
 }
@@ -105,7 +90,7 @@ const EventCardList: React.FC<Props> = ({
 
     // 선택된 이벤트의 카드 DOM 요소 가져오기
     const selectedIndex = events.findIndex(
-      (event) => event.trip_event_id === selectedEvent.trip_event_id,
+      (event) => event.event_id === selectedEvent.event_id,
     );
     const selectedCard = cardRefs.current[selectedIndex];
 
@@ -129,22 +114,19 @@ const EventCardList: React.FC<Props> = ({
       className="flex overflow-x-auto snap-x snap-mandatory py-4 px-2 hide-scrollbar min-w-[270px]"
     >
       {events.map((event, index) => (
-        <div
-          key={event.trip_event_id}
-          ref={(el) => (cardRefs.current[index] = el)}
-        >
+        <div key={event.event_id} ref={(el) => (cardRefs.current[index] = el)}>
           <EventCardRow
             index={index + 1}
-            title={event.title}
-            destination={event.destination}
+            title={event.event_name}
+            location={event.location}
             startDate={event.start_date}
             endDate={event.end_date}
             image={event.place_image}
-            cost={event.cost.reduce((sum, item) => sum + item.cost, 0)}
-            isSelected={selectedEvent?.trip_event_id === event.trip_event_id}
+            cost={event.cost.reduce((sum, item) => sum + item.value, 0)}
+            isSelected={selectedEvent?.event_id === event.event_id}
             onClick={() => setSelectedEvent(event)}
-            onEdit={() => onEditEvent(event.trip_event_id)}
-            onDelete={() => onDeleteEvent(event.trip_event_id)}
+            onEdit={() => onEditEvent(event.event_id)}
+            onDelete={() => onDeleteEvent(event.event_id)}
           />
         </div>
       ))}

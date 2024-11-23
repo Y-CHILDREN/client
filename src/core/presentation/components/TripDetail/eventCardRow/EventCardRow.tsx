@@ -6,7 +6,7 @@ import { ko } from 'date-fns/locale';
 interface EventCardRowProps {
   index: number;
   title: string;
-  destination: string;
+  location: string;
   startDate: string;
   endDate: string;
   image?: string;
@@ -20,7 +20,7 @@ interface EventCardRowProps {
 const EventCardRow: React.FC<EventCardRowProps> = ({
   index,
   title,
-  destination,
+  location,
   startDate,
   endDate,
   image,
@@ -121,7 +121,7 @@ const EventCardRow: React.FC<EventCardRowProps> = ({
             <div className="flex flex-col items-start">
               <h3 className="font-medium">{title}</h3>
               <p className="text-sm text-gray-600 truncate max-w-[150px]">
-                {destination}
+                {location}
               </p>
               <p className="text-sm font-medium mt-1">
                 {cost.toLocaleString()} 원

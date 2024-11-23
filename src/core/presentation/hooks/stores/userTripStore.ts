@@ -7,11 +7,13 @@ interface UserTripState {
   getDday: (trip: Trip) => string;
   getActiveTrips: (active: string) => Trip[];
   getSelectedTripById: (id: number) => Trip | undefined;
+  fetchTrips: (userId: string) => Promise<void>;
 }
 
 export const useUserTripStore = create<UserTripState>()((set, get) => ({
   tripData: [],
   setUserTripData: (trips: Trip[]) => {
+
     set({ tripData: trips });
   },
 
@@ -58,5 +60,23 @@ export const useUserTripStore = create<UserTripState>()((set, get) => ({
 
   getSelectedTripById: (id: number) => {
     return get().tripData.find((trip) => trip.id === id);
+  },
+
+  // 내 여행 조회
+  fetchTrips: async (userId: string) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/trips/user/${userId}`,
+      );
+
+      if (!response.ok) {
+        throw new Error('여행 데이터를 불러오는 데 실패했습니다.');
+      }
+
+      const data = await response.json();
+      set({ tripData: data });
+    } catch (error) {
+      console.error('여행 데이터 fetch 에러:', error);
+    }
   },
 }));
