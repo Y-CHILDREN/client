@@ -73,10 +73,19 @@ export async function updateUserImage(
 export async function deleteUser(id: string): Promise<User | undefined> {
   try {
     const res = await userApi.delete(`/users/${id}`);
+
+    // 회원 탈퇴 후 캐시 초기화
+    userApi.defaults.headers.common = {};
+    if (typeof window !== 'undefined') {
+      sessionStorage.clear();
+      localStorage.clear();
+    }
+
     console.log('삭제 데이터:', res.data);
     return res.data;
   } catch (error) {
     console.log('삭제에 실패 했습니다.', error);
+    throw error; // 에러를 throw하도록 수정
   }
 }
 
@@ -86,6 +95,13 @@ export async function logout(): Promise<void> {
 
     if (!response.data.success) {
       throw new Error(response.data.message);
+    }
+
+    userApi.defaults.headers.common = {};
+
+    if (typeof window !== 'undefined') {
+      sessionStorage.clear();
+      localStorage.clear();
     }
   } catch (error) {
     console.error('로그아웃 실패:', error);
