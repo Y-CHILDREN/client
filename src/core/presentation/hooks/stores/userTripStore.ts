@@ -11,8 +11,8 @@ interface UserTripState {
 
 export const useUserTripStore = create<UserTripState>()((set, get) => ({
   tripData: [],
-  setTripData: (trip: Trip[]) => {
-    set({ tripData: trip });
+  setTripData: (trips: Trip[]) => {
+    set({ tripData: trips });
   },
 
   getDday: (trip: Trip) => {
