@@ -22,6 +22,7 @@ import { Event } from '@/core/domain/entities/event.ts';
 import { useUserTripStore } from '../../hooks/stores/userTripStore.ts';
 import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore';
 import { useGoogleMapsStore } from '@/core/presentation/hooks/stores/googleMapsStore.ts';
+import { getUserByEmail } from '../../../data/infrastructure/services/userService';
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
@@ -60,6 +61,38 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   // 선택 또는 포커싱된 이벤트
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  const [memberProfiles, setMemberProfiles] = useState<User[]>([]);
+
+  // 멤버의 유저 정보를 가져오는 로직
+  useEffect(() => {
+    const fetchMemberProfiles = async () => {
+      const memberEmails = selectedTripId
+        ? getSelectedTripById(selectedTripId)?.members || []
+        : [];
+
+      const profiles = await Promise.all(
+        memberEmails.map(async (email) => {
+          try {
+            const userInfo = await getUserByEmail(email);
+            return userInfo;
+          } catch (error) {
+            console.error(`유저정보 가져오기 실패 ${email}:`, error);
+            return null;
+          }
+        }),
+      );
+
+      // null 값을 필터링하고 상태 업데이트 (타입 가드 개념 공부 필요)
+      setMemberProfiles(
+        profiles.filter((profile): profile is User => profile !== null),
+      );
+    };
+
+    if (selectedTripId) {
+      fetchMemberProfiles();
+    }
+  }, [selectedTripId]);
 
   // const [tripEvents, setTripEvents] = useState<Event[]>([
   //   {
@@ -113,71 +146,71 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, 0);
 
   // 멤버
-  const members: User[] = [
-    {
-      id: '2',
-      provider: 'naver',
-      email: 'ghkdwodnjs@naver.com',
-      user_image:
-        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-      nickname: 'Wanny',
-      user_memo: '',
-      access_token:
-        'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-      refresh_token:
-        '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-      trip_history: [1],
-    },
-    {
-      id: '3',
-      provider: 'naver',
-      email: 'ghkdwodnjs123@naver.com',
-      user_image:
-        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-      nickname: 'Wanny123',
-      user_memo: '',
-      access_token:
-        'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-      refresh_token:
-        '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-      trip_history: [1],
-    },
-    {
-      id: '4',
-      provider: 'google',
-      email: 'kt44800325@gmail.com',
-      user_image:
-        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-      nickname: '오니',
-      user_memo: '',
-      access_token:
-        'ya29.a0AeDClZATQawfEtSOFBuLyj7BT9_-M08opxchQyiG2Txon7g2QeTqs8oCmSF7yvM-I4k6WBEXkbOn_a9uxDOPk_2rA1B4U8bzhWtzHY0Nksm2RxFLEp5sVTRIIVtwA9X8yq9MtU0KDgSEa2fbPw291lNY7vY3eovFs6K1dZDOaCgYKAV0SARESFQHGX2MiiiZY27UlPJgpQdO8D0Racw0175',
-      refresh_token:
-        '1//0e-1UcIDy2ik0CgYIARAAGA4SNwF-L9IrQjKLMVENaGMaSrpTfZRZWhiZCMn19K1p9HsAGqGHhoNrS9UYHS_7Q8fTR9AceoOyXJ0',
-      trip_history: [1],
-    },
-    {
-      id: '5',
-      provider: 'naver',
-      email: 'pack@naver.com',
-      user_image:
-        'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-      nickname: 'Rodaju',
-      user_memo: '',
-      access_token:
-        'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-      refresh_token:
-        '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-      trip_history: [1],
-    },
-  ];
+  // const members: User[] = [
+  //   {
+  //     id: '2',
+  //     provider: 'naver',
+  //     email: 'ghkdwodnjs@naver.com',
+  //     user_image:
+  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
+  //     nickname: 'Wanny',
+  //     user_memo: '',
+  //     access_token:
+  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
+  //     refresh_token:
+  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
+  //     trip_history: [1],
+  //   },
+  //   {
+  //     id: '3',
+  //     provider: 'naver',
+  //     email: 'ghkdwodnjs123@naver.com',
+  //     user_image:
+  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
+  //     nickname: 'Wanny123',
+  //     user_memo: '',
+  //     access_token:
+  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
+  //     refresh_token:
+  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
+  //     trip_history: [1],
+  //   },
+  //   {
+  //     id: '4',
+  //     provider: 'google',
+  //     email: 'kt44800325@gmail.com',
+  //     user_image:
+  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
+  //     nickname: '오니',
+  //     user_memo: '',
+  //     access_token:
+  //       'ya29.a0AeDClZATQawfEtSOFBuLyj7BT9_-M08opxchQyiG2Txon7g2QeTqs8oCmSF7yvM-I4k6WBEXkbOn_a9uxDOPk_2rA1B4U8bzhWtzHY0Nksm2RxFLEp5sVTRIIVtwA9X8yq9MtU0KDgSEa2fbPw291lNY7vY3eovFs6K1dZDOaCgYKAV0SARESFQHGX2MiiiZY27UlPJgpQdO8D0Racw0175',
+  //     refresh_token:
+  //       '1//0e-1UcIDy2ik0CgYIARAAGA4SNwF-L9IrQjKLMVENaGMaSrpTfZRZWhiZCMn19K1p9HsAGqGHhoNrS9UYHS_7Q8fTR9AceoOyXJ0',
+  //     trip_history: [1],
+  //   },
+  //   {
+  //     id: '5',
+  //     provider: 'naver',
+  //     email: 'pack@naver.com',
+  //     user_image:
+  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
+  //     nickname: 'Rodaju',
+  //     user_memo: '',
+  //     access_token:
+  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
+  //     refresh_token:
+  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
+  //     trip_history: [1],
+  //   },
+  // ];
 
   // tripSchedule.members 와 members에서 일치하는 멤버 필터링
-  const filteredMembers = tripScheduleData
-    ? members.filter((member) =>
-        tripScheduleData.members.includes(member.email),
-      )
-    : [];
+  // const filteredMembers = tripScheduleData
+  //   ? members.filter((member) =>
+  //       tripScheduleData.members.includes(member.email),
+  //     )
+  //   : [];
 
   // 날짜 선택
   const [selectedDate, setSelectedDate] = useState(
@@ -329,12 +362,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
           {/* 헤더 */}
           <header className="px-4 space-y-4">
             {/* 닫기, 지도, 추가기능 버튼 */}
-            <div className="flex justify-between items-center pt-2 relative">
+            <div className="relative flex items-center justify-between pt-2">
               <button
                 onClick={handleClose}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                className="p-2 rounded-lg hover:bg-gray-100"
               >
-                <X className="h-6 w-6" />
+                <X className="w-6 h-6" />
               </button>
               <div
                 className="flex items-center gap-4"
@@ -343,9 +376,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 {/* 맵 버튼 */}
                 <button onClick={handleMapToggle} className="bg-white">
                   {showMap ? (
-                    <List className="h-6 w-6" />
+                    <List className="w-6 h-6" />
                   ) : (
-                    <Map className="h-6 w-6" />
+                    <Map className="w-6 h-6" />
                   )}
                 </button>
 
@@ -354,10 +387,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
                   className="bg-white"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <MoreVertical className="h-6 w-6" />
+                  <MoreVertical className="w-6 h-6" />
                 </button>
                 {showDropdown && (
-                  <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                  <div className="absolute right-0 z-50 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg top-full">
                     <button
                       onClick={() => {
                         onEditTrip(selectedTripId!);
@@ -386,7 +419,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
               {/* 제목 */}
               <h1 className="text-2xl font-bold">{tripScheduleData.title}</h1>
 
-              <div className="flex items-center justify-between text-sm text-gray-600 py-3">
+              <div className="flex items-center justify-between py-3 text-sm text-gray-600">
                 {/* 날짜, 경비 */}
                 <div className="flex flex-col items-center space-y-3">
                   <span className="flex items-center mr-auto">
@@ -415,7 +448,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
                 {/* 멤버 아바타 */}
                 <div className="flex -space-x-2">
-                  {filteredMembers.slice(0, 3).map((member, index) => (
+                  {memberProfiles.map((member, index) => (
                     <Avatar
                       key={member.id}
                       name={member.nickname}
@@ -425,9 +458,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                       color={`hsl(${index * 60}, 70%, 85%)`}
                     />
                   ))}
-                  {filteredMembers.length > 3 && (
-                    <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-sm text-gray-600">
-                      +{filteredMembers.length - 3}
+                  {memberProfiles.length > 3 && (
+                    <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full">
+                      +{memberProfiles.length - 3}
                     </div>
                   )}
                 </div>
@@ -436,7 +469,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           </header>
 
           {/*  날짜 선택 탭 */}
-          <nav className="border-y border-gray-200">
+          <nav className="border-gray-200 border-y">
             <div className="flex overflow-x-auto hide-scrollbar">
               {dateOptions.map((date) => (
                 <button
@@ -460,7 +493,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           </nav>
 
           {/* 이벤트 목록 */}
-          <main className="flex-1 relative">
+          <main className="relative flex-1">
             {showMap ? (
               isLoaded ? (
                 <MapWithMarkers
@@ -485,8 +518,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
                           {format(event.start_date, 'HH:mm', { locale: ko })}
                         </div>
                       </div>
-                      <div className="flex-1 space-y-2 justify-between border border-gray-200 rounded-lg shadow-lg p-3 px-5">
-                        <div className="flex flex-row justify-between items-center">
+                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
+                        <div className="flex flex-row items-center justify-between">
                           <div className="flex flex-col items-start">
                             <div className="font-medium">
                               {event.event_name}
@@ -512,12 +545,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
                           </button>
                         </div>
                         {expandedEvents.includes(event.event_id) && (
-                          <div className=" pb-1">
+                          <div className="pb-1 ">
                             <div className="pt-1 border-t border-gray-100">
                               <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
                                 <span>{event.location}</span>
                                 <button
-                                  className="p-2 hover:bg-gray-100 rounded-lg"
+                                  className="p-2 rounded-lg hover:bg-gray-100"
                                   onClick={() =>
                                     handleCopyAddress(event.location)
                                   }
@@ -527,13 +560,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                               <div className="flex gap-3">
                                 <button
-                                  className="flex-1 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-sm"
+                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
                                   onClick={() => onEditEvent(event.event_id)}
                                 >
                                   수정
                                 </button>
                                 <button
-                                  className="flex-1 py-3 border border-red-200 rounded-lg hover:bg-red-50 text-red-500 text-sm"
+                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50"
                                   onClick={() => onDeleteEvent(event.event_id)}
                                 >
                                   삭제
@@ -559,7 +592,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 onClick={handleCreateEvent}
                 className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
               >
-                <Plus className="h-5 w-5 mr-2" />
+                <Plus className="w-5 h-5 mr-2" />
                 이벤트 추가
               </button>
             </div>

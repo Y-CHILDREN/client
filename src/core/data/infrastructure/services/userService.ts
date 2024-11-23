@@ -26,9 +26,9 @@ export async function getUserById(id: string): Promise<User | undefined> {
   }
 }
 
-export async function getUserByEmail(id: string, email: string): Promise<User> {
+export async function getUserByEmail(email: string): Promise<User> {
   try {
-    const res = await userApi.get(`/users/${id}/${email}`);
+    const res = await userApi.get(`/users/email/${email}`);
     if (!res.data) {
       throw new Error('사용자를 찾을 수 없습니다.');
     }
