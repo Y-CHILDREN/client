@@ -13,6 +13,14 @@
     -webkit-appearance: none;
     margin: 0;
   }
+  .no-scroll-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scroll-bar {
+    -ms-overflow-style: none; /* 인터넷 익스플로러 */
+    scrollbar-width: none; /* 파이어폭스 */
+  }
 }
 
 :root {
