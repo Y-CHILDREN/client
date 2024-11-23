@@ -31,6 +31,8 @@ interface TripDetailProps {
   onCreateEvent: () => void;
   onEditEvent: (eventId: number) => void;
   onDeleteEvent: (eventId: number) => void;
+  onEditTrip: (tripId: number) => void;
+  onDeleteTrip: (tripId: number) => void;
 }
 
 const TripDetail: React.FC<TripDetailProps> = ({
@@ -38,6 +40,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
   onCreateEvent,
   onEditEvent = () => {},
   onDeleteEvent = () => {},
+  onEditTrip = () => {},
+  onDeleteTrip = () => {},
 }) => {
   // 상태 관리
   const {
@@ -356,7 +360,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                   <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                     <button
                       onClick={() => {
-                        // onEditTrip();
+                        onEditTrip(selectedTripId!);
                         setShowDropdown(false);
                       }}
                       className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -366,7 +370,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     </button>
                     <button
                       onClick={() => {
-                        // onDeleteTrip();
+                        onDeleteTrip(selectedTripId!);
                         setShowDropdown(false);
                       }}
                       className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
