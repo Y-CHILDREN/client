@@ -3,7 +3,7 @@ import { Trip } from '../../../domain/entities/trip';
 
 interface UserTripState {
   tripData: Trip[];
-  setTripData: (trips: Trip[]) => void;
+  setUserTripData: (trips: Trip[]) => void;
   getDday: (trip: Trip) => string;
   getActiveTrips: (active: string) => Trip[];
   getSelectedTripById: (id: number) => Trip | undefined;
@@ -11,7 +11,7 @@ interface UserTripState {
 
 export const useUserTripStore = create<UserTripState>()((set, get) => ({
   tripData: [],
-  setTripData: (trips: Trip[]) => {
+  setUserTripData: (trips: Trip[]) => {
     set({ tripData: trips });
   },
 
@@ -36,21 +36,20 @@ export const useUserTripStore = create<UserTripState>()((set, get) => ({
 
   //현재 날짜 기준 여행 데이터 필터링
   getActiveTrips: (active: string) => {
-    const { tripData } = get();
     return active === '예정된 여행'
-      ? tripData.filter((trip) => {
+      ? get().tripData.filter((trip) => {
           const startDate = new Date(trip.start_date || '');
           return startDate > new Date();
         })
       : active === '여행중'
-        ? tripData.filter((trip) => {
+        ? get().tripData.filter((trip) => {
             const startDate = new Date(trip.start_date || '');
             const endDate = new Date(trip.end_date || '');
             const currentDate = new Date();
             return currentDate >= startDate && currentDate <= endDate;
           })
         : active === '완료된 여행'
-          ? tripData.filter((trip) => {
+          ? get().tripData.filter((trip) => {
               const endDate = new Date(trip.end_date || '');
               return endDate < new Date();
             })
