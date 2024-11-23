@@ -1,3 +1,6 @@
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/stores/authStore';
@@ -8,6 +11,7 @@ const Login: React.FC = () => {
   const [textList, setTextList] = useState<string[]>([]);
   const [showFinal, setShowFinal] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,6 +51,7 @@ const Login: React.FC = () => {
     }
 
     if (tokenParam && userParam) {
+      setIsLoading(true);
       try {
         const parsedUser = JSON.parse(decodeURIComponent(userParam));
 
@@ -107,7 +112,11 @@ const Login: React.FC = () => {
 
   return (
     <div>
-      {!user ? (
+      {isLoading ? (
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+      ) : !user ? (
         <>
           <div className="w-[327px] h-[573px] p-[24px_20px_24px] flex flex-col justify-center items-center g-[4px] flex-1 self-stretch filter brightness-200">
             <div className="flex flex-col w-[112px] h-[120px] items-center text-center text-[32px] font-bold leading-[40px] font-pretendard">
@@ -136,7 +145,7 @@ const Login: React.FC = () => {
             </div>
             <div className="flex items-center gap-[20px]">
               <button
-                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[rgba(210,210,210,0.4)] p-0
+                className="flex w-[56px] h-[56px] justify-center items-center gap-[16px] rounded-[160px] bg-[#ffffff] p-0
             "
                 onClick={handleGoogleLogin}
               >

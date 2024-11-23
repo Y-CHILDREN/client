@@ -16,6 +16,7 @@ import DropDown from '../dropDown/DropDown.tsx';
 import SearchInputComponent from '../Search/SearchInputComponent.tsx';
 import useTripStore from '../../hooks/stores/tripStore.ts';
 import { useAuthStore } from '../../hooks/stores/authStore.ts';
+import { useUserTripStore } from '../../hooks/stores/userTripStore.ts';
 
 interface Props {
   onClose: () => void;
@@ -61,6 +62,8 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   const [errors, setErrors] = useState<{ [key in keyof CreatedTrip]?: string }>(
     {},
   );
+
+  const { setUserTripData } = useUserTripStore();
 
   // logging
   useEffect(() => {
@@ -227,7 +230,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
     // subregion 선택 시 tripData.destination 업데이트
     setTripData((prev) => ({
       ...prev,
-      destination: `${region === 'domestic' ? 'domestic' : 'overseas'} - ${newSubregion}`,
+      destination: `${region === 'domestic' ? 'domestic' : 'overseas'} ${newSubregion}`,
     }));
   };
 
@@ -315,6 +318,13 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
         const response = await axios.post(`${apiUrl}/trips/`, tripDetails);
         console.log('Trip created:', response.data);
         onSubmit();
+
+        if (user) {
+          const updatedTripsData = await axios.get(
+            `${apiUrl}/trips/user/${user.id}`,
+          );
+          setUserTripData(updatedTripsData.data);
+        }
       } catch (error) {
         console.error('Error creating trip:', error);
       }
@@ -322,9 +332,8 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
   };
 
   return (
-
     <div className="w-full h-full bg-white min-h-[600px] flex flex-col">
-      <div className="flex items-center p-4 border-b relative">
+      <div className="relative flex items-center p-4 border-b">
         <button
           onClick={handleClose}
           className="absolute p-2 transition-colors rounded-full left-4 hover:bg-gray-50"

@@ -15,12 +15,12 @@ function Mytrips() {
   return (
     <>
       <Header>내 여행</Header>
-      <div className="flex w-full p-[0px_20px] items-start">
+      <div className="flex w-full p-[0px_20px] items-start bg-white">
         {['예정된 여행', '여행중', '완료된 여행'].map((tab) => (
           <div
             key={tab}
             onClick={() => setActiveTab(tab as TabType)}
-            className={`flex h-[48px] justify-center items-center gap-1 flex-1  px-4 py-2 ${
+            className={`flex h-[48px] justify-center items-center hover:cursor-pointer gap-1 flex-1  px-4 py-2 ${
               activeTab === tab
                 ? 'text-[#151616] border-b-[2px] border-[#222324]'
                 : 'text-[#AAADB0]'
@@ -30,7 +30,7 @@ function Mytrips() {
           </div>
         ))}
       </div>
-      <div className="flex flex-col items-start self-stretch flex-1 gap-3 p-5">
+      <div className="flex flex-col items-start self-stretch flex-1 gap-3 p-5 bg-[#F5F6F6]">
         {activeTrips.map((trip: Trip, index: number) => (
           <TripCard key={index} trip={trip} />
         ))}

@@ -1,12 +1,15 @@
 import { Trip } from '../../domain/entities/trip';
 import { useUserTripStore } from '../hooks/stores/userTripStore';
+import { useUserTripEventStore } from '../hooks/stores/userTripEventStore';
 import { useNavigate } from 'react-router-dom';
+import TripThumbnail from './home/TripThumbnail';
 interface TripCardProps {
   trip: Trip;
 }
 const TripCard = ({ trip }: TripCardProps) => {
   const navigate = useNavigate();
   const { getDday } = useUserTripStore();
+  const { setSelectedTripId } = useUserTripEventStore();
 
   const formatDate = (dateString: string | Date | undefined) => {
     if (!dateString) return '';
@@ -14,19 +17,19 @@ const TripCard = ({ trip }: TripCardProps) => {
     return date.toLocaleDateString();
   };
   const handleNavigation = () => {
-    navigate('/trip-detail');
+    setSelectedTripId(trip.id);
+    navigate(`/trip-detail`);
   };
 
   return (
     <div
-      className="flex items-center self-stretch gap-5 p-4 rounded-xl bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.04),0px_0px_4px_0px_rgba(0,0,0,0.04)]"
+      className="flex items-center self-stretch gap-5 p-4 rounded-xl bg-white shadow-[0px_4px_12px_0px_rgba(0,0,0,0.04),0px_0px_4px_0px_rgba(0,0,0,0.04)] hover:cursor-pointer"
       onClick={handleNavigation}
     >
-      <div className="w-[72px] h-[72px]">
-        <img
-          src="/assets/mytrips/tripCardImage.png"
-          alt="여행 이미지"
-          className="w-full h-full rounded-[8px] object-cover"
+      <div className="relative w-[72px] h-[72px] overflow-hidden rounded-xl">
+        <TripThumbnail
+          destination={trip.destination}
+          className="object-cover w-full h-full"
         />
       </div>
       <div className="flex flex-col items-start justify-center gap-[6px] flex-1 ">

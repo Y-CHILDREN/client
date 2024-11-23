@@ -1,14 +1,15 @@
 import Header from '../components/layout/Header';
-import {
-  logout,
-  deleteUser,
-} from '../../data/infrastructure/services/userService';
+import { logout } from '../../data/infrastructure/services/userService';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
 
 const Mypage = () => {
   const { user, clearAuth } = useAuthStore();
   const navigate = useNavigate();
+  const { showToast } = useToast();
+
+  const copyLink = 'http://y-children.s3-website.ap-northeast-2.amazonaws.com';
 
   console.log('User Object:', user);
   console.log('User Image URL:', user?.user_image);
@@ -24,14 +25,20 @@ const Mypage = () => {
   };
 
   const handleDelete = async () => {
+    navigate('/delete-user', { replace: true });
+  };
+
+  const handleCapyClipBoard = async (copyLink: string) => {
     try {
-      if (!user?.id) {
-        throw new Error('사용자 ID가 없습니다');
-      }
-      await deleteUser(user.id);
-      navigate('/deletecomplete', { replace: true });
+      const textArea = document.createElement('textarea');
+      textArea.value = copyLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      showToast('링크 복사가 완료되었습니다.', 'success');
     } catch (error) {
-      console.error('회원 삭제 실패:', error);
+      console.error('클립보드 복사 실패:', error);
     }
   };
 
@@ -67,7 +74,10 @@ const Mypage = () => {
               <p>{user?.email}</p>
             </div>
           </div>
-          <div className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2]">
+          <div
+            className="flex items-center self-stretch gap-3 p-4 rounded-[8px] bg-[#45E1B2] hover:cursor-pointer"
+            onClick={() => handleCapyClipBoard(copyLink)}
+          >
             <div className="flex items-center flex-1 gap-3">
               <div className="w-[40px] h-[40px] ">
                 <img
@@ -93,13 +103,13 @@ const Mypage = () => {
 
         <div className="flex items-start self-stretch justify-center gap-3 ">
           <button
-            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2"
+            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-gray-200 text-[#545759] rounded-2"
             onClick={handleLogout}
           >
             로그아웃
           </button>
           <button
-            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-[#F5F6F6] text-[#545759] rounded-2"
+            className="flex h-[48px] py-3 px-5 justify-center items-center gap-2 flex-[1_0_0] bg-gray-200 text-[#545759] rounded-2"
             onClick={handleDelete}
           >
             회원탈퇴

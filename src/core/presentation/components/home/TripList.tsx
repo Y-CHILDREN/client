@@ -9,7 +9,7 @@ import {
 import TripCard from './TripCard';
 
 interface TripData {
-  title: string;
+  name: string;
   start_date: string;
   destination: string;
   id: number;
@@ -34,27 +34,30 @@ const TripList: React.FC<TripListProps> = ({
         <TabsList className="flex px-6 pt-8 pb-4 items-start gap-6 self-stretch">
           <TabsTrigger
             value="upcoming"
-            className="px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] data-[state=active]:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
+            className="group px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] data-[state=active]:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
           >
             <span>다가오는 여행</span>
             <div className="relative w-full flex justify-center">
-              <div className="w-[4px] h-[4px] bg-black rounded-full" />
+              <div className="w-[4px] h-[4px] rounded-full bg-transparent group-data-[state=active]:bg-black focus-visible:outline-none border-none hover-none" />
             </div>
           </TabsTrigger>
           <TabsTrigger
             value="past"
-            className="px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] data-[state=active]:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
+            className="group px-0 line-clamp-1 bg-transparent overflow-hidden text-[#AAADB0] data-[state=active]:text-[#151616] truncate focus:whitespace-normal font-pretendard text-base font-semibold leading-6"
           >
-            다녀온 여행
+            <span>다녀온 여행</span>
+            <div className="relative w-full flex justify-center">
+              <div className="w-[4px] h-[4px] rounded-full bg-transparent group-data-[state=active]:bg-black" />
+            </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="upcoming">
           {hasUpcomingTrip ? (
             <div className="flex flex-row pl-6 items-start gap-3 self-stretch overflow-x-auto">
               {upcomingTripData.map((item) => (
-                <Link to={`/trip/${item.id}`}>
+                <Link to={`/trip/${item.id}`} key={item.id}>
                   <TripCard
-                    tripName={item.title}
+                    tripName={item.name}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />
@@ -75,9 +78,9 @@ const TripList: React.FC<TripListProps> = ({
           {hasPastTrip ? (
             <div className="flex flex-row pl-6 box-border items-start gap-3 self-stretch overflow-hidden">
               {pastTripData.map((item) => (
-                <Link to={`/trip/${item.id}`}>
+                <Link to={`/trip/${item.id}`} key={item.id}>
                   <TripCard
-                    tripName={item.title}
+                    tripName={item.name}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />

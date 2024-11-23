@@ -1,0 +1,30 @@
+<svg width="64" height="72" viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Pin" filter="url(#filter0_ddi_1041_3542)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M32 8C43.0457 8 52 16.9543 52 28C52 36.4692 46.7358 43.7089 39.301 46.6255L33.1389 55.0482C33.0105 55.2246 32.8399 55.3685 32.6416 55.4678C32.4434 55.5672 32.2232 55.619 31.9998 55.619C31.7764 55.619 31.5562 55.5672 31.3579 55.4678C31.1597 55.3685 30.9891 55.2246 30.8606 55.0482L24.6984 46.6253C17.2639 43.7085 12 36.469 12 28C12 16.9543 20.9543 8 32 8Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_ddi_1041_3542" x="0" y="0" width="64" height="71.619" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="6"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1041_3542"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="1" operator="dilate" in="SourceAlpha" result="effect2_dropShadow_1041_3542"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_1041_3542" result="effect2_dropShadow_1041_3542"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_1041_3542" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.882353 0 0 0 0 0.882353 0 0 0 0 0.882353 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="shape" result="effect3_innerShadow_1041_3542"/>
+</filter>
+</defs>
+</svg>

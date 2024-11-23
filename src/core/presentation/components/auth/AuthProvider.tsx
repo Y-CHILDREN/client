@@ -9,7 +9,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUser, setLoading, setAuthenticated } = useAuthStore();
-  const { setTripData } = useUserTripStore();
+  const { setUserTripData } = useUserTripStore();
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
           const tripData = await response.json();
           if (Array.isArray(tripData)) {
-            setTripData(tripData);
+            setUserTripData(tripData);
           } else {
             console.error('Trip data is not an array:', tripData);
           }
@@ -55,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     checkAuth();
-  }, [setTripData]);
+  }, [apiUrl, setAuthenticated, setLoading, setUserTripData, setUser]);
 
   return <>{children}</>;
 };
