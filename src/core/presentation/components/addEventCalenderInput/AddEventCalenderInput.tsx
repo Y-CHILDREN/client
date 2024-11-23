@@ -35,6 +35,7 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
       <button
         className={`flex justify-between p-3 ${data?.start ? 'text-black' : 'text-gray-400'} bg-white border-2 border-gray-200 rounded-md text-start`}
         onClick={handleOpenBottomSheet}
+        type="button"
       >
         <p>{data?.start ? formattedStartDate : '시작 일시'}</p>
         <img src="/assets/addEventForm/calenderIcon.svg" alt="달력 아이콘" />
@@ -42,6 +43,7 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
       <button
         className={`flex justify-between p-3 ${data?.start ? 'text-black' : 'text-gray-400'} bg-white border-2 border-gray-200 rounded-md text-start`}
         onClick={handleOpenBottomSheet}
+        type="button"
       >
         <p>{data?.end ? formattedEndDate : '종료 일시'}</p>
         <img src="/assets/addEventForm/calenderIcon.svg" alt="달력 아이콘" />

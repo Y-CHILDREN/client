@@ -38,6 +38,7 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
       <button
         onClick={dropDownHandler}
         className="flex items-center justify-between bg-transparent form-input-radius"
+        type="button"
       >
         <p
           className={category !== '항목 선택' ? 'text-black' : 'text-gray-400'}
