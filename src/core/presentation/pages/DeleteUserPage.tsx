@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useToast } from '../hooks/useToast';
+import { deleteUser } from '../../data/infrastructure/services/userService';
 
 const DeleteCompletePage = () => {
   const navigate = useNavigate();
@@ -15,11 +16,15 @@ const DeleteCompletePage = () => {
   const handleConfirm = async () => {
     if (confirmEmail === user?.email) {
       try {
+        if (!user?.id) {
+          throw new Error('사용자 ID가 없습니다');
+        }
+        await deleteUser(user.id);
         await clearAuth();
-        navigate('/login', { replace: true });
         showToast('탈퇴가 정상 처리 되었습니다.', 'success');
+        navigate('/login', { replace: true });
       } catch (error) {
-        console.error(error, '회원 탈퇴중 에러발생');
+        console.error('회원 삭제 실패:', error);
       }
     } else {
       showToast('이메일이 일치하지 않습니다.', 'error');
@@ -34,7 +39,7 @@ const DeleteCompletePage = () => {
     <>
       <Header>회원 탈퇴</Header>
       <div className="flex flex-col items-center justify-center p-6 ">
-        <div className="h-[500px] flex items-center justify-center ">
+        <div className="h-[380px] flex items-center justify-center ">
           <img src={backgroundImg} alt="byebye" />
         </div>
         <div className="flex flex-col items-start gap-6 text-center">

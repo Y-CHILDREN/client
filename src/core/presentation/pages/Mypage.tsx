@@ -1,8 +1,5 @@
 import Header from '../components/layout/Header';
-import {
-  logout,
-  deleteUser,
-} from '../../data/infrastructure/services/userService';
+import { logout } from '../../data/infrastructure/services/userService';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/useToast';
@@ -28,20 +25,17 @@ const Mypage = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      if (!user?.id) {
-        throw new Error('사용자 ID가 없습니다');
-      }
-      await deleteUser(user.id);
-      navigate('/deletecomplete', { replace: true });
-    } catch (error) {
-      console.error('회원 삭제 실패:', error);
-    }
+    navigate('/delete-user', { replace: true });
   };
 
   const handleCapyClipBoard = async (copyLink: string) => {
     try {
-      await navigator.clipboard.writeText(copyLink);
+      const textArea = document.createElement('textarea');
+      textArea.value = copyLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
       showToast('링크 복사가 완료되었습니다.', 'success');
     } catch (error) {
       console.error('클립보드 복사 실패:', error);
