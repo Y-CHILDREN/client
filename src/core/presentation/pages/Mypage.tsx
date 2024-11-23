@@ -30,7 +30,12 @@ const Mypage = () => {
 
   const handleCapyClipBoard = async (copyLink: string) => {
     try {
-      await navigator.clipboard.writeText(copyLink);
+      const textArea = document.createElement('textarea');
+      textArea.value = copyLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
       showToast('링크 복사가 완료되었습니다.', 'success');
     } catch (error) {
       console.error('클립보드 복사 실패:', error);
