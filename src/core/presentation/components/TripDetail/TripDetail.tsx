@@ -307,12 +307,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   // logging
   useEffect(() => {
-    console.log('tripScheduleData:', tripScheduleData);
-    console.log('tripEvents:', tripEvents);
+    // console.log('tripScheduleData:', tripScheduleData);
+    // console.log('tripEvents:', tripEvents);
+    // console.log('showMap:', showMap);
     // console.log('Filtered Members:', filteredMembers);
     // console.log('eventForSelectedDate', eventForSelectedDate);
     // console.log('selectedEvent', selectedEvent);
-  }, [tripScheduleData, tripEvents]);
+  }, [tripScheduleData, tripEvents, showMap]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">

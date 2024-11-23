@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap } from '@react-google-maps/api';
 
 import { Event } from '@/core/domain/entities/event.ts';
@@ -20,13 +20,18 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
 }) => {
   const mapRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false); // 로드 완료 여부 상태 추가
 
   const onLoad = React.useCallback((map: google.maps.Map) => {
     mapRef.current = map;
+    setMapInstance(map); // 상태로 지도 참조 저장
+    setIsMapLoaded(true); // 로드 완료 상태 업데이트
   }, []);
 
   const onUnmount = React.useCallback(() => {
     mapRef.current = null;
+    setIsMapLoaded(false); // 언마운트 시 로드 상태 초기화
   }, []);
 
   // PanTo 기능 (부드러운 화면 전환)
@@ -41,11 +46,11 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
     if (selectedEvent?.latitude && selectedEvent?.longitude) {
       panTo(selectedEvent.latitude, selectedEvent.longitude);
     }
-  }, [selectedEvent]);
+  }, [selectedEvent, panTo]);
 
   // 마커
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapInstance || !isMapLoaded) return; // 지도 로드가 완료되지 않았으면 마커를 추가하지 않음
 
     // 마커 초기화
     markersRef.current.forEach((marker) => (marker.map = null));
@@ -73,7 +78,7 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
         `;
 
         const marker = new google.maps.marker.AdvancedMarkerElement({
-          map: mapRef.current,
+          map: mapInstance,
           position: { lat: event.latitude, lng: event.longitude },
           content: markerElement,
           title: event.event_name,
@@ -87,7 +92,15 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
         markersRef.current.push(marker);
       }
     });
-  }, [events, setSelectedEvent]);
+  }, [events, setSelectedEvent, mapInstance, isMapLoaded]);
+
+  // logging
+  useEffect(() => {
+    // console.log('isMapLoaded:', isMapLoaded);
+    // console.log('mapRef:', mapRef);
+    // console.log('mapInstance:', mapInstance);
+    // console.log('selectedEvent:', selectedEvent);
+  }, [isMapLoaded, mapInstance, mapRef, selectedEvent]);
 
   return (
     <>
