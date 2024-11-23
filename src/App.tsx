@@ -18,7 +18,7 @@ import AddEventPage from './core/presentation/pages/AddEventPage.tsx';
 import Mytrips from './core/presentation/pages/Mytrips';
 import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
 import { ProtectedRoute } from './routers/ProtectedRouter';
-import DeleteCompletePage from './core/presentation/pages/DeleteCompletePage';
+import DeleteCompletePage from './core/presentation/pages/DeleteUserPage.tsx';
 import { TripDetailPage } from './core/presentation/pages/TripDetailPage';
 import ToastMessageProvider from './core/presentation/components/ui/ToastMessageProvider.tsx';
 
@@ -58,10 +58,7 @@ const App: React.FC = () => {
                 <Route path="/create-trip" element={<CreateTripPage />} />
                 <Route path="/mypage" element={<Mypage />} />
                 <Route path="/mytrips" element={<Mytrips />} />
-                <Route
-                  path="/deletecomplete"
-                  element={<DeleteCompletePage />}
-                />
+                <Route path="/delete-user" element={<DeleteCompletePage />} />
                 <Route path="*" element={<Navigate to="/home" replace />} />
                 <Route path="/trip-detail" element={<TripDetailPage />} />
               </Route>
