@@ -75,8 +75,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
       const profiles = await Promise.all(
         memberEmails.map(async (email) => {
           try {
-            const userInfo = await getUserByEmail(email);
-            return userInfo;
+            return await getUserByEmail(email);
           } catch (error) {
             console.error(`유저정보 가져오기 실패 ${email}:`, error);
             return null;
@@ -95,123 +94,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, [selectedTripId]);
 
-  // const [tripEvents, setTripEvents] = useState<Event[]>([
-  //   {
-  //     event_id: 1,
-  //     trip_id: 1,
-  //     event_name: '제주도 여행',
-  //     location: '제주 제주시 공항로 2',
-  //     start_date: new Date('2024-11-01').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [
-  //       { category: '식비', value: 30000 },
-  //       { category: '교통비', value: 1500 },
-  //     ],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  //   {
-  //     event_id: 2,
-  //     trip_id: 1,
-  //     event_name: '제주 렌트',
-  //     location: '제주 제주시 첨단로 242',
-  //     start_date: new Date('2024-11-01').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [{ category: '식비', value: 50000 }],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  //   {
-  //     event_id: 3,
-  //     trip_id: 1,
-  //     event_name: '제주도 맛집',
-  //     location: '제주 제주시 조천읍 함덕로 40 2층 201호',
-  //     start_date: new Date('2024-11-02').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [{ category: '입장료', value: 10000 }],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  //   {
-  //     event_id: 4,
-  //     trip_id: 1,
-  //     event_name: '아르떼뮤지엄',
-  //     location: '제주특별자치도 제주시 특별자치도, 애월읍 어림비로 478',
-  //     start_date: new Date('2024-11-01').toISOString(),
-  //     end_date: new Date('2024-11-22').toISOString(),
-  //     cost: [{ category: '입장료', value: 17000 }],
-  //     place_image: 'https://placehold.co/400',
-  //   },
-  // ]);
-
   // 비용 합계 계산
   const totalCost = tripEvents.reduce((acc, event) => {
     return acc + event.cost.reduce((sum, costItem) => sum + costItem.value, 0);
   }, 0);
-
-  // 멤버
-  // const members: User[] = [
-  //   {
-  //     id: '2',
-  //     provider: 'naver',
-  //     email: 'ghkdwodnjs@naver.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: 'Wanny',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-  //     refresh_token:
-  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-  //     trip_history: [1],
-  //   },
-  //   {
-  //     id: '3',
-  //     provider: 'naver',
-  //     email: 'ghkdwodnjs123@naver.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: 'Wanny123',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-  //     refresh_token:
-  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-  //     trip_history: [1],
-  //   },
-  //   {
-  //     id: '4',
-  //     provider: 'google',
-  //     email: 'kt44800325@gmail.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: '오니',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AeDClZATQawfEtSOFBuLyj7BT9_-M08opxchQyiG2Txon7g2QeTqs8oCmSF7yvM-I4k6WBEXkbOn_a9uxDOPk_2rA1B4U8bzhWtzHY0Nksm2RxFLEp5sVTRIIVtwA9X8yq9MtU0KDgSEa2fbPw291lNY7vY3eovFs6K1dZDOaCgYKAV0SARESFQHGX2MiiiZY27UlPJgpQdO8D0Racw0175',
-  //     refresh_token:
-  //       '1//0e-1UcIDy2ik0CgYIARAAGA4SNwF-L9IrQjKLMVENaGMaSrpTfZRZWhiZCMn19K1p9HsAGqGHhoNrS9UYHS_7Q8fTR9AceoOyXJ0',
-  //     trip_history: [1],
-  //   },
-  //   {
-  //     id: '5',
-  //     provider: 'naver',
-  //     email: 'pack@naver.com',
-  //     user_image:
-  //       'https://lh3.googleusercontent.com/a/ACg8ocKji1Y0dBDA_LJG3YzZfstynUfR2qtPS8_qJmtZ_9FkXA79NSNw=s96-c',
-  //     nickname: 'Rodaju',
-  //     user_memo: '',
-  //     access_token:
-  //       'ya29.a0AcM612wBL-gtSO5PMhPl_LoP6IQJ4OdzylLRmjTP76xOr3xVpVrbJ6yQH1Q1ti2YKnLAH7e0vl3SRJslSj-b_o38aU3xij-1UQ3nJAQnMBAcvp0GlwvSapLjdbKqdp4aYgCBctmu_6JtHteZR_Ha3VGJTfIGnel2sO_mBrN_aCgYKARgSARASFQHGX2MiTmev-n8gPEZQ3Z4DbT2F0g0175',
-  //     refresh_token:
-  //       '1//0eQqQoREMmFDECgYIARAAGA4SNwF-L9IrwrGe1Tsdl-t_WShiOaukjX4gYj2zyfpy5sXaQfUujnjnSECa6yF6DBXWOr97wJhl1uY',
-  //     trip_history: [1],
-  //   },
-  // ];
-
-  // tripSchedule.members 와 members에서 일치하는 멤버 필터링
-  // const filteredMembers = tripScheduleData
-  //   ? members.filter((member) =>
-  //       tripScheduleData.members.includes(member.email),
-  //     )
-  //   : [];
 
   // 날짜 선택
   const [selectedDate, setSelectedDate] = useState(
@@ -347,12 +233,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // logging
   useEffect(() => {
     // console.log('tripScheduleData:', tripScheduleData);
-    console.log('tripEvents:', tripEvents);
+    // console.log('tripEvents:', tripEvents);
     // console.log('showMap:', showMap);
     // console.log('Filtered Members:', filteredMembers);
     // console.log('eventForSelectedDate', eventForSelectedDate);
     // console.log('selectedEvent', selectedEvent);
-  }, [tripScheduleData, tripEvents, showMap]);
+  }, []);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
