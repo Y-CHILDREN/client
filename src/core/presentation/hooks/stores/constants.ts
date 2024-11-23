@@ -4,4 +4,4 @@ export const GOOGLE_MAP_LIBRARIES: (
   | 'geometry'
   | 'drawing'
   | 'marker'
-)[] = ['marker'];
+)[] = ['marker', 'places'];
