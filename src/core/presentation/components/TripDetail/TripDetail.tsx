@@ -268,7 +268,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
     if (selectedTripId) {
       fetchTripEvents(selectedTripId);
     }
-  }, [selectedTripId]);
+  }, []);
 
   // tripEvent에 위치 정보를 추가하는 로직
   useEffect(() => {
