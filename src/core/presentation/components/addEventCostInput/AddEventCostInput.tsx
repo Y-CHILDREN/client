@@ -1,12 +1,7 @@
 import { UseFormRegister } from 'react-hook-form';
 import { UseFormSetValue } from 'react-hook-form';
-interface FormValues {
-  eventName: string;
-  location: string;
-  schedule: Date;
-  costCategory: string;
-  costValue: number;
-}
+import { FormValues } from '../../pages/AddEventPage.tsx';
+
 interface AddEventCostInputProps {
   register: UseFormRegister<FormValues>;
   setValue: UseFormSetValue<FormValues>;
@@ -25,16 +20,16 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
   return (
     <article className="flex flex-col items-start">
       <p>경비</p>
-      {costInputs.map((costInput) => {
+      {costInputs.map((costInput, index) => {
         const { id } = costInput;
         return (
           <div key={id} className="flex justify-between w-full pt-3">
-            <EventFormDropDown setValue={setValue} />
+            <EventFormDropDown setValue={setValue} index={index} />
             <div className="flex w-[40%] form-input-radius">
               <input
                 className="w-full no-spinner"
                 type="number"
-                {...register(`costValue`)}
+                {...register(`cost.${index}.cost`)}
               />
               <p>원</p>
             </div>

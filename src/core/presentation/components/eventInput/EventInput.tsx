@@ -1,12 +1,5 @@
 import { UseFormRegister } from 'react-hook-form';
-
-interface FormValues {
-  eventName: string;
-  location: string;
-  schedule: Date;
-  costCategory: string;
-  costValue: number;
-}
+import { FormValues } from '../../pages/AddEventPage.tsx';
 
 interface EventInputProps {
   id: keyof FormValues;
