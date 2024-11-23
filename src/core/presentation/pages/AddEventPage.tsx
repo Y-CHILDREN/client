@@ -1,17 +1,19 @@
 import EventInput from '../components/eventInput/EventInput.tsx';
-
 import AddEventCalenderInput from '../components/addEventCalenderInput/AddEventCalenderInput.tsx';
 import AddEventCostInput from '../components/addEventCostInput/AddEventCostInput.tsx';
 import AddEventPostButton from '../components/addEventPostButton/AddEventPostButton.tsx';
 import RequiredDot from '../components/requiredDot/RequiredDot.tsx';
-
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-
-import { useState, useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
 import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
 import AddEventHeader from '../components/addEventHeader/addEventHeader.tsx';
+
+import { useState, useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { createTripEvent } from '../../data/infrastructure/services/eventService.ts';
+import { useUserTripEventStore } from '../hooks/stores/userTripEventStore.ts';
+// import { useNavigate } from 'react-router-dom';
 
 export interface Cost {
   category: string;
@@ -19,10 +21,11 @@ export interface Cost {
 }
 
 export interface FormValues {
+  tripId: number | null;
   eventName: string;
   location: string;
   cost: Cost[];
-  dateRange: { start?: Date; end?: Date }; // 날짜 범위 추가
+  dateRange: { start?: Date; end?: Date };
 }
 
 interface Option {
@@ -45,6 +48,20 @@ const AddEventPage: React.FC = () => {
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  const selectedTripId = useUserTripEventStore((state) => state.selectedTripId);
+  // const navigate = useNavigate();
+
+  const addEventMutation = useMutation({
+    mutationFn: createTripEvent,
+    onSuccess: () => {
+      console.log('이벤트가 성공적으로 추가되었습니다.');
+      // navigate('/trip-detail');
+    },
+    onError: (error) => {
+      console.error('이벤트 추가 중 오류가 발생했습니다:', error);
+    },
+  });
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
@@ -79,18 +96,22 @@ const AddEventPage: React.FC = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
+    const dataAddTripId = {
+      ...data,
+      tripId: selectedTripId,
+    };
+    addEventMutation.mutate(dataAddTripId);
   };
 
   const bottomSheetHandler = () => setIsBottomSheetOpen(true);
 
-  // watch를 사용하여 현재 dateRange 값을 가져옴
   const dateRange = watch('dateRange');
+
   return (
     <FormProvider {...methods}>
       <>
         <AddEventHeader message="이벤트 추가하기" />
-        <form className="w-full " onSubmit={handleSubmit(onSubmit)}>
+        <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
           <section className="flex flex-col w-full h-[624px] px-[20px] pt-[20px] gap-[14px]">
             <EventInput
               register={register}
@@ -149,7 +170,10 @@ const AddEventPage: React.FC = () => {
               setValue={setValue}
               getValues={getValues}
             />
-            <AddEventPostButton text="추가 완료" />
+            <AddEventPostButton
+              text={addEventMutation.isPending ? '추가 중...' : '추가 완료'}
+              disabled={addEventMutation.isPending}
+            />
           </section>
           <BottomSheet
             isOpen={isBottomSheetOpen}
