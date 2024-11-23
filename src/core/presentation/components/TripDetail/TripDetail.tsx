@@ -42,7 +42,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // 상태 관리
   const {
     selectedTripId, // 선택된 trip_id.
-    // tripEvents, // 전체 이벤트
+    tripEvents, // 전체 이벤트
+    fetchTripEvents, // event 조회.
+    updateEventCoordinates, // event에 좌표 추가.
   } = useUserTripEventStore();
   const { getSelectedTripById } = useUserTripStore(); // trip_id로 tripData 조회.
 
@@ -264,55 +266,19 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   // tripEvent에 위치 정보를 추가하는 로직
   useEffect(() => {
-    if (isLoaded) {
-      const geocoder = new window.google.maps.Geocoder();
-
-      // 좌표 없는 이벤트 목록
-      const eventsWithoutCoordinates = tripEvents.filter(
-        (event) =>
-          event.latitude === undefined || event.longitude === undefined,
-      );
-
-      if (eventsWithoutCoordinates.length > 0) {
-        const updatedEventsPromises = eventsWithoutCoordinates.map((event) => {
-          return new Promise<Event>((resolve) => {
-            geocoder.geocode({ address: event.location }, (result, status) => {
-              if (result === null) {
-                return console.log('result is null');
-              }
-
-              // result에 값이 존재하는지 확인
-              if (status === 'OK' && result[0]) {
-                const { lat, lng } = result[0].geometry.location;
-                resolve({
-                  ...event,
-                  latitude: lat(),
-                  longitude: lng(),
-                });
-              } else {
-                console.error(
-                  `Geocoding failed for ${event.location}: `,
-                  status,
-                );
-                resolve(event); // 실패 시 원래 이벤트 반환
-              }
-            });
-          });
-        });
-
-        // 모든 Geocoding 작업이 완료되면 상태 업데이트
-        Promise.all(updatedEventsPromises).then((updatedEvents) => {
-          setTripEvents((prevEvents) =>
-            prevEvents.map(
-              (prevEvent) =>
-                updatedEvents.find((e) => e.event_id === prevEvent.event_id) ||
-                prevEvent,
-            ),
-          );
-        });
+    const fetchAndUpdateEvents = async () => {
+      try {
+        if (selectedTripId) {
+          await fetchTripEvents(selectedTripId); // 이벤트 데이터 가져오기
+          await updateEventCoordinates(); // 좌표 업데이트
+        }
+      } catch (error) {
+        console.error('데이터 처리 중 오류:', error);
       }
-    }
-  }, [isLoaded, tripEvents]);
+    };
+
+    fetchAndUpdateEvents();
+  }, [selectedTripId]);
 
   // 토스트 팝업 노출 시간
   useEffect(() => {
