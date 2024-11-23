@@ -6,7 +6,7 @@ const LoginLayout: React.FC = () => {
   return (
     <>
       <div
-        className="w-[420px] h-[812px] bg-black flex flex-col justify-between bg-cover filter brightness-85"
+        className="w-[420px] h-[100vh] bg-black flex flex-col justify-between bg-cover filter brightness-85"
         style={{ backgroundImage: `url(${loginBackgroundImg})` }}
       >
         <main className="flex flex-col items-center justify-btween p-[20px_24px_48px] flex-1 self-stretch">
