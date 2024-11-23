@@ -205,12 +205,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   const { isLoaded } = useGoogleMapsStore();
 
-  // 지도 옵션 설정
-  const mapContainerStyle = {
-    width: '100%',
-    height: '100%',
-  };
-
   // 이벤트 목록 드롭다운.
   const [expandedEvents, setExpandedEvents] = useState<number[]>([]);
 
@@ -458,7 +452,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
               isLoaded ? (
                 <MapWithMarkers
                   events={eventForSelectedDate}
-                  mapContainerStyle={mapContainerStyle}
+                  mapContainerStyle={{ width: '100%', height: '100%' }}
                   selectedEvent={selectedEvent}
                   setSelectedEvent={setSelectedEvent}
                 />
