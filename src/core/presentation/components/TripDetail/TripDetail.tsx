@@ -411,18 +411,24 @@ const TripDetail: React.FC<TripDetailProps> = ({
                         </div>
                       </div>
                       <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
-                        <div className="flex flex-row items-center justify-between">
-                          <div className="flex flex-col items-start">
+                        <div className="flex flex-1 flex-row items-center justify-between">
+                          <div className="flex flex-col items-start w-full">
                             <div className="font-medium">
                               {event.event_name}
                             </div>
-                            <div className="text-sm text-gray-600">
-                              {event.location.split(' ').slice(0, 2).join(' ')}{' '}
-                              ·{' '}
-                              {event.cost
-                                .reduce((sum, item) => sum + item.value, 0)
-                                .toLocaleString()}{' '}
-                              원
+                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                              <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-28">
+                                {event.location
+                                  .split(' ')
+                                  .slice(0, 2)
+                                  .join(' ')}
+                              </div>
+                              <div className="ml-auto">
+                                {event.cost
+                                  .reduce((sum, item) => sum + item.value, 0)
+                                  .toLocaleString()}{' '}
+                                원
+                              </div>
                             </div>
                           </div>
                           <button
