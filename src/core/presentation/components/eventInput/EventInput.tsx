@@ -27,7 +27,7 @@ const EventInput: React.FC<EventInputProps> = ({
         id={id}
         placeholder={inputText}
         type="text"
-        {...register(id)} // register를 사용하여 입력 필드를 등록합니다.
+        {...register(id)}
       />
     </article>
   );

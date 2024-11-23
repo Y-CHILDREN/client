@@ -21,6 +21,10 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
 
   const formattedStartDate = dateFormat(data?.start);
   const formattedEndDate = dateFormat(data?.end);
+  const handleOpenBottomSheet = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // 이벤트 전파 막기
+    openBottomSheet(); // 원래 함수 호출
+  };
 
   return (
     <article className="flex flex-col gap-5">
@@ -30,14 +34,16 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
       </div>
       <button
         className={`flex justify-between p-3 ${data?.start ? 'text-black' : 'text-gray-400'} bg-white border-2 border-gray-200 rounded-md text-start`}
-        onClick={openBottomSheet}
+        onClick={handleOpenBottomSheet}
+        type="button"
       >
         <p>{data?.start ? formattedStartDate : '시작 일시'}</p>
         <img src="/assets/addEventForm/calenderIcon.svg" alt="달력 아이콘" />
       </button>
       <button
         className={`flex justify-between p-3 ${data?.start ? 'text-black' : 'text-gray-400'} bg-white border-2 border-gray-200 rounded-md text-start`}
-        onClick={openBottomSheet}
+        onClick={handleOpenBottomSheet}
+        type="button"
       >
         <p>{data?.end ? formattedEndDate : '종료 일시'}</p>
         <img src="/assets/addEventForm/calenderIcon.svg" alt="달력 아이콘" />
