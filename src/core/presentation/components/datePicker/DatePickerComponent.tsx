@@ -34,7 +34,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
   return (
     <div className={className}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block mb-1 text-sm font-medium text-gray-700">
           {label}
         </label>
       )}

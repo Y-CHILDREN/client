@@ -9,15 +9,19 @@ import AddEventBottomSheetContent from '../components/addEventBottomSheetContent
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
 
-interface FormValues {
+export interface Cost {
+  category: string;
+  cost: number;
+}
+
+export interface FormValues {
   eventName: string;
   location: string;
-  schedule: Date;
-  costCategory: string;
-  costValue: number;
+  cost: Cost[];
+  dateRange: { start?: Date; end?: Date }; // 날짜 범위 추가
 }
 
 interface Option {
@@ -33,7 +37,9 @@ interface Option {
 }
 
 const AddEventPage: React.FC = () => {
-  const { register, handleSubmit, setValue } = useForm<FormValues>();
+  const methods = useForm<FormValues>();
+  const { register, handleSubmit, setValue, watch } = methods;
+
   const [locationValue, setLocationValue] = useState<Option | null>(null);
   const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -75,75 +81,80 @@ const AddEventPage: React.FC = () => {
     console.log(data);
   };
 
-  const bottonSheetHandler = () => setIsBottomSheetOpen(true);
+  const bottomSheetHandler = () => setIsBottomSheetOpen(true);
 
+  // watch를 사용하여 현재 dateRange 값을 가져옴
+  const dateRange = watch('dateRange');
   return (
-    <>
-      <AddEventHeader message="이벤트 추가하기" />
-      <form className="w-full h-full" onSubmit={handleSubmit(onSubmit)}>
-        <section className="flex flex-col w-full h-full px-[20px] py-[20px] gap-[24px]">
-          <EventInput
-            register={register}
-            id="eventName"
-            label="이벤트 이름"
-            inputText="이벤트 이름을 입력해 주세요."
-          />
-          <div className="flex flex-col w-full gap-2">
-            <div className="flex float-start">
-              <label className="">장소</label>
-              <RequiredDot />
+    <FormProvider {...methods}>
+      <>
+        <AddEventHeader message="이벤트 추가하기" />
+        <form className="w-full " onSubmit={handleSubmit(onSubmit)}>
+          <section className="flex flex-col w-full h-[624px] px-[20px] pt-[20px] gap-[14px]">
+            <EventInput
+              register={register}
+              id="eventName"
+              label="이벤트 이름"
+              inputText="이벤트 이름을 입력해 주세요."
+            />
+            <div className="flex flex-col w-full gap-2">
+              <div className="flex float-start">
+                <label className="">장소</label>
+                <RequiredDot />
+              </div>
+              {isScriptLoaded && (
+                <GooglePlacesAutocomplete
+                  apiKey={googleMapsApiKey}
+                  selectProps={{
+                    value: locationValue,
+                    onChange: handleLocationSelect,
+                    placeholder: '주소 검색',
+                    styles: {
+                      container: (provided) => ({
+                        ...provided,
+                        width: '380px',
+                      }),
+                      control: (provided) => ({
+                        ...provided,
+                        height: '50px',
+                        borderColor: '#E5E7EB',
+                        '&:hover': {
+                          borderColor: '#9CA3AF',
+                        },
+                      }),
+                      input: (provided) => ({
+                        ...provided,
+                        fontSize: '15px',
+                      }),
+                      option: (provided) => ({
+                        ...provided,
+                        fontSize: '15px',
+                      }),
+                    },
+                  }}
+                  autocompletionRequest={{
+                    componentRestrictions: { country: 'kr' },
+                  }}
+                />
+              )}
+              <input type="hidden" {...register('location')} />
             </div>
-            {isScriptLoaded && (
-              <GooglePlacesAutocomplete
-                apiKey={googleMapsApiKey}
-                selectProps={{
-                  value: locationValue,
-                  onChange: handleLocationSelect,
-                  placeholder: '주소 검색',
-                  styles: {
-                    container: (provided) => ({
-                      ...provided,
-                      width: '380px',
-                    }),
-                    control: (provided) => ({
-                      ...provided,
-                      height: '50px',
-                      borderColor: '#E5E7EB',
-                      '&:hover': {
-                        borderColor: '#9CA3AF',
-                      },
-                    }),
-                    input: (provided) => ({
-                      ...provided,
-                      fontSize: '15px',
-                    }),
-                    option: (provided) => ({
-                      ...provided,
-                      fontSize: '15px',
-                    }),
-                  },
-                }}
-                autocompletionRequest={{
-                  componentRestrictions: { country: 'kr' },
-                }}
-              />
-            )}
-            <input type="hidden" {...register('location')} />
-          </div>
-          <AddEventCalenderInput openBottomSheet={bottonSheetHandler} />
-          <AddEventCostInput register={register} setValue={setValue} />
-          <div className="mt-auto">
+            <AddEventCalenderInput
+              openBottomSheet={bottomSheetHandler}
+              data={dateRange}
+            />
+            <AddEventCostInput register={register} setValue={setValue} />
             <AddEventPostButton text="추가 완료" />
-          </div>
-        </section>
-        <BottomSheet
-          isOpen={isBottomSheetOpen}
-          onClose={() => setIsBottomSheetOpen(false)}
-        >
-          <AddEventBottomSheetContent />
-        </BottomSheet>
-      </form>
-    </>
+          </section>
+          <BottomSheet
+            isOpen={isBottomSheetOpen}
+            onClose={() => setIsBottomSheetOpen(false)}
+          >
+            <AddEventBottomSheetContent />
+          </BottomSheet>
+        </form>
+      </>
+    </FormProvider>
   );
 };
 

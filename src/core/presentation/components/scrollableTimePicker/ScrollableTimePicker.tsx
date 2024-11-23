@@ -4,10 +4,18 @@ const times: string[] = ['AM', 'PM'];
 const hours: number[] = Array.from({ length: 12 }, (_, i) => i);
 const minutes: number[] = Array.from({ length: 60 }, (_, i) => i);
 
-const ScrollableTimePicker: React.FC = () => {
+interface ScrollableTimePickerProps {
+  onStartTimeChange: (hour: number, minute: number, time: string) => void;
+  onEndTimeChange: (hour: number, minute: number, time: string) => void;
+}
+const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
+  onStartTimeChange,
+  onEndTimeChange,
+}) => {
   const [selectedTime, setSelectedTime] = useState<string>('AM');
   const [selectedHour, setSelectedHour] = useState<number>(12);
   const [selectedMinute, setSelectedMinute] = useState<number>(0);
+  const [isSettingStartTime, setIsSettingStartTime] = useState<boolean>(true);
 
   // index 제한 함수
   const safeIndex = (index: number, max: number): number =>
@@ -18,6 +26,15 @@ const ScrollableTimePicker: React.FC = () => {
     setSelectedMinute(minutes[0]);
     setSelectedTime(times[0]);
   }, []);
+
+  const handleConfirm = () => {
+    if (isSettingStartTime) {
+      onStartTimeChange(selectedHour, selectedMinute, selectedTime);
+      setIsSettingStartTime(false);
+    } else {
+      onEndTimeChange(selectedHour, selectedMinute, selectedTime);
+    }
+  };
 
   const handleScroll = (
     e: React.UIEvent<HTMLDivElement>,
@@ -75,12 +92,18 @@ const ScrollableTimePicker: React.FC = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="flex items-center gap-4">
-        <p>시간</p>
+        <p>{isSettingStartTime ? '시작 시간' : '종료 시간'}</p>
         {renderScrollItems(hours, selectedHour, 'hour')}
         <span className="text-2xl font-semibold">:</span>
         {renderScrollItems(minutes, selectedMinute, 'minute')}
         {renderScrollItems(times, selectedTime, 'time')}
       </div>
+      <button
+        onClick={handleConfirm}
+        className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-md"
+      >
+        저장
+      </button>
     </div>
   );
 };
