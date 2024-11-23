@@ -1,19 +1,16 @@
 import { useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
-
-interface FormValues {
-  eventName: string;
-  location: string;
-  schedule: Date;
-  costCategory: string;
-  costValue: number;
-}
+import { FormValues } from '../../pages/AddEventPage.tsx';
 
 interface EventFormDropDownProps {
   setValue: UseFormSetValue<FormValues>;
+  index: number;
 }
 
-const EventFormDropDown: React.FC<EventFormDropDownProps> = ({ setValue }) => {
+const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
+  setValue,
+  index,
+}) => {
   const [isView, setView] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('항목 선택');
 
@@ -31,7 +28,7 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({ setValue }) => {
   const categoryHandler = (value: string) => {
     setCategory(value);
     setView(!isView);
-    setValue('costCategory', value); // 수정된 부분
+    setValue(`cost.${index}.category`, value); // 수정된 부분
   };
 
   return (
@@ -47,7 +44,7 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({ setValue }) => {
         </p>
         <img
           className="w-6 h-6"
-          src="/src/core/presentation/assets/addEventForm/dropDownIcon.svg"
+          src="/assets/addEventForm/dropDownIcon.svg"
           alt="drop down 그림"
         />
       </button>
