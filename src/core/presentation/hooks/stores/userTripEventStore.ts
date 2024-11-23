@@ -1,25 +1,10 @@
 import { create } from 'zustand';
 
-interface Cost {
-  category: string;
-  value: number;
-}
-
-interface TripEvent {
-  trip_id: number;
-  event_id: number;
-  event_name: string;
-  location: string;
-  start_date: Date;
-  end_date: Date;
-  cost: Cost[];
-}
-
-export type { TripEvent, Cost };
+import { Event } from '@/core/domain/entities/event.ts';
 
 interface UserTripEventState {
   selectedTripId: number | null;
-  tripEvents: TripEvent[];
+  tripEvents: Event[];
   setSelectedTripId: (tripId: number | null) => void;
   fetchTripEvents: (tripId: number) => Promise<void>;
 }
