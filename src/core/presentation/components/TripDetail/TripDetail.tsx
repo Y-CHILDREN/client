@@ -95,9 +95,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, [selectedTripId]);
 
   // 비용 합계 계산
-  const totalCost = tripEvents.reduce((acc, event) => {
-    return acc + event.cost.reduce((sum, costItem) => sum + costItem.value, 0);
-  }, 0);
+  const totalCost = tripEvents
+    .reduce((acc, event) => {
+      return (
+        acc + event.cost.reduce((sum, costItem) => sum + costItem.value, 0)
+      );
+    }, 0)
+    .toLocaleString('ko-KR');
 
   // 날짜 선택
   const [selectedDate, setSelectedDate] = useState(
@@ -233,12 +237,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // logging
   useEffect(() => {
     // console.log('tripScheduleData:', tripScheduleData);
-    // console.log('tripEvents:', tripEvents);
+    console.log('tripEvents:', tripEvents);
     // console.log('showMap:', showMap);
     // console.log('Filtered Members:', filteredMembers);
     // console.log('eventForSelectedDate', eventForSelectedDate);
     // console.log('selectedEvent', selectedEvent);
-  }, []);
+  }, [tripEvents]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
