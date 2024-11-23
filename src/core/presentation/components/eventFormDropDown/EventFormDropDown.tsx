@@ -21,11 +21,13 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
     { id: 4, label: '기념품' },
   ];
 
-  const dropDownHandler = () => {
+  const dropDownHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setView(!isView);
   };
 
-  const categoryHandler = (value: string) => {
+  const categoryHandler = (value: string, e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     setCategory(value);
     setView(!isView);
     setValue(`cost.${index}.category`, value); // 수정된 부분
@@ -52,7 +54,7 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
         <ul className="cursor-pointer w-full absolute top-[60px] bg-white form-input-radius text-start z-20">
           {dropMenu.map(({ id, label }) => (
             <li
-              onClick={() => categoryHandler(label)}
+              onClick={(e) => categoryHandler(label, e)}
               className="z-10 py-3 pl-3 bg-white rounded-lg hover:bg-gray-100"
               key={id}
             >

@@ -31,11 +31,12 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'tween' }}
+            onClick={(e) => e.stopPropagation()} // 이벤트 전파 막기
           >
             {children}
             <button
               onClick={onClose}
-              className="w-full px-3 mt-3 text-white rounded-lg bg-dot-color "
+              className="w-full px-3 mt-3 text-white rounded-lg bg-dot-color"
             >
               확인
             </button>
