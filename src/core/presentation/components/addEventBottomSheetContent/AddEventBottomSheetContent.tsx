@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
 import ScrollableTimePicker from '../scrollableTimePicker/ScrollableTimePicker.tsx';
@@ -8,68 +8,35 @@ const AddEventBottomSheetContent = () => {
     start?: Date;
     end?: Date;
   }>({ start: undefined, end: undefined });
-  const { start, end } = dateRange;
 
   const handleDateChange = (
     update: [Date | null | undefined, Date | null | undefined],
   ) => {
-    console.log('update:', update);
-    let [selectedStartDate, selectedEndDate] = update; // selectedEndDate는 null 또는 유효한 두 번째 날짜
+    let [selectedStartDate, selectedEndDate] = update;
 
-    // 타입 변환 null -> undefined
-    if (selectedStartDate === null) {
-      selectedStartDate = undefined;
-    }
-    if (selectedEndDate === null) {
-      selectedEndDate = undefined;
-    }
+    // null을 undefined로 변환
+    if (selectedStartDate === null) selectedStartDate = undefined;
+    if (selectedEndDate === null) selectedEndDate = undefined;
 
-    let finalStartDate = start;
-    let finalEndDate = end;
-
-    if (start === undefined && end === undefined) {
-      // 첫 번째 날짜 선택 시
-      finalStartDate = selectedStartDate;
-      finalEndDate = undefined;
-      console.log('처음 날짜를 선택했을 때');
-    } else if (start !== undefined && end === undefined) {
-      // 두 번째 날짜를 선택 시
-      if (selectedStartDate !== undefined && selectedStartDate < start) {
-        // 새로운 날짜가 첫 번째 날짜보다 이전일 때
-        finalStartDate = selectedStartDate;
-        finalEndDate = start;
-        console.log('두 번째 선택된 날짜가 첫 번째 선택된 날짜보다 이전일 때');
-      } else {
-        // 새로운 날짜가 첫 번째 날짜 이후 또는 동일할 때
-        finalStartDate = start;
-        finalEndDate = selectedEndDate;
-        console.log(
-          '두 번째 선택된 날짜가 첫 번째 선택된 날짜 이후 또는 같은 날짜일 때',
-        );
-      }
-    } else if (start !== null && end !== null) {
-      // 이미 날짜 범위가 선택된 상태에서 새로운 선택을 시작할 때
-      finalStartDate = selectedStartDate;
-      finalEndDate = undefined;
-      console.log('날짜 범위를 재설정하고 새로운 첫 번째 날짜를 선택했을 때');
-    }
-
-    // dateRange 상태 업데이트
     setDateRange({
-      start: finalStartDate,
-      end: finalEndDate,
+      start: selectedStartDate,
+      end: selectedEndDate,
     });
-
-    // tripData 날짜 상태 업데이트
-    // setTripData((prev) => ({
-    //   ...prev,
-    //   start_date: finalStartDate,
-    //   end_date: finalEndDate,
-    // }));
   };
+
+  // 상태 업데이트
+
+  useEffect(() => {
+    console.log('start:', dateRange.start);
+    console.log('end:', dateRange.end);
+  }, [dateRange]); // dateRange가 변경될 때마다 호출됩니다.
   return (
     <>
-      <DatePickerComponent onChange={handleDateChange} />
+      <DatePickerComponent
+        onChange={handleDateChange}
+        startDate={dateRange.start || undefined}
+        endDate={dateRange.end || undefined}
+      />
       <ScrollableTimePicker />
     </>
   );
