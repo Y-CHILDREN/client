@@ -50,6 +50,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
     tripEvents, // 전체 이벤트
     fetchTripEvents, // event 조회.
     updateEventCoordinates, // event에 좌표 추가.
+    updateEventPhotos,
   } = useUserTripEventStore();
   const { getSelectedTripById } = useUserTripStore(); // trip_id로 tripData 조회.
 
@@ -303,13 +304,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, []);
 
-  // tripEvent에 위치 정보를 추가하는 로직
+  // tripEvent에 위치 정보 && Place Image를 추가하는 로직
   useEffect(() => {
     const fetchAndUpdateEvents = async () => {
       try {
         if (selectedTripId) {
           await fetchTripEvents(selectedTripId); // 이벤트 데이터 가져오기
           await updateEventCoordinates(); // 좌표 업데이트
+          await updateEventPhotos(); // 사진 업데이트
         }
       } catch (error) {
         console.error('데이터 처리 중 오류:', error);
@@ -345,7 +347,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // logging
   useEffect(() => {
     // console.log('tripScheduleData:', tripScheduleData);
-    // console.log('tripEvents:', tripEvents);
+    console.log('tripEvents:', tripEvents);
     // console.log('showMap:', showMap);
     // console.log('Filtered Members:', filteredMembers);
     // console.log('eventForSelectedDate', eventForSelectedDate);
