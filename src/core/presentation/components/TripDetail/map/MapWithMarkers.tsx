@@ -23,6 +23,8 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false); // 로드 완료 여부 상태 추가
 
+  const markerPinUrl = '/assets/map/MarkerPin.svg';
+
   const onLoad = React.useCallback((map: google.maps.Map) => {
     mapRef.current = map;
     setMapInstance(map); // 상태로 지도 참조 저장
@@ -60,22 +62,33 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({
     events.forEach((event, index) => {
       if (event.latitude && event.longitude) {
         const markerElement = document.createElement('div');
-        markerElement.innerHTML = `
-          <div style="
-            background-color: #3ACC97;
-            color: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-          ">
-            ${index + 1}
-          </div>
-        `;
+        markerElement.style.position = 'relative';
+        markerElement.style.width = '64px';
+        markerElement.style.height = '72px';
+
+        const img = document.createElement('img');
+        img.src = markerPinUrl;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        markerElement.appendChild(img);
+
+        const numberElement = document.createElement('div');
+        numberElement.textContent = `${index + 1}`;
+        numberElement.style.position = 'absolute';
+        numberElement.style.top = '39%';
+        numberElement.style.left = '50%';
+        numberElement.style.transform = 'translate(-50%, -50%)';
+        numberElement.style.width = '32px';
+        numberElement.style.height = '32px';
+        numberElement.style.backgroundColor = '#3ACC97';
+        numberElement.style.borderRadius = '50%';
+        numberElement.style.display = 'flex';
+        numberElement.style.alignItems = 'center';
+        numberElement.style.justifyContent = 'center';
+        numberElement.style.color = 'white';
+        numberElement.style.fontWeight = 'bold';
+        numberElement.style.fontSize = '16px';
+        markerElement.appendChild(numberElement);
 
         const marker = new google.maps.marker.AdvancedMarkerElement({
           map: mapInstance,
