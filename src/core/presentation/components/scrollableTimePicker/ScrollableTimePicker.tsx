@@ -27,7 +27,9 @@ const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
     setSelectedTime(times[0]);
   }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     if (isSettingStartTime) {
       onStartTimeChange(selectedHour, selectedMinute, selectedTime);
       setIsSettingStartTime(false);
@@ -40,6 +42,7 @@ const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
     e: React.UIEvent<HTMLDivElement>,
     type: 'time' | 'hour' | 'minute',
   ): void => {
+    e.stopPropagation(); // 이벤트 전파 막기
     const scrollTop = e.currentTarget.scrollTop;
     const itemHeight = 40;
     const maxIndex =

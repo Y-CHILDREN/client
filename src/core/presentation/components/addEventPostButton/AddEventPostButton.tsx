@@ -1,10 +1,21 @@
 interface AddEventPostButtonProps {
   text: string;
+  disabled?: boolean;
+  onClick?: () => void;
 }
 
-const AddEventPostButton: React.FC<AddEventPostButtonProps> = ({ text }) => {
+const AddEventPostButton: React.FC<AddEventPostButtonProps> = ({
+  text,
+  disabled = false,
+}) => {
   return (
-    <button className="w-full px-3 text-white  bg-dot-color">{text}</button>
+    <button
+      className={`w-full px-3 text-white bg-dot-color ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      disabled={disabled}
+      type="submit"
+    >
+      {text}
+    </button>
   );
 };
 
