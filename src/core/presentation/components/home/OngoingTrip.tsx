@@ -3,7 +3,10 @@ import React from 'react';
 import Beach from '../../assets/home/Beach.png';
 import { Button } from '@/core/presentation/components/ui/button';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TripThumbnail from './TripThumbnail';
+// import { useUserTripEventStore } from '@/core/presentation/hooks/stores/userTripEventStore.ts';
+// import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
 
 interface OngoingTripProps {
   hasOngoingTrip: boolean;
@@ -26,13 +29,23 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
           (1000 * 60 * 60 * 24),
       )
     : 0;
+  const navigate = useNavigate();
+  // const { setSelectedTripId } = useUserTripEventStore();
+  const handleNavigation = () => {
+    navigate(`/trip-detail/${ongoingTripData.id}`);
+  };
   return (
     <div className="flex px-6 items-center self-stretch">
       {/* 진행중인 여행 있는지 여부에 따라 다른 콘텐츠 노출 */}
       {hasOngoingTrip ? (
-        <Link to={`/trip/${ongoingTripData.id}`}>
+        <Link to={`/trip-detail`}>
           {/* 카드*/}
-          <div className="relative w-[372px] h-[372px] flex flex-col items-start gap-[215px] flex-1 self-stretch rounded-xl">
+          <div
+            className="relative w-[372px] h-[372px] flex flex-col items-start gap-[215px] flex-1 self-stretch rounded-xl"
+            onClick={handleNavigation}
+            role="button"
+            tabIndex={0}
+          >
             <TripThumbnail
               className="flex flex-col items-start self-stretch h-full rounded-xl"
               destination={ongoingTripData.destination}

@@ -13,6 +13,14 @@ interface TripData {
   id: number;
 }
 
+interface upcomingTripData {
+  title: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  id: number;
+}
+
 const Home: React.FC = () => {
   const { user } = useAuthStore();
   const [hasOngoingTrip, setHasOngoingTrip] = useState<boolean>(false);
@@ -20,7 +28,9 @@ const Home: React.FC = () => {
     undefined,
   );
   const [hasUpcomingTrip, setHasUpcomingTrip] = useState<boolean>(false);
-  const [upcomingTripData, setUpcomingTripData] = useState<TripData[]>([]);
+  const [upcomingTripData, setUpcomingTripData] = useState<upcomingTripData[]>(
+    [],
+  );
   const [hasPastTrip, setHasPastTrip] = useState<boolean>(false);
   const [pastTripData, setPastTripData] = useState<TripData[]>([]);
 
@@ -75,6 +85,10 @@ const Home: React.FC = () => {
 
     checkTripData();
   }, []);
+
+  console.log('ongoing trip is ' + ongoingTripData);
+  console.log(upcomingTripData);
+  console.log('past trip is' + pastTripData);
 
   return (
     <>

@@ -8,8 +8,15 @@ import {
 } from '@/core/presentation/components/ui/tabs';
 import TripCard from './TripCard';
 
-interface TripData {
-  name: string;
+interface upcomingTripData {
+  title: string;
+  start_date: string;
+  destination: string;
+  id: number;
+}
+
+interface pastTripData {
+  title: string;
   start_date: string;
   destination: string;
   id: number;
@@ -18,8 +25,8 @@ interface TripData {
 interface TripListProps {
   hasUpcomingTrip: boolean;
   hasPastTrip: boolean;
-  upcomingTripData: TripData[];
-  pastTripData: TripData[];
+  upcomingTripData: upcomingTripData[];
+  pastTripData: pastTripData[];
 }
 
 const TripList: React.FC<TripListProps> = ({
@@ -55,11 +62,12 @@ const TripList: React.FC<TripListProps> = ({
           {hasUpcomingTrip ? (
             <div className="flex flex-row pl-6 items-start gap-3 self-stretch overflow-x-auto">
               {upcomingTripData.map((item) => (
-                <Link to={`/trip/${item.id}`} key={item.id}>
+                <Link to={`/trip-detail/`} key={item.id}>
                   <TripCard
-                    tripName={item.name}
+                    tripName={item.title}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
+                    tripId={item.id}
                   />
                 </Link>
               ))}
@@ -80,7 +88,8 @@ const TripList: React.FC<TripListProps> = ({
               {pastTripData.map((item) => (
                 <Link to={`/trip/${item.id}`} key={item.id}>
                   <TripCard
-                    tripName={item.name}
+                    tripId={item.id}
+                    tripName={item.title}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />
