@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
   Tabs,
   TabsContent,
@@ -7,26 +6,13 @@ import {
   TabsTrigger,
 } from '@/core/presentation/components/ui/tabs';
 import TripCard from './TripCard';
-
-interface upcomingTripData {
-  title: string;
-  start_date: string;
-  destination: string;
-  id: number;
-}
-
-interface pastTripData {
-  title: string;
-  start_date: string;
-  destination: string;
-  id: number;
-}
+import { Trip } from '../../../domain/entities/trip';
 
 interface TripListProps {
   hasUpcomingTrip: boolean;
   hasPastTrip: boolean;
-  upcomingTripData: upcomingTripData[];
-  pastTripData: pastTripData[];
+  upcomingTripData: Trip[];
+  pastTripData: Trip[];
 }
 
 const TripList: React.FC<TripListProps> = ({
@@ -62,14 +48,15 @@ const TripList: React.FC<TripListProps> = ({
           {hasUpcomingTrip ? (
             <div className="flex flex-row pl-6 items-start gap-3 self-stretch overflow-x-auto">
               {upcomingTripData.map((item) => (
-                <Link to={`/trip-detail/`} key={item.id}>
+                <div>
                   <TripCard
+                    key={item.id}
                     tripName={item.title}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                     tripId={item.id}
                   />
-                </Link>
+                </div>
               ))}
             </div>
           ) : (
@@ -86,14 +73,15 @@ const TripList: React.FC<TripListProps> = ({
           {hasPastTrip ? (
             <div className="flex flex-row pl-6 box-border items-start gap-3 self-stretch overflow-hidden">
               {pastTripData.map((item) => (
-                <Link to={`/trip/${item.id}`} key={item.id}>
+                <div>
                   <TripCard
+                    key={item.id}
                     tripId={item.id}
                     tripName={item.title}
                     tripDate={new Date(item.start_date)}
                     destination={item.destination}
                   />
-                </Link>
+                </div>
               ))}
             </div>
           ) : (

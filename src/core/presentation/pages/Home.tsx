@@ -4,35 +4,18 @@ import { useAuthStore } from '../hooks/stores/authStore';
 import IntroMessage from '../components/home/IntroMessage';
 import OngoingTrip from '../components/home/OngoingTrip';
 import TripList from '../components/home/TripList';
-
-interface TripData {
-  title: string;
-  destination: string;
-  start_date: string;
-  end_date: string;
-  id: number;
-}
-
-interface upcomingTripData {
-  title: string;
-  destination: string;
-  start_date: string;
-  end_date: string;
-  id: number;
-}
+import { Trip } from '../../domain/entities/trip';
 
 const Home: React.FC = () => {
   const { user } = useAuthStore();
   const [hasOngoingTrip, setHasOngoingTrip] = useState<boolean>(false);
-  const [ongoingTripData, setOngoingTripData] = useState<TripData | undefined>(
+  const [ongoingTripData, setOngoingTripData] = useState<Trip | undefined>(
     undefined,
   );
   const [hasUpcomingTrip, setHasUpcomingTrip] = useState<boolean>(false);
-  const [upcomingTripData, setUpcomingTripData] = useState<upcomingTripData[]>(
-    [],
-  );
+  const [upcomingTripData, setUpcomingTripData] = useState<Trip[]>([]);
   const [hasPastTrip, setHasPastTrip] = useState<boolean>(false);
-  const [pastTripData, setPastTripData] = useState<TripData[]>([]);
+  const [pastTripData, setPastTripData] = useState<Trip[]>([]);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -46,7 +29,7 @@ const Home: React.FC = () => {
 
         //OngoingTrip 유무 확인 & 넘겨줄 데이터 생성
         const currentDate = new Date();
-        const ongoingTripIndex = data.findIndex((trip: any) => {
+        const ongoingTripIndex = data.findIndex((trip: Trip) => {
           const startDate = new Date(trip.start_date);
           const endDate = new Date(trip.end_date);
           return startDate <= currentDate && currentDate <= endDate;
@@ -56,26 +39,26 @@ const Home: React.FC = () => {
 
         //UpcomingTrip 유무 확인 & 넘겨줄 데이터 생성
         const UpcomingTripIndex = data
-          .map((trip: any) => {
+          .map((trip: Trip) => {
             const startDate = new Date(trip.start_date);
             return startDate > currentDate ? trip.id : -1;
           })
           .filter((index: number) => index !== -1);
         setHasUpcomingTrip(UpcomingTripIndex.length > 0);
         setUpcomingTripData(
-          data.filter((trip: any) => UpcomingTripIndex.includes(trip.id)),
+          data.filter((trip: Trip) => UpcomingTripIndex.includes(trip.id)),
         );
 
         //PastTrip 유무 확인 & 넘겨줄 데이터 생성
         const PastTripIndex = data
-          .map((trip: any) => {
+          .map((trip: Trip) => {
             const endDate = new Date(trip.end_date);
             return endDate < currentDate ? trip.id : -1;
           })
           .filter((index: number) => index !== -1);
         setHasPastTrip(PastTripIndex.length > 0);
         setPastTripData(
-          data.filter((trip: any) => PastTripIndex.includes(trip.id)),
+          data.filter((trip: Trip) => PastTripIndex.includes(trip.id)),
         );
       } catch (error) {
         console.error('Failed to fetch ongoing trip status:', error);

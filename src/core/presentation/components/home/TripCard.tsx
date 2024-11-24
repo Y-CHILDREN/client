@@ -1,7 +1,9 @@
 import React from 'react';
 import TripThumbnail from './TripThumbnail';
 import { useNavigate } from 'react-router-dom';
+import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore';
 
+useUserTripEventStore;
 interface TripCardProps {
   tripId: number;
   tripName: string;
@@ -16,8 +18,10 @@ const TripCard: React.FC<TripCardProps> = ({
   destination,
 }) => {
   const navigate = useNavigate();
+  const { setSelectedTripId } = useUserTripEventStore();
   const handleNavigation = () => {
-    navigate(`/trip-detail/${tripId}`);
+    setSelectedTripId(tripId);
+    navigate(`/trip-detail`);
   };
   return (
     <div

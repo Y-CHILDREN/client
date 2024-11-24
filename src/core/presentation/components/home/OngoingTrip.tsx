@@ -5,18 +5,15 @@ import { Button } from '@/core/presentation/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import TripThumbnail from './TripThumbnail';
+import { Trip } from '../../../domain/entities/trip';
+import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore';
+useUserTripEventStore;
 // import { useUserTripEventStore } from '@/core/presentation/hooks/stores/userTripEventStore.ts';
 // import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
 
 interface OngoingTripProps {
   hasOngoingTrip: boolean;
-  ongoingTripData: {
-    title: string;
-    destination: string;
-    start_date: string;
-    end_date: string;
-    id: number;
-  };
+  ongoingTripData: Trip;
 }
 const OngoingTrip: React.FC<OngoingTripProps> = ({
   hasOngoingTrip,
@@ -30,53 +27,52 @@ const OngoingTrip: React.FC<OngoingTripProps> = ({
       )
     : 0;
   const navigate = useNavigate();
-  // const { setSelectedTripId } = useUserTripEventStore();
+  const { setSelectedTripId } = useUserTripEventStore();
+
   const handleNavigation = () => {
-    navigate(`/trip-detail/${ongoingTripData.id}`);
+    setSelectedTripId(ongoingTripData.id);
+    console.log(ongoingTripData.id);
+    navigate(`/trip-detail`);
   };
   return (
     <div className="flex px-6 items-center self-stretch">
       {/* 진행중인 여행 있는지 여부에 따라 다른 콘텐츠 노출 */}
       {hasOngoingTrip ? (
-        <Link to={`/trip-detail`}>
-          {/* 카드*/}
-          <div
-            className="relative w-[372px] h-[372px] flex flex-col items-start gap-[215px] flex-1 self-stretch rounded-xl"
-            onClick={handleNavigation}
-            role="button"
-            tabIndex={0}
-          >
-            <TripThumbnail
-              className="flex flex-col items-start self-stretch h-full rounded-xl"
-              destination={ongoingTripData.destination}
-            />
-            <div className="absolute flex flex-col justify-between items-start w-full h-full p-6 bg-gradient-to-b from-transparent from-40% to-black/[0.72] to-100% absolute rounded-xl">
-              <div className="flex justify-center items-center py-[6px] px-[10px] rounded-[6px] bg-black/[0.32] text-white">
-                <span className="font-pretendard text-sm font-normal leading-5">
-                  여행&nbsp;
-                </span>
-                <span className="font-pretendard text-sm font-semibold leading-5">
-                  {dayCount}일차
-                </span>
-              </div>
-              <div className="flex flex-col items-start gap-1 self-stretch text-white">
-                <h3 className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-lg font-semibold leading-6">
-                  {ongoingTripData.title}
-                </h3>
-                <time className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-sm font-normal leading-5">
-                  {new Date(ongoingTripData.start_date).toLocaleDateString(
-                    'ko-KR',
-                  )}
-                  -
-                  {new Date(ongoingTripData.end_date).toLocaleDateString(
-                    'ko-KR',
-                  )}
-                </time>
-              </div>
+        <div
+          className="relative w-[372px] h-[372px] flex flex-col items-start gap-[215px] flex-1 self-stretch rounded-xl"
+          onClick={handleNavigation}
+          role="button"
+          tabIndex={0}
+        >
+          <TripThumbnail
+            className="flex flex-col items-start self-stretch h-full rounded-xl"
+            destination={ongoingTripData.destination}
+          />
+          <div className="absolute flex flex-col justify-between items-start w-full h-full p-6 bg-gradient-to-b from-transparent from-40% to-black/[0.72] to-100% absolute rounded-xl">
+            <div className="flex justify-center items-center py-[6px] px-[10px] rounded-[6px] bg-black/[0.32] text-white">
+              <span className="font-pretendard text-sm font-normal leading-5">
+                여행&nbsp;
+              </span>
+              <span className="font-pretendard text-sm font-semibold leading-5">
+                {dayCount}일차
+              </span>
+            </div>
+            <div className="flex flex-col items-start gap-1 self-stretch text-white">
+              <h3 className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-lg font-semibold leading-6">
+                {ongoingTripData.title}
+              </h3>
+              <time className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-sm font-normal leading-5">
+                {new Date(ongoingTripData.start_date).toLocaleDateString(
+                  'ko-KR',
+                )}
+                -
+                {new Date(ongoingTripData.end_date).toLocaleDateString('ko-KR')}
+              </time>
             </div>
           </div>
-        </Link>
+        </div>
       ) : (
+        // </Link>
         /* 진행중인 콘텐츠 없을 때 */
         <div className="relative w-[327px] h-[327px] p-[32px_24px_24px_24px] flex flex-col items-center gap-4 flex-1 self-stretch rounded-xl bg-[#F5F6F6]">
           <div className="flex flex-col items-center gap-2 flex-1 self-stretch">
