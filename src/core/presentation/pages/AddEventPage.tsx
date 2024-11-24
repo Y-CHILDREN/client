@@ -15,6 +15,7 @@ import { createTripEvent } from '../../data/infrastructure/services/eventService
 import { useUserTripEventStore } from '../hooks/stores/userTripEventStore.ts';
 import { useNavigate } from 'react-router-dom';
 
+
 export interface Cost {
   category: string;
   cost: number;
