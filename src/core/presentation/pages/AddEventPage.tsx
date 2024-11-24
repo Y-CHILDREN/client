@@ -13,6 +13,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { createTripEvent } from '../../data/infrastructure/services/eventService.ts';
 import { useUserTripEventStore } from '../hooks/stores/userTripEventStore.ts';
+import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 export interface Cost {
@@ -50,13 +51,13 @@ const AddEventPage: React.FC = () => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const selectedTripId = useUserTripEventStore((state) => state.selectedTripId);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const addEventMutation = useMutation({
     mutationFn: createTripEvent,
     onSuccess: () => {
       console.log('이벤트가 성공적으로 추가되었습니다.');
-      // navigate('/trip-detail');
+      navigate('/trip-detail');
     },
     onError: (error) => {
       console.error('이벤트 추가 중 오류가 발생했습니다:', error);
