@@ -16,9 +16,11 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
   getValues,
 }) => {
   const [costInputs, setCostInputs] = useState([{ id: Date.now() }]);
+
   const addCostInput = () => {
     setCostInputs([...costInputs, { id: Date.now() }]);
   };
+
   const removeCostInput = (index: number) => {
     if (costInputs.length > 1) {
       // costInputs 배열이 1개 이상인 경우에만 필드를 삭제
@@ -31,7 +33,7 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
     } else {
       // 입력 필드가 1개인 경우에는 값을 초기화
       setCostInputs([{ id: Date.now() }]);
-      setValue('cost', []); // 초기화하려는 값 설정 (필드 값 초기화)
+      setValue('cost', []); //필드 값 초기화
     }
   };
 
@@ -45,9 +47,10 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
             <EventFormDropDown setValue={setValue} index={index} />
             <div className="flex w-[40%] form-input-radius">
               <input
-                className="w-full no-spinner"
-                type="string"
+                className="w-full no-spinner no-number-scroll"
+                type="number"
                 {...register(`cost.${index}.cost`)}
+                onWheel={(event) => (event.target as HTMLElement).blur()}
               />
               <p>원</p>
             </div>
