@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import { UseFormSetValue } from 'react-hook-form';
+import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { FormValues } from '../../pages/AddEventPage.tsx';
 import RequiredDot from '../requiredDot/RequiredDot.tsx';
 
@@ -18,10 +18,12 @@ interface Option {
 
 interface AddEventGoogleLocationProps {
   setValue: UseFormSetValue<FormValues>;
+  errors: FieldErrors<FormValues>;
 }
 
 const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
   setValue,
+  errors,
 }) => {
   const [locationValue, setLocationValue] = useState<Option | null>(null);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
@@ -30,7 +32,8 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
 
   const handleLocationSelect = (newValue: Option | null) => {
     setLocationValue(newValue);
-    if (newValue) setValue('location', newValue.label);
+    if (newValue)
+      setValue('location', newValue.label, { shouldValidate: true });
   };
 
   useEffect(() => {
@@ -51,18 +54,18 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
     };
 
     loadGoogleMapsScript();
-
+    console.log(errors);
     return () => {
       const script = document.querySelector(
         'script[src*="maps.googleapis.com/maps/api"]',
       );
       if (script) script.remove();
     };
-  }, [googleMapsApiKey]);
+  }, [googleMapsApiKey, errors]);
 
   return (
-    <>
-      <div className="flex float-start">
+    <article className="flex-col text-left border-gray-200">
+      <div className="flex float-start mb-[10px]">
         <p className="">장소</p>
         <RequiredDot />
       </div>
@@ -80,16 +83,15 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
             styles: {
               container: (provided) => ({
                 ...provided,
-                width: '100%',
-                textAlign: 'left',
-                border: '2px, solid',
-                borderColor: '#e5e7eb',
-                borderRadius: '0.375rem',
               }),
               control: (provided) => ({
                 ...provided,
+                width: '100%',
+                border: '2px solid #e5e7eb',
+
+                borderRadius: '0.375rem',
+                textAlign: 'left',
                 height: '50px',
-                border: 'none',
               }),
               input: (provided) => ({
                 ...provided,
@@ -107,7 +109,11 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
           }}
         />
       )}
-    </>
+
+      {errors.location && (
+        <p className="mt-2 text-sm text-red-500">위치를 입력해 주세요.</p>
+      )}
+    </article>
   );
 };
 
