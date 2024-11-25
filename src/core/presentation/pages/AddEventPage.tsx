@@ -2,7 +2,6 @@ import EventInput from '../components/eventInput/EventInput.tsx';
 import AddEventCalenderInput from '../components/addEventCalenderInput/AddEventCalenderInput.tsx';
 import AddEventCostInput from '../components/addEventCostInput/AddEventCostInput.tsx';
 import AddEventPostButton from '../components/addEventPostButton/AddEventPostButton.tsx';
-import RequiredDot from '../components/requiredDot/RequiredDot.tsx';
 import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
 import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
 import AddEventHeader from '../components/addEventHeader/addEventHeader.tsx';
@@ -14,7 +13,6 @@ import { useMutation } from '@tanstack/react-query';
 import { createTripEvent } from '../../data/infrastructure/services/eventService.ts';
 import { useUserTripEventStore } from '../hooks/stores/userTripEventStore.ts';
 import { useNavigate } from 'react-router-dom';
-
 
 export interface Cost {
   category: string;
@@ -65,8 +63,8 @@ const AddEventPage: React.FC = () => {
     <FormProvider {...methods}>
       <>
         <AddEventHeader message="이벤트 추가하기" />
-        <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-          <section className="flex flex-col w-full h-[624px] px-[20px] pt-[20px] gap-[14px]">
+        <form className="w-full h-full" onSubmit={handleSubmit(onSubmit)}>
+          <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
             <EventInput
               register={register}
               id="eventName"
@@ -74,12 +72,7 @@ const AddEventPage: React.FC = () => {
               inputText="이벤트 이름을 입력해 주세요."
             />
             <div className="flex flex-col w-full gap-2">
-              <div className="flex float-start">
-                <label className="">장소</label>
-                <RequiredDot />
-              </div>
               <AddEventGoogleLocation setValue={setValue} />
-              <input type="hidden" {...register('location')} />
             </div>
             <AddEventCalenderInput
               openBottomSheet={bottomSheetHandler}
