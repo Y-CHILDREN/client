@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { UseFormSetValue } from 'react-hook-form';
 import { FormValues } from '../../pages/AddEventPage.tsx';
+import RequiredDot from '../requiredDot/RequiredDot.tsx';
 
 interface Option {
   label: string;
@@ -61,28 +62,38 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
 
   return (
     <>
+      <div className="flex float-start">
+        <p className="">장소</p>
+        <RequiredDot />
+      </div>
       {isScriptLoaded && (
         <GooglePlacesAutocomplete
+          debounce={500}
           apiKey={googleMapsApiKey}
           selectProps={{
             value: locationValue,
             onChange: handleLocationSelect,
-            placeholder: '주소 검색',
+            placeholder: '주소 입력',
+            components: {
+              DropdownIndicator: null, // 드롭다운 버튼 제거
+            },
             styles: {
               container: (provided) => ({
                 ...provided,
-                width: '380px',
+                width: '100%',
+                textAlign: 'left',
+                border: '2px, solid',
+                borderColor: '#e5e7eb',
+                borderRadius: '0.375rem',
               }),
               control: (provided) => ({
                 ...provided,
                 height: '50px',
-                borderColor: '#E5E7EB',
-                '&:hover': {
-                  borderColor: '#9CA3AF',
-                },
+                border: 'none',
               }),
               input: (provided) => ({
                 ...provided,
+                autoComplete: 'off',
                 fontSize: '15px',
               }),
               option: (provided) => ({

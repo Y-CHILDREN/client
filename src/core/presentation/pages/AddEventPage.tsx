@@ -5,7 +5,7 @@ import AddEventPostButton from '../components/addEventPostButton/AddEventPostBut
 import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
 import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
 import AddEventHeader from '../components/addEventHeader/addEventHeader.tsx';
-import AddEventGoogleLocation from '../components/addEventGoogleLocation/AddEventGoogleLocation.tsx';
+import AddEventGoogleLocationInput from '../components/addEventGoogleLocationInput/AddEventGoogleLocationInput.tsx';
 
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -72,7 +72,7 @@ const AddEventPage: React.FC = () => {
               inputText="이벤트 이름을 입력해 주세요."
             />
             <div className="flex flex-col w-full gap-2">
-              <AddEventGoogleLocation setValue={setValue} />
+              <AddEventGoogleLocationInput setValue={setValue} />
             </div>
             <AddEventCalenderInput
               openBottomSheet={bottomSheetHandler}
