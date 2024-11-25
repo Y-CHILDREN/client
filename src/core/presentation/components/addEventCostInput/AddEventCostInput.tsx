@@ -57,7 +57,7 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
           </div>
         );
       })}
-      <button className="w-full mt-3" onClick={addCostInput}>
+      <button className="w-full mt-3" type="button" onClick={addCostInput}>
         + 경비 추가
       </button>
     </article>
