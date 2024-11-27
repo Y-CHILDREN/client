@@ -43,7 +43,7 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
         !document.querySelector('script[src*="maps.googleapis.com/maps/api"]')
       ) {
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&language=ko&region=KR`;
         script.async = true;
         script.defer = true;
         script.onload = () => setIsScriptLoaded(true);
@@ -72,6 +72,10 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
       {isScriptLoaded && (
         <GooglePlacesAutocomplete
           debounce={500}
+          apiOptions={{
+            language: 'ko',
+            region: 'KR',
+          }}
           apiKey={googleMapsApiKey}
           selectProps={{
             value: locationValue,

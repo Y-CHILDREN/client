@@ -31,7 +31,7 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
   };
 
   return (
-    <article className="flex flex-col gap-5">
+    <article className="flex flex-col gap-5 text-left">
       <div className="flex">
         <p className="">일정</p>
         <RequiredDot />
@@ -54,7 +54,7 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
       </button>
       {errors.dateRange && (
         <p className="mt-2 text-sm text-red-500">
-          {errors.dateRange.message === 'Required'
+          {errors.dateRange.message !== 'Required'
             ? errors.dateRange.message
             : '시작일과 종료일 값은 필수입니다.'}
         </p>
