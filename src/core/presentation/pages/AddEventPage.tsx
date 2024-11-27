@@ -101,41 +101,39 @@ const AddEventPage: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <>
-        <AddEventHeader message="이벤트 추가하기" />
-        <form className="w-full h-full" onSubmit={handleSubmit(onSubmit)}>
-          <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
-            <EventNameInput
-              register={register}
-              id="eventName"
-              label="이벤트 이름"
-              inputText="이벤트 이름을 입력해 주세요."
-              errors={errors}
-            />
-            <AddEventGoogleLocationInput setValue={setValue} errors={errors} />
-            <AddEventCalenderInput
-              openBottomSheet={bottomSheetHandler}
-              dateRange={dateRange}
-              errors={errors}
-            />
-            <AddEventCostInput
-              register={register}
-              setValue={setValue}
-              getValues={watch}
-            />
-            <AddEventPostButton
-              text={addEventMutation.isPending ? '추가 중...' : '추가 완료'}
-              disabled={addEventMutation.isPending}
-            />
-          </section>
-          <BottomSheet
-            isOpen={isBottomSheetOpen}
-            onClose={() => setIsBottomSheetOpen(false)}
-          >
-            <AddEventBottomSheetContent />
-          </BottomSheet>
-        </form>
-      </>
+      <AddEventHeader message="이벤트 추가하기" />
+      <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
+        <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
+          <EventNameInput
+            register={register}
+            id="eventName"
+            label="이벤트 이름"
+            inputText="이벤트 이름을 입력해 주세요."
+            errors={errors}
+          />
+          <AddEventGoogleLocationInput setValue={setValue} errors={errors} />
+          <AddEventCalenderInput
+            openBottomSheet={bottomSheetHandler}
+            dateRange={dateRange}
+            errors={errors}
+          />
+          <AddEventCostInput
+            register={register}
+            setValue={setValue}
+            getValues={watch}
+          />
+          <AddEventPostButton
+            text={addEventMutation.isPending ? '추가 중...' : '추가 완료'}
+            disabled={addEventMutation.isPending}
+          />
+        </section>
+        <BottomSheet
+          isOpen={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+        >
+          <AddEventBottomSheetContent />
+        </BottomSheet>
+      </form>
     </FormProvider>
   );
 };
