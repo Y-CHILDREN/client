@@ -12,7 +12,9 @@ const eventApi = axios.create({
   },
 });
 
-async function createTripEvent(data: FormValues): Promise<Event | undefined> {
+const createTripEvent = async (
+  data: FormValues,
+): Promise<Event | undefined> => {
   try {
     const formattedData = {
       trip_id: data.tripId,
@@ -36,6 +38,20 @@ async function createTripEvent(data: FormValues): Promise<Event | undefined> {
     console.log('이벤트가 제대로 전송되지 않았습니다.', error);
     throw error;
   }
-}
+};
 
-export { createTripEvent };
+const getTripEvent = async (event_id: number): Promise<Event | undefined> => {
+  try {
+    const res = await eventApi.get(`/event/${event_id}`);
+    if (!res.data) {
+      throw new Error('오류 발생');
+    }
+
+    return res.data;
+  } catch (error) {
+    console.log('이벤트가 제대로 전송되지 않았습니다.', error);
+    throw error;
+  }
+};
+
+export { createTripEvent, getTripEvent };
