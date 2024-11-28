@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
-import { FormValues } from '../../pages/AddEventPage.tsx';
+import { FormValues } from '../../../pages/AddEventPage.tsx';
+
 
 interface EventFormDropDownProps {
   setValue: UseFormSetValue<FormValues>;

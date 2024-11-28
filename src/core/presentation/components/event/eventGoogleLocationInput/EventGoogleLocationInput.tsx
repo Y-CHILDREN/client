@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { FieldErrors, UseFormSetValue } from 'react-hook-form';
-import { FormValues } from '../../pages/AddEventPage.tsx';
-import RequiredDot from '../requiredDot/RequiredDot.tsx';
+import { FormValues } from '../../../pages/AddEventPage.tsx';
+import RequiredDot from '../../requiredDot/RequiredDot.tsx';
 
 interface Option {
   label: string;
@@ -16,12 +16,12 @@ interface Option {
   };
 }
 
-interface AddEventGoogleLocationProps {
+interface EventGoogleLocationProps {
   setValue: UseFormSetValue<FormValues>;
   errors: FieldErrors<FormValues>;
 }
 
-const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
+const EventGoogleLocationInput: React.FC<EventGoogleLocationProps> = ({
   setValue,
   errors,
 }) => {
@@ -54,7 +54,6 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
     };
 
     loadGoogleMapsScript();
-    console.log(errors);
     return () => {
       const script = document.querySelector(
         'script[src*="maps.googleapis.com/maps/api"]',
@@ -121,4 +120,4 @@ const AddEventGoogleLocation: React.FC<AddEventGoogleLocationProps> = ({
   );
 };
 
-export default AddEventGoogleLocation;
+export { EventGoogleLocationInput };

@@ -1,6 +1,6 @@
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
-import { FormValues } from '../../pages/AddEventPage.tsx';
-import RequiredDot from '../requiredDot/RequiredDot.tsx';
+import RequiredDot from '../../requiredDot/RequiredDot.tsx';
+import { FormValues } from '../../../pages/AddEventPage.tsx';
 
 interface EventInputProps {
   id: keyof FormValues;
@@ -37,4 +37,4 @@ const EventNameInput: React.FC<EventInputProps> = ({
   );
 };
 
-export default EventNameInput;
+export { EventNameInput };

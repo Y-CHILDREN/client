@@ -1,6 +1,6 @@
 import { UseFormGetValues, UseFormRegister } from 'react-hook-form';
 import { UseFormSetValue } from 'react-hook-form';
-import { FormValues } from '../../pages/AddEventPage.tsx';
+import { FormValues } from '../../../pages/AddEventPage.tsx';
 import { Plus } from 'lucide-react';
 interface AddEventCostInputProps {
   register: UseFormRegister<FormValues>;
@@ -8,9 +8,9 @@ interface AddEventCostInputProps {
   getValues: UseFormGetValues<FormValues>;
 }
 
-import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
 import { useState } from 'react';
-const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
+import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
+const EventCostInput: React.FC<AddEventCostInputProps> = ({
   register,
   setValue,
   getValues,
@@ -78,4 +78,4 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
   );
 };
 
-export default AddEventCostInput;
+export { EventCostInput };
