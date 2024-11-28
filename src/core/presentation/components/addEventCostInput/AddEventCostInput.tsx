@@ -1,6 +1,5 @@
 import { UseFormGetValues, UseFormRegister } from 'react-hook-form';
 import { UseFormSetValue } from 'react-hook-form';
-import { FormValues } from '../../pages/AddEventPage.tsx';
 import { Plus } from 'lucide-react';
 interface AddEventCostInputProps {
   register: UseFormRegister<FormValues>;
@@ -8,9 +7,10 @@ interface AddEventCostInputProps {
   getValues: UseFormGetValues<FormValues>;
 }
 
-import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
 import { useState } from 'react';
-const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
+import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
+import { FormValues } from '../../pages/AddEventPage.tsx';
+const EventCostInput: React.FC<AddEventCostInputProps> = ({
   register,
   setValue,
   getValues,
@@ -49,12 +49,15 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
               <input
                 className="w-full no-spinner no-number-scroll"
                 type="number"
-                {...register(`cost.${index}.cost`)}
-                onWheel={(event) => (event.target as HTMLElement).blur()}
+                {...register(`cost.${index}.cost`, {
+                  setValueAs: (value) => (value ? Number(value) : undefined), // 문자열을 숫자로 변환
+                })}
+                onWheel={(event) => (event.target as HTMLInputElement).blur()}
               />
               <p>원</p>
             </div>
             <button
+              type="button"
               className="p-0 border-none outline-none cursor-pointer bg-inherit "
               onClick={() => removeCostInput(index)} // 삭제 함수 호출
             >
@@ -78,4 +81,4 @@ const AddEventCostInput: React.FC<AddEventCostInputProps> = ({
   );
 };
 
-export default AddEventCostInput;
+export { EventCostInput };
