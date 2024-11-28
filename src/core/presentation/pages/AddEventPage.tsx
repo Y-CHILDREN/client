@@ -18,7 +18,7 @@ import { EventCalenderInput } from '../components/event/eventCalenderInput/Event
 
 export interface Cost {
   category: string;
-  cost: number;
+  value: number;
 }
 
 export interface FormValues {
@@ -26,7 +26,7 @@ export interface FormValues {
   eventName: string;
   location: string;
   cost: Cost[];
-  dateRange: { start?: Date; end?: Date };
+  dateRange: { start?: Date | null; end?: Date | null };
 }
 
 const AddEventPage: React.FC = () => {
@@ -36,7 +36,7 @@ const AddEventPage: React.FC = () => {
     cost: z.array(
       z.object({
         category: z.string().min(1, '비용 항목을 입력해 주세요.'),
-        cost: z.number().min(0, '비용은 0 이상이어야 합니다.'),
+        value: z.number().min(0, '비용은 0 이상이어야 합니다.'),
       }),
     ),
     dateRange: z

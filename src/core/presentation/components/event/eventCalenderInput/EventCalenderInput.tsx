@@ -4,7 +4,7 @@ import { FormValues } from '../../../pages/AddEventPage.tsx';
 
 interface EventCalenderInputProps {
   openBottomSheet: () => void;
-  dateRange: { start?: Date; end?: Date }; // 날짜 범위 추가
+  dateRange: { start?: Date | null; end?: Date | null }; // 날짜 범위 추가
   errors: FieldErrors<FormValues>;
 }
 
@@ -13,7 +13,7 @@ const EventCalenderInput: React.FC<EventCalenderInputProps> = ({
   dateRange,
   errors,
 }) => {
-  function dateFormat(dateRange?: Date): string {
+  function dateFormat(dateRange?: Date | null): string {
     if (!dateRange) return '';
     const year = dateRange.getFullYear();
     const month = (dateRange.getMonth() + 1).toString().padStart(2, '0');

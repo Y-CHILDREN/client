@@ -16,19 +16,17 @@ const createTripEvent = async (
   data: FormValues,
 ): Promise<Event | undefined> => {
   try {
-    const formattedData = {
+    const res = await eventApi.post(`/event`, {
       trip_id: data.tripId,
       event_name: data.eventName,
       location: data.location,
       cost: data.cost.map((cost) => ({
         category: cost.category,
-        value: cost.cost,
+        value: cost.value,
       })),
       start_date: data.dateRange.start,
       end_date: data.dateRange.end,
-    };
-
-    const res = await eventApi.post(`/event`, formattedData);
+    });
     if (!res.data) {
       throw new Error('오류 발생');
     }
@@ -54,4 +52,33 @@ const getTripEvent = async (event_id: number): Promise<Event | undefined> => {
   }
 };
 
-export { createTripEvent, getTripEvent };
+const updateTripEvent = async (
+  { eventId, data }: { eventId: number | undefined; data: FormValues }, // 객체 형태로 인수 받기
+): Promise<Event | undefined> => {
+  try {
+    console.log('업데이트할 데이터:', data);
+
+    const response = await eventApi.patch(`/event/${eventId}`, {
+      trip_id: data.tripId,
+      event_name: data.eventName,
+      location: data.location,
+      cost: data.cost.map((cost) => ({
+        category: cost.category,
+        value: cost.value,
+      })),
+      start_date: data.dateRange.start?.toISOString(),
+      end_date: data.dateRange.end?.toISOString(),
+    });
+
+    if (!response.data) {
+      throw new Error('서버에서 응답을 받지 못했습니다.');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('이벤트 수정 중 오류 발생:', error);
+    throw error;
+  }
+};
+
+export { createTripEvent, getTripEvent, updateTripEvent };
