@@ -10,7 +10,7 @@ const AddEventPostButton: React.FC<AddEventPostButtonProps> = ({
 }) => {
   return (
     <button
-      className={`w-full px-3 text-white bg-dot-color ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={`w-full mt-auto my-3 text-white bg-dot-color ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       disabled={disabled}
       type="submit"
     >

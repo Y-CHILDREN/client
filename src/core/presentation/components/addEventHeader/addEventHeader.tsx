@@ -10,7 +10,7 @@ const AddEventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
   };
 
   return (
-    <section className="flex items-center h-[60px] px-3 border-b-2 border-gray-200 ">
+    <section className="flex items-center h-[60px] px-3 border-b-2 border-gray-200 bg-white">
       <img
         onClick={navigateHandler}
         className="cursor-pointer"
