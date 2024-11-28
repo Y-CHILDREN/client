@@ -1,19 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { FormValues } from '../../../pages/AddEventPage.tsx';
-
 
 interface EventFormDropDownProps {
   setValue: UseFormSetValue<FormValues>;
   index: number;
+  defaultCategory?: string;
 }
 
 const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
   setValue,
   index,
+  defaultCategory,
 }) => {
   const [isView, setView] = useState<boolean>(false);
-  const [category, setCategory] = useState<string>('항목 선택');
+  const [category, setCategory] = useState<string>(
+    defaultCategory || '항목 선택',
+  );
 
   const dropMenu = [
     { id: 1, label: '입장료' },
@@ -21,6 +24,14 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
     { id: 3, label: '주차비' },
     { id: 4, label: '기념품' },
   ];
+
+  // defaultCategory가 있으면 초기에 setValue와 setCategory 호출
+  useEffect(() => {
+    if (defaultCategory) {
+      setValue(`cost.${index}.category`, defaultCategory);
+      setCategory(defaultCategory);
+    }
+  }, [defaultCategory, index, setValue]);
 
   const dropDownHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -31,7 +42,7 @@ const EventFormDropDown: React.FC<EventFormDropDownProps> = ({
     e.stopPropagation();
     setCategory(value);
     setView(!isView);
-    setValue(`cost.${index}.category`, value); // 수정된 부분
+    setValue(`cost.${index}.category`, value);
   };
 
   return (
