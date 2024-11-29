@@ -24,7 +24,7 @@ export function TripDetailPage() {
   // 이벤트 수정 핸들러: event_id 이벤트에 해당하는 수정 화면으로 이동
   const handleEditEvent = (eventId: number) => {
     // console.log('navigate event-edit', eventId);
-    navigate(`/edit-event/${eventId}`);
+    navigate(`/update-event/${eventId}`);
   };
 
   // 이벤트 삭제 핸들러: 특정 이벤트 삭제.
