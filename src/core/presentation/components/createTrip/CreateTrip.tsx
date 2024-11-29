@@ -447,8 +447,12 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                 <button
                   type="button"
                   onClick={step < 4 ? handleNextStep : undefined}
-                  className="px-4 py-3 bg-[#92e7c5] text-white rounded-lg hover:bg-[#7fceb0] transition-colors"
                   style={{ flex: 2 }}
+                  className={`px-4 py-3 rounded-lg transition-colors ${
+                    step === 2 && start && end
+                      ? 'bg-[#3ACC97] text-white'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
                 >
                   다음
                 </button>
