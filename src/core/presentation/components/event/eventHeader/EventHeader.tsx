@@ -3,7 +3,7 @@ interface AddEventHeaderProps {
   message: string;
 }
 
-const AddEventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
+const EventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
   const navigate = useNavigate();
   const navigateHandler = () => {
     navigate('/trip-detail');
@@ -24,4 +24,4 @@ const AddEventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
   );
 };
 
-export default AddEventHeader;
+export { EventHeader };

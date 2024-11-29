@@ -1,19 +1,19 @@
 import { FieldErrors } from 'react-hook-form';
-import RequiredDot from '../requiredDot/RequiredDot.tsx';
-import { FormValues } from '../../pages/AddEventPage.tsx';
+import RequiredDot from '../../requiredDot/RequiredDot.tsx';
+import { FormValues } from '../../../pages/AddEventPage.tsx';
 
-interface AddEventCalenderInputProps {
+interface EventCalenderInputProps {
   openBottomSheet: () => void;
-  dateRange: { start?: Date; end?: Date }; // 날짜 범위 추가
+  dateRange: { start?: Date | null; end?: Date | null }; // 날짜 범위 추가
   errors: FieldErrors<FormValues>;
 }
 
-const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
+const EventCalenderInput: React.FC<EventCalenderInputProps> = ({
   openBottomSheet,
   dateRange,
   errors,
 }) => {
-  function dateFormat(dateRange?: Date): string {
+  function dateFormat(dateRange?: Date | null): string {
     if (!dateRange) return '';
     const year = dateRange.getFullYear();
     const month = (dateRange.getMonth() + 1).toString().padStart(2, '0');
@@ -63,4 +63,4 @@ const AddEventCalenderInput: React.FC<AddEventCalenderInputProps> = ({
   );
 };
 
-export default AddEventCalenderInput;
+export { EventCalenderInput };

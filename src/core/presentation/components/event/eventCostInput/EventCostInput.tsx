@@ -1,21 +1,35 @@
 import { UseFormGetValues, UseFormRegister } from 'react-hook-form';
 import { UseFormSetValue } from 'react-hook-form';
 import { Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
+import { Cost, FormValues } from '../../../pages/AddEventPage.tsx';
 interface AddEventCostInputProps {
   register: UseFormRegister<FormValues>;
   setValue: UseFormSetValue<FormValues>;
   getValues: UseFormGetValues<FormValues>;
+  defaultCosts?: Cost[];
 }
 
-import { useState } from 'react';
-import EventFormDropDown from '../eventFormDropDown/EventFormDropDown.tsx';
-import { FormValues } from '../../pages/AddEventPage.tsx';
 const EventCostInput: React.FC<AddEventCostInputProps> = ({
   register,
   setValue,
   getValues,
+  defaultCosts,
 }) => {
-  const [costInputs, setCostInputs] = useState([{ id: Date.now() }]);
+  // defaultCosts가 있으면 그에 맞는 입력 필드 초기화
+  const [costInputs, setCostInputs] = useState(
+    defaultCosts && defaultCosts.length > 0
+      ? defaultCosts.map((_, index) => ({ id: Date.now() + index }))
+      : [{ id: Date.now() }],
+  );
+
+  // 초기 렌더링 시 기본값 설정
+  useEffect(() => {
+    if (Array.isArray(defaultCosts) && defaultCosts.length > 0) {
+      setValue('cost', defaultCosts);
+    }
+  }, [defaultCosts, setValue]);
 
   const addCostInput = () => {
     setCostInputs([...costInputs, { id: Date.now() }]);
@@ -23,17 +37,14 @@ const EventCostInput: React.FC<AddEventCostInputProps> = ({
 
   const removeCostInput = (index: number) => {
     if (costInputs.length > 1) {
-      // costInputs 배열이 1개 이상인 경우에만 필드를 삭제
-      const updatedInputs = costInputs.filter((_, i) => i !== index); // 입력 필드 삭제
-      setCostInputs(updatedInputs); // 상태 업데이트
+      const updatedInputs = costInputs.filter((_, i) => i !== index);
+      setCostInputs(updatedInputs);
 
-      // react-hook-form 값 업데이트
-      const updatedCost = getValues('cost').filter((_, i) => i !== index); // 현재 cost 값을 가져와서 삭제
-      setValue('cost', updatedCost); // 업데이트된 배열로 cost 값 설정
+      const updatedCost = getValues('cost').filter((_, i) => i !== index);
+      setValue('cost', updatedCost);
     } else {
-      // 입력 필드가 1개인 경우에는 값을 초기화
       setCostInputs([{ id: Date.now() }]);
-      setValue('cost', []); //필드 값 초기화
+      setValue('cost', []);
     }
   };
 
@@ -44,13 +55,18 @@ const EventCostInput: React.FC<AddEventCostInputProps> = ({
         const { id } = costInput;
         return (
           <div key={id} className="flex justify-between w-full pt-3">
-            <EventFormDropDown setValue={setValue} index={index} />
+            <EventFormDropDown
+              setValue={setValue}
+              index={index}
+              defaultCategory={defaultCosts?.[index]?.category} // 카테고리 기본값 추가
+            />
             <div className="flex w-[40%] form-input-radius">
               <input
                 className="w-full no-spinner no-number-scroll"
                 type="number"
-                {...register(`cost.${index}.cost`, {
-                  setValueAs: (value) => (value ? Number(value) : undefined), // 문자열을 숫자로 변환
+                defaultValue={defaultCosts?.[index]?.value} // 기본값 추가
+                {...register(`cost.${index}.value`, {
+                  setValueAs: (value) => (value ? Number(value) : undefined),
                 })}
                 onWheel={(event) => (event.target as HTMLInputElement).blur()}
               />
@@ -59,7 +75,7 @@ const EventCostInput: React.FC<AddEventCostInputProps> = ({
             <button
               type="button"
               className="p-0 border-none outline-none cursor-pointer bg-inherit "
-              onClick={() => removeCostInput(index)} // 삭제 함수 호출
+              onClick={() => removeCostInput(index)}
             >
               <img
                 src="/assets/addEventForm/trashIcon.svg"

@@ -1,11 +1,10 @@
-import AddEventCalenderInput from '../components/addEventCalenderInput/AddEventCalenderInput.tsx';
-import AddEventCostInput from '../components/addEventCostInput/AddEventCostInput.tsx';
-import AddEventPostButton from '../components/addEventPostButton/AddEventPostButton.tsx';
-import EventNameInput from '../components/eventNameInput/EventNameInput.tsx';
-import BottomSheet from '../components/bottomSheet/BottomSheet.tsx';
-import AddEventBottomSheetContent from '../components/addEventBottomSheetContent/AddEventBottomSheetContent.tsx';
-import AddEventHeader from '../components/addEventHeader/addEventHeader.tsx';
-import AddEventGoogleLocationInput from '../components/addEventGoogleLocationInput/AddEventGoogleLocationInput.tsx';
+import { EventSubmitButton } from '../components/event/eventSubmitButton/EventSubmitButton.tsx';
+import { BottomSheet } from '../components/bottomSheet/BottomSheet.tsx';
+import { EventHeader } from '../components/event/eventHeader/EventHeader.tsx';
+import { EventGoogleLocationInput } from '../components/event/eventGoogleLocationInput/EventGoogleLocationInput.tsx';
+import { EventNameInput } from '../components/event/eventNameInput/EventNameInput.tsx';
+import { EventCostInput } from '../components/event/eventCostInput/EventCostInput.tsx';
+import { EventBottomSheetContent } from '../components/event/eventBottomSheetContent/EventBottomSheetContent.tsx';
 
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -15,10 +14,11 @@ import { useUserTripEventStore } from '../hooks/stores/userTripEventStore.ts';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { EventCalenderInput } from '../components/event/eventCalenderInput/EventCalenderInput.tsx';
 
 export interface Cost {
   category: string;
-  cost: number;
+  value: number;
 }
 
 export interface FormValues {
@@ -26,7 +26,7 @@ export interface FormValues {
   eventName: string;
   location: string;
   cost: Cost[];
-  dateRange: { start?: Date; end?: Date };
+  dateRange: { start?: Date | null; end?: Date | null };
 }
 
 const AddEventPage: React.FC = () => {
@@ -36,7 +36,7 @@ const AddEventPage: React.FC = () => {
     cost: z.array(
       z.object({
         category: z.string().min(1, '비용 항목을 입력해 주세요.'),
-        cost: z.number().min(0, '비용은 0 이상이어야 합니다.'),
+        value: z.number().min(0, '비용은 0 이상이어야 합니다.'),
       }),
     ),
     dateRange: z
@@ -79,11 +79,10 @@ const AddEventPage: React.FC = () => {
   const addEventMutation = useMutation({
     mutationFn: createTripEvent,
     onSuccess: () => {
-      console.log('이벤트가 성공적으로 추가되었습니다.');
       navigate('/trip-detail');
     },
-    onError: (error) => {
-      console.error('이벤트 추가 중 오류가 발생했습니다:', error);
+    onError: (err) => {
+      console.log('이벤트 추가 중 오류가 발생했습니다:', err);
     },
   });
 
@@ -101,7 +100,7 @@ const AddEventPage: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <AddEventHeader message="이벤트 추가하기" />
+      <EventHeader message="이벤트 추가하기" />
       <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
         <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
           <EventNameInput
@@ -111,18 +110,18 @@ const AddEventPage: React.FC = () => {
             inputText="이벤트 이름을 입력해 주세요."
             errors={errors}
           />
-          <AddEventGoogleLocationInput setValue={setValue} errors={errors} />
-          <AddEventCalenderInput
+          <EventGoogleLocationInput setValue={setValue} errors={errors} />
+          <EventCalenderInput
             openBottomSheet={bottomSheetHandler}
             dateRange={dateRange}
             errors={errors}
           />
-          <AddEventCostInput
+          <EventCostInput
             register={register}
             setValue={setValue}
             getValues={watch}
           />
-          <AddEventPostButton
+          <EventSubmitButton
             text={addEventMutation.isPending ? '추가 중...' : '추가 완료'}
             disabled={addEventMutation.isPending}
           />
@@ -131,7 +130,7 @@ const AddEventPage: React.FC = () => {
           isOpen={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
         >
-          <AddEventBottomSheetContent />
+          <EventBottomSheetContent />
         </BottomSheet>
       </form>
     </FormProvider>
