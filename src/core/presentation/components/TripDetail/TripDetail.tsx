@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Footer from '../layout/Footer';
 import {
   X,
   Map,
@@ -259,34 +260,30 @@ const TripDetail: React.FC<TripDetailProps> = ({
       ) : (
         <>
           {/* 헤더 */}
-          <header className="px-4 space-y-4">
+          <header>
             {/* 닫기, 지도, 추가기능 버튼 */}
-            <div className="relative flex items-center justify-between pt-2">
+            <div className="relative flex items-center justify-between px-2">
               <button
                 onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-gray-100"
+                className="p-2 rounded-lg hover:bg-gray-100 bg-white"
               >
-                <X className="w-6 h-6" />
+                <X className="w-12 h-12 p-3" />
               </button>
-              <div
-                className="flex items-center gap-4"
-                ref={dropdownRefMoreVertical}
-              >
+              <div className="flex items-center" ref={dropdownRefMoreVertical}>
                 {/* 맵 버튼 */}
-                <button onClick={handleMapToggle} className="bg-white">
-                  {showMap ? (
-                    <List className="w-6 h-6" />
-                  ) : (
-                    <Map className="w-6 h-6" />
-                  )}
+                <button
+                  onClick={handleMapToggle}
+                  className="bg-white w-12 h-12 p-3"
+                >
+                  {showMap ? <List /> : <Map />}
                 </button>
 
                 {/* 추가기능 버튼 */}
                 <button
-                  className="bg-white"
+                  className="bg-white w-12 h-12 p-3"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <MoreVertical className="w-6 h-6" />
+                  <MoreVertical />
                 </button>
                 {showDropdown && (
                   <div className="absolute right-0 z-50 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg top-full">
@@ -314,54 +311,59 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 )}
               </div>
             </div>
-            <div className="space-y-3">
-              {/* 제목 */}
-              <h1 className="text-2xl font-bold">{tripScheduleData.title}</h1>
 
-              <div className="flex items-center justify-between py-3 text-sm text-gray-600">
-                {/* 날짜, 경비 */}
-                <div className="flex flex-col items-center space-y-3">
-                  <span className="flex items-center mr-auto">
-                    <Calendar className="mr-2" />
-                    {format(
-                      parseISO(tripScheduleData.start_date),
-                      'yyyy. MM. dd',
-                      {
-                        locale: ko,
-                      },
-                    )}{' '}
-                    -{' '}
-                    {format(
-                      parseISO(tripScheduleData.end_date),
-                      'yyyy. MM. dd',
-                      {
-                        locale: ko,
-                      },
-                    )}
-                  </span>
-                  <span className="flex items-center mr-auto">
-                    <CircleDollarSign className="mr-2" />{' '}
-                    <strong>{totalCost} 원</strong>
+            <div>
+              <div className="flex flex-col items-start gap-3 self-stretch p-6 pt-5 pb-5 pl-5">
+                {/* 제목 */}
+                <div className="flex items-center gap-3 self-stretch">
+                  <span className="text-[28px] font-normal font-semibold leading-7 text-gray-900 text-left">
+                    {tripScheduleData.title}
                   </span>
                 </div>
 
-                {/* 멤버 아바타 */}
-                <div className="flex -space-x-2">
-                  {memberProfiles.map((member, index) => (
-                    <Avatar
-                      key={member.id}
-                      name={member.nickname}
-                      src={member.user_image}
-                      size="32"
-                      round
-                      color={`hsl(${index * 60}, 70%, 85%)`}
-                    />
-                  ))}
-                  {memberProfiles.length > 3 && (
-                    <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full">
-                      +{memberProfiles.length - 3}
-                    </div>
-                  )}
+                <div className="flex items-start gap-2 self-stretch">
+                  {/* 날짜, 경비 */}
+                  <div className="flex flex-col items-start gap-2 flex-1">
+                    <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
+                      <Calendar />
+                      {format(
+                        parseISO(tripScheduleData.start_date),
+                        'yyyy. MM. dd',
+                        {
+                          locale: ko,
+                        },
+                      )}{' '}
+                      -{' '}
+                      {format(
+                        parseISO(tripScheduleData.end_date),
+                        'yyyy. MM. dd',
+                        {
+                          locale: ko,
+                        },
+                      )}
+                    </span>
+                    <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
+                      <CircleDollarSign /> <span>{totalCost} 원</span>
+                    </span>
+                  </div>
+                  {/* 멤버 아바타 */}
+                  <div className="flex items-center gap-2">
+                    {memberProfiles.map((member, index) => (
+                      <Avatar
+                        key={member.id}
+                        name={member.nickname}
+                        src={member.user_image}
+                        size="32"
+                        round
+                        color={`hsl(${index * 60}, 70%, 85%)`}
+                      />
+                    ))}
+                    {memberProfiles.length > 3 && (
+                      <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full">
+                        +{memberProfiles.length - 3}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -496,7 +498,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             )}
 
             {/* 이벤트 추가 버튼 */}
-            <div className={`fixed bottom-20 right-32 z-10 `}>
+            <div className={`absolute bottom-20 right-4 z-10 `}>
               <button
                 onClick={handleCreateEvent}
                 className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
@@ -535,6 +537,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
           )}
         </>
       )}
+      <div className="absolute bottom-0 w-full">
+        <Footer />
+      </div>
     </div>
   );
 };
