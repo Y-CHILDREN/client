@@ -413,7 +413,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
                           {index + 1}
                         </div>
-                        <div className="text-sm font-medium text-gray-500">
+                        <div className="text-[13px] font-semibold text-gray-500">
                           {format(event.start_date, 'HH:mm', { locale: ko })}
                         </div>
                       </div>
