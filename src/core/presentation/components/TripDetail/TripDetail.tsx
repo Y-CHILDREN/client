@@ -452,8 +452,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
                         {expandedEvents.includes(event.event_id) && (
                           <div className="pb-1 ">
                             <div className="pt-1 border-t border-gray-100">
-                              <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
-                                <span>{event.location}</span>
+                              <div className="flex justify-start items-center mb-2.5 text-gray-600 text-sm">
+                                <span className="text-left">
+                                  {event.location}
+                                </span>
                                 <button
                                   className="p-2 rounded-lg hover:bg-gray-100"
                                   onClick={() =>
