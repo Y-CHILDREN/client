@@ -59,7 +59,7 @@ export function TripDetailPage() {
   };
 
   const handleEditTrip = (tripId: number) => {
-    navigate(`/trip/${tripId}`);
+    navigate(`/edit-trip/${tripId}`);
   };
 
   const handleDeleteTrip = async (tripId: number) => {
