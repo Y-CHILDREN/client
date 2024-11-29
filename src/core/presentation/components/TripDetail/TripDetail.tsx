@@ -420,8 +420,22 @@ const TripDetail: React.FC<TripDetailProps> = ({
                       <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
                         <div className="flex flex-1 flex-row items-center justify-between">
                           <div className="flex flex-col items-start w-full">
-                            <div className="font-medium">
-                              {event.event_name}
+                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                              <div className="text-base font-semibold text-gray-900">
+                                {event.event_name}
+                              </div>
+                              <button
+                                className="p-1"
+                                onClick={() =>
+                                  handleExpandEvent(event.event_id)
+                                }
+                              >
+                                {expandedEvents.includes(event.event_id) ? (
+                                  <ChevronUp className="w-5 h-5 text-gray-400" />
+                                ) : (
+                                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                                )}
+                              </button>
                             </div>
                             <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
                               <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-28">
@@ -438,16 +452,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                             </div>
                           </div>
-                          <button
-                            className="p-4"
-                            onClick={() => handleExpandEvent(event.event_id)}
-                          >
-                            {expandedEvents.includes(event.event_id) ? (
-                              <ChevronUp className="w-5 h-5 text-gray-400" />
-                            ) : (
-                              <ChevronDown className="w-5 h-5 text-gray-400" />
-                            )}
-                          </button>
                         </div>
                         {expandedEvents.includes(event.event_id) && (
                           <div className="pb-1 ">
