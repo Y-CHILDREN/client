@@ -365,7 +365,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
             <div className="space-y-8">
               <div className="flex items-center gap-2">
                 <span className="text-xl font-medium">어디로 떠나시나요?</span>
-                <span className="text-[#92e7c5] text-sm">필수</span>
+                <span className="text-[#17B47B] text-sm">필수</span>
               </div>
               <div className="flex gap-3">
                 <DropDown
@@ -390,10 +390,36 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                 />
               </div>
             </div>
+
             {errors.destination && (
               <p className="mt-2 text-sm text-red-500">{errors.destination}</p>
             )}
-            <div className="p-6 mt-auto">
+            <div className="mt-auto">
+              {/* 선택한 여행지 표시 */}
+              {region && subregion ? (
+                <div className="flex flex-col px-5 py-3 justify-center items-start gap-3 self-stretch rounded-[8px] bg-[#FBFBFB] mt-auto mb-4 border border-[#EDEEEF]">
+                  <div className="flex flex-col justify-center items-start gap-3 self-stretch">
+                    <span className="text-[#151616] text-center font-semibold text-sm leading-5">
+                      선택한 여행지
+                    </span>
+                    <div>
+                      <button
+                        onClick={() => setSubregion('')}
+                        className="flex h-9 pt-0 pr-3 pb-0 pl-4 justify-center items-center text-center gap-1 rounded-[160px] bg-[#E9F6F1]"
+                      >
+                        <span className="text-[#151616] text-center font-semibold text-sm leading-5">
+                          {
+                            subregionOptions.find(
+                              (option) => option.value === subregion,
+                            )?.label
+                          }
+                        </span>
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -417,7 +443,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                 <span className="text-xl font-medium">
                   여행 일정을 선택해 주세요
                 </span>
-                <span className="text-[#92e7c5] text-sm">필수</span>
+                <span className="text-[#17B47B] text-sm">필수</span>
               </div>
               <DatePickerComponent
                 startDate={start}
@@ -431,7 +457,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               />
             </div>
 
-            <div className="p-6 mt-auto">
+            <div className="mt-auto">
               {errors.end_date && (
                 <p className="mt-2 text-sm text-red-500">{errors.end_date}</p>
               )}
@@ -516,7 +542,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               </div>
             </div>
 
-            <div className="p-6 mt-auto">
+            <div className="mt-auto">
               {errors.members && (
                 <p className="mt-2 text-sm text-red-500">{errors.members}</p>
               )}
@@ -553,7 +579,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                 <span className="text-xl font-medium">
                   마지막으로 여행의 이름을 적어 주세요.
                 </span>
-                <span className="text-[#92e7c5] text-sm">필수</span>
+                <span className="text-[#17B47B] text-sm">필수</span>
               </div>
               <input
                 type="text"
@@ -562,7 +588,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 placeholder="예) 제주도 가족여행"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#92e7c5]"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#92e7c5]"
               />
             </div>
 
