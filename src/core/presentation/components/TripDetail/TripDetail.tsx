@@ -13,7 +13,7 @@ import {
   Pencil,
   Trash,
 } from 'lucide-react';
-import { format, isSameDay, parseISO } from 'date-fns';
+import { format, isSameDay, isWithinInterval, parseISO } from 'date-fns';
 import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
 
@@ -127,7 +127,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
   const eventForSelectedDate = tripEvents
     .filter((event) =>
       selectedDate
-        ? isSameDay(parseISO(event.start_date), selectedDate)
+        ? isWithinInterval(selectedDate, {
+            start: parseISO(event.start_date),
+            end: parseISO(event.end_date),
+          })
         : false,
     )
     .sort(
