@@ -48,4 +48,4 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   );
 };
 
-export default BottomSheet;
+export { BottomSheet };

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { FormValues } from '../../../pages/AddEventPage.tsx';
+import DatePickerComponent from '../../datePicker/DatePickerComponent.tsx';
+import ScrollableTimePicker from '../../scrollableTimePicker/ScrollableTimePicker.tsx';
 
-import DatePickerComponent from '../datePicker/DatePickerComponent.tsx';
-import ScrollableTimePicker from '../scrollableTimePicker/ScrollableTimePicker.tsx';
-import { FormValues } from '../../pages/AddEventPage.tsx';
-
-const AddEventBottomSheetContent = () => {
+const EventBottomSheetContent = () => {
   const { setValue } = useFormContext<FormValues>();
   const [dateRange, setDateRange] = useState<{ start?: Date; end?: Date }>({
     start: undefined,
@@ -58,6 +57,7 @@ const AddEventBottomSheetContent = () => {
         onChange={handleDateChange}
         startDate={dateRange.start || undefined}
         endDate={dateRange.end || undefined}
+        isEvent={true}
       />
       <ScrollableTimePicker
         onStartTimeChange={handleStartTimeChange}
@@ -67,4 +67,4 @@ const AddEventBottomSheetContent = () => {
   );
 };
 
-export default AddEventBottomSheetContent;
+export { EventBottomSheetContent };

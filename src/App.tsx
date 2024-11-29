@@ -23,6 +23,7 @@ import { TripDetailPage } from './core/presentation/pages/TripDetailPage';
 import ToastMessageProvider from './core/presentation/components/ui/ToastMessageProvider.tsx';
 
 import { useGoogleMapsLoader } from '@/core/presentation/hooks/useGoogleMapsLoader.ts';
+import UpdateEventPage from './core/presentation/pages/UpdateEventPage.tsx';
 import { EditTripPage } from '@/core/presentation/pages/EditTripPage.tsx';
 
 const App: React.FC = () => {
@@ -55,6 +56,10 @@ const App: React.FC = () => {
               >
                 <Route path="/zustand" element={<ZustandPractice />} />
                 <Route path="/add-event" element={<AddEventPage />} />
+                <Route
+                  path="/update-event/:eventId"
+                  element={<UpdateEventPage />}
+                />
                 <Route path="/home" element={<Home />} />
                 <Route path="/create-trip" element={<CreateTripPage />} />
                 <Route path="/mypage" element={<Mypage />} />
