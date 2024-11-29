@@ -492,21 +492,23 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     </div>
                   </div>
                 ))}
+                {/* 이벤트 추가 버튼 */}
+                <div className="absolute bottom-20 right-4 z-10 flex justify-center">
+                  <button
+                    onClick={handleCreateEvent}
+                    className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    이벤트 추가
+                  </button>
+                </div>
+                <div className="absolute bottom-0 w-full">
+                  <Footer />
+                </div>
               </div>
             ) : (
               <p className="mt-4">일정을 추가해 주세요</p>
             )}
-
-            {/* 이벤트 추가 버튼 */}
-            <div className={`absolute bottom-20 right-4 z-10 `}>
-              <button
-                onClick={handleCreateEvent}
-                className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                이벤트 추가
-              </button>
-            </div>
 
             {/* 하단 이벤트 목록 카드 */}
             {showMap && (
@@ -537,9 +539,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
           )}
         </>
       )}
-      <div className="absolute bottom-0 w-full">
-        <Footer />
-      </div>
     </div>
   );
 };
