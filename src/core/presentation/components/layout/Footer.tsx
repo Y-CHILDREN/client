@@ -7,17 +7,22 @@ const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   const getIconSrc = (path: string) => {
-    return location.pathname === path
-      ? path === '/home'
-        ? '/assets/navigation/onHouse.svg'
-        : path === '/mytrips'
-          ? '/assets/navigation/onSuitcaseRolling.svg'
-          : '/assets/navigation/onUser.svg'
-      : path === '/home'
-        ? '/assets/navigation/offHouse.svg'
-        : path === '/mytrips'
-          ? '/assets/navigation/offSuitcaseRolling.svg'
-          : '/assets/navigation/offUser.svg';
+    const currentPath = location.pathname;
+    const isMyTripsSection =
+      currentPath === '/mytrips' || currentPath === '/trip-detail';
+
+    if (path === '/mytrips' && isMyTripsSection) {
+      return '/assets/navigation/onSuitcaseRolling.svg';
+    }
+
+    if (currentPath === path) {
+      if (path === '/home') return '/assets/navigation/onHouse.svg';
+      if (path === '/mypage') return '/assets/navigation/onUser.svg';
+    }
+
+    if (path === '/home') return '/assets/navigation/offHouse.svg';
+    if (path === '/mytrips') return '/assets/navigation/offSuitcaseRolling.svg';
+    return '/assets/navigation/offUser.svg';
   };
 
   const handleNavigation = (path: string) => {
