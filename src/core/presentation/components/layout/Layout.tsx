@@ -22,7 +22,8 @@ const Layout: React.FC = () => {
       </main>
       {/*Bottom navigation bar*/}
       {location.pathname !== '/add-event' &&
-        location.pathname !== `/update-event/${eventId}` && <Footer />}
+        location.pathname !== `/update-event/${eventId}` &&
+        location.pathname !== '/trip-detail' && <Footer />}
     </div>
   );
 };
