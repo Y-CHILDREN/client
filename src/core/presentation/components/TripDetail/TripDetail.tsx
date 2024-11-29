@@ -496,9 +496,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             )}
 
             {/* 이벤트 추가 버튼 */}
-            <div
-              className={`absolute right-4 ${showMap ? 'top-4' : 'bottom-8'}`}
-            >
+            <div className={`fixed bottom-20 right-36 z-10 `}>
               <button
                 onClick={handleCreateEvent}
                 className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
