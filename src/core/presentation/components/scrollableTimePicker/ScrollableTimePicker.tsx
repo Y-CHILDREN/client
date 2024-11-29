@@ -72,7 +72,7 @@ const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
     type: 'time' | 'hour' | 'minute',
   ): JSX.Element => (
     <div
-      className="w-16 h-40 overflow-y-scroll text-center no-scroll-bar"
+      className="w-16 h-40 overflow-y-scroll text-center snap-y no-scroll-bar"
       onScroll={(e) => handleScroll(e, type)}
     >
       {/* 상하 공백 */}
@@ -80,7 +80,7 @@ const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
       {items.map((item) => (
         <div
           key={item}
-          className={`h-10 flex items-center justify-center ${
+          className={`h-10 flex items-center justify-center snap-center ${
             item === selected ? 'font-bold text-black' : 'text-gray-500'
           }`}
         >
@@ -104,6 +104,7 @@ const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
       <button
         onClick={handleConfirm}
         className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-md"
+        type="button"
       >
         저장
       </button>

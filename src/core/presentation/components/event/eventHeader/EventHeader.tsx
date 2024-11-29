@@ -3,14 +3,14 @@ interface AddEventHeaderProps {
   message: string;
 }
 
-const AddEventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
+const EventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
   const navigate = useNavigate();
   const navigateHandler = () => {
     navigate('/trip-detail');
   };
 
   return (
-    <section className="flex items-center h-[60px] px-3 border-b-2 border-gray-200 ">
+    <section className="flex items-center h-[10%] px-3 border-b-2 border-gray-200 bg-white">
       <img
         onClick={navigateHandler}
         className="cursor-pointer"
@@ -24,4 +24,4 @@ const AddEventHeader: React.FC<AddEventHeaderProps> = ({ message }) => {
   );
 };
 
-export default AddEventHeader;
+export { EventHeader };

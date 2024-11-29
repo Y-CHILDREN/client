@@ -1,11 +1,13 @@
 import React from 'react';
 import './Layout.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+
 import Footer from './Footer';
 
 const Layout: React.FC = () => {
   const location = useLocation();
+  const { eventId } = useParams();
   return (
     <div className="wrapper">
       {/*Main content*/}
@@ -13,7 +15,8 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}
-      {location.pathname !== '/add-event' && <Footer />}
+      {location.pathname !== '/add-event' &&
+        location.pathname !== `/update-event/${eventId}` && <Footer />}
     </div>
   );
 };
