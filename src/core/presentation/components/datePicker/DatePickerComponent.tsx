@@ -3,6 +3,8 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useUserTripStore } from '../../hooks/stores/userTripStore.ts';
+import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore.ts';
 
 interface DatePickerProps {
   startDate?: Date;
@@ -17,6 +19,7 @@ interface DatePickerProps {
   inline?: boolean;
   className?: string;
   label?: string;
+  isEvent?: boolean;
 }
 
 const DatePickerComponent: React.FC<DatePickerProps> = ({
@@ -31,7 +34,30 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
   inline = true,
   className,
   label,
+  isEvent,
 }) => {
+  let tripEndDay: Date | undefined;
+  let tripStartDay: Date | undefined;
+  const selectedTripId = useUserTripEventStore((state) => state.selectedTripId);
+  const getSelectedTripById = useUserTripStore(
+    (state) => state.getSelectedTripById,
+  );
+
+  // null 타입 체크
+  const trip =
+    selectedTripId !== null ? getSelectedTripById(selectedTripId) : undefined;
+
+  // undefined 처리
+  if (trip?.start_date) {
+    tripStartDay = new Date(trip.start_date);
+  }
+
+  if (trip?.end_date) {
+    tripEndDay = new Date(trip.end_date);
+  }
+
+  const dynamicMinDate = isEvent ? tripStartDay : minDate || new Date();
+  const dynamicMaxDate = isEvent ? tripEndDay : maxDate;
   return (
     <div className={className}>
       {label && (
@@ -44,8 +70,8 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
         startDate={startDate}
         endDate={endDate}
         onChange={onChange}
-        minDate={minDate || new Date()}
-        maxDate={maxDate}
+        minDate={dynamicMinDate}
+        maxDate={dynamicMaxDate}
         dateFormat={dateFormat}
         showMonthDropdown={showMonthDropdown}
         showYearDropdown={showYearDropdown}

@@ -1,12 +1,11 @@
-interface AddEventPostButtonProps {
+interface EventSubmitButtonProps {
   text: string;
-  disabled?: boolean;
-  onClick?: () => void;
+  disabled: boolean;
 }
 
-const AddEventPostButton: React.FC<AddEventPostButtonProps> = ({
+const EventSubmitButton: React.FC<EventSubmitButtonProps> = ({
   text,
-  disabled = false,
+  disabled,
 }) => {
   return (
     <button
@@ -19,4 +18,4 @@ const AddEventPostButton: React.FC<AddEventPostButtonProps> = ({
   );
 };
 
-export default AddEventPostButton;
+export { EventSubmitButton };
