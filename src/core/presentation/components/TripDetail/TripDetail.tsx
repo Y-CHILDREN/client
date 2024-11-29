@@ -407,7 +407,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             ) : eventForSelectedDate.length > 0 ? (
               <div className="flex flex-col gap-3 p-4 mb-10">
                 {eventForSelectedDate.map((event, index) => (
-                  <div key={event.event_id} className="p-4">
+                  <div key={event.event_id}>
                     <div className="flex items-center space-x-4">
                       <div className="flex flex-col items-center gap-1">
                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
