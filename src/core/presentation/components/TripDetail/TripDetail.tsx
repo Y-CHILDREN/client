@@ -396,17 +396,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
           {/* 이벤트 목록 */}
           <main className="relative flex-1 bg-[#F5F6F6]">
-            {/* {showMap ? (
-              isLoaded ? (
-                <MapWithMarkers
-                  events={eventForSelectedDate}
-                  mapContainerStyle={{ width: '100%', height: '100%' }}
-                  selectedEvent={selectedEvent}
-                  setSelectedEvent={setSelectedEvent}
-                />
-              ) : (
-                <div>Loading map...</div>
-              ) */}
             {showMap ? (
               <>
                 {isLoaded ? (
