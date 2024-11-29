@@ -50,18 +50,18 @@ const EventCardRow: React.FC<EventCardRowProps> = ({
 
   return (
     <div
-      className={`relative flex flex-col items-start snap-center flex-shrink-0 w-[90vw] max-w-[300px] h-[136px] bg-white rounded-2xl shadow-lg mx-2 cursor-pointer ${
+      className={`relative flex flex-col items-start snap-center flex-shrink-0 w-[90vw] max-w-[300px] h-[136px] bg-white rounded-[8px] shadow-lg mx-1 cursor-pointer ${
         isSelected ? '' : ''
       }`}
       onClick={onClick}
     >
-      <div className="flex p-[12px] pt-[8px] pl-[16px] items-center gap-[8px] self-stretch">
+      <div className="flex pt-[12px] pr-[12px] pb-[8px] pl-[16px] items-center gap-[8px] self-stretch">
         {/* Time and Number Badge */}
         <div className="flex items-center gap-[8px] flex-1">
-          <div className="flex w-[16px] h-[16px] flex-col justify-center items-center gap-[10px] bg-[#3ACC97] rounded-full text-white font-medium overflow-hidden text-white text-center text-ellipsis font-semibold text-[12px] leading-[14px]">
+          <div className="flex w-[16px] h-[16px] flex-col justify-center items-center gap-[10px] bg-[#3ACC97] rounded-full text-white font-medium overflow-hidden text-white text-center text-ellipsis font-semibold text-[10px] leading-[14px]">
             {index}
           </div>
-          <div className="overflow-hidden text-[#17B47B] text-ellipsis font-semibold text-[16px] leading-[20px]">
+          <div className="overflow-hidden text-[#17B47B] text-ellipsis font-semibold text-[14px] leading-[20px]">
             {format(new Date(startDate), 'HH:mm', { locale: ko })} -{' '}
             {format(new Date(endDate), 'HH:mm', { locale: ko })}
           </div>
@@ -108,7 +108,7 @@ const EventCardRow: React.FC<EventCardRowProps> = ({
       </div>
 
       {/* Content */}
-      <div className="flex pt-[0px] pr-[16px] pt-[12px] pl-[16px] items-start gap-[12px] flex-1 self-stretch">
+      <div className="flex pt-[0px] pr-[16px] pl-[16px] items-start gap-[12px] flex-1 self-stretch">
         {image ? (
           <div>
             <img

@@ -265,22 +265,22 @@ const TripDetail: React.FC<TripDetailProps> = ({
             <div className="relative flex items-center justify-between px-2">
               <button
                 onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-gray-100 bg-white"
+                className="p-2 rounded-lg hover:bg-gray-100 bg-white w-12 h-12 p-3 focus:outline-none"
               >
-                <X className="w-12 h-12 p-3" />
+                <X />
               </button>
               <div className="flex items-center" ref={dropdownRefMoreVertical}>
                 {/* 맵 버튼 */}
                 <button
                   onClick={handleMapToggle}
-                  className="bg-white w-12 h-12 p-3"
+                  className="bg-white w-12 h-12 p-3 rounded-lg hover:bg-gray-100 focus:outline-none"
                 >
                   {showMap ? <List /> : <Map />}
                 </button>
 
                 {/* 추가기능 버튼 */}
                 <button
-                  className="bg-white w-12 h-12 p-3"
+                  className="bg-white w-12 h-12 p-3 rounded-lg hover:bg-gray-100 focus:outline-none"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
                   <MoreVertical />
@@ -410,7 +410,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 )}
                 {/* 지도 모드일 때의 이벤트 추가 버튼 */}
                 <div
-                  className={`absolute ${eventForSelectedDate.length > 0 ? 'bottom-40' : 'bottom-5'} right-4 z-10 flex justify-center`}
+                  className={`absolute ${eventForSelectedDate.length > 0 ? 'bottom-[168px]' : 'bottom-5'} right-4 z-10 flex justify-center`}
                 >
                   <button
                     onClick={handleCreateEvent}
