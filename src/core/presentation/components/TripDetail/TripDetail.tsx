@@ -392,7 +392,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           </nav>
 
           {/* 이벤트 목록 */}
-          <main className="relative flex-1">
+          <main className="relative flex-1 bg-[#F5F6F6]">
             {showMap ? (
               isLoaded ? (
                 <MapWithMarkers
@@ -405,11 +405,11 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 <div>Loading map...</div>
               )
             ) : eventForSelectedDate.length > 0 ? (
-              <div className="flex flex-col gap-3 p-4 mb-10 bg-gray-50">
+              <div className="flex flex-col gap-3 p-4 mb-10">
                 {eventForSelectedDate.map((event, index) => (
                   <div key={event.event_id} className="p-4">
                     <div className="flex items-center space-x-4">
-                      <div className="flex flex-col items-center">
+                      <div className="flex flex-col items-center gap-1">
                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
                           {index + 1}
                         </div>
@@ -417,15 +417,15 @@ const TripDetail: React.FC<TripDetailProps> = ({
                           {format(event.start_date, 'HH:mm', { locale: ko })}
                         </div>
                       </div>
-                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
+                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg bg-white">
                         <div className="flex flex-1 flex-row items-center justify-between">
                           <div className="flex flex-col items-start w-full">
                             <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
-                              <div className="text-base font-semibold text-gray-900">
+                              <div className="text-base font-semibold text-gray-90">
                                 {event.event_name}
                               </div>
                               <button
-                                className="p-1"
+                                className="p-1 bg-white"
                                 onClick={() =>
                                   handleExpandEvent(event.event_id)
                                 }
