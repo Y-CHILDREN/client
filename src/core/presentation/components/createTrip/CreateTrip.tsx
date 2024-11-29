@@ -592,7 +592,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
               />
             </div>
 
-            <div className="p-6 mt-auto">
+            <div className="mt-auto">
               {errors.title && (
                 <p className="mt-2 text-sm text-red-500">{errors.title}</p>
               )}
