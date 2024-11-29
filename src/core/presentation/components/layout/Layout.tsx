@@ -11,7 +11,11 @@ const Layout: React.FC = () => {
   return (
     <div className="wrapper">
       {/*Main content*/}
-      <main className="flex-grow overflow-x-hidden overflow-y-auto bg-[#F5F6F6]">
+      <main
+        className={`flex-grow overflow-x-hidden overflow-y-auto ${
+          location.pathname === '/home' ? 'bg-[#F5F6F6]' : 'bg-white'
+        }`}
+      >
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}

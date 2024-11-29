@@ -32,6 +32,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   clearAuth: () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('token');
+    localStorage.removeItem('tripId-storage');
     document.cookie = 'token=; path=/; max-age=0';
     document.cookie = 'connect.sid=; path=/; max-age=0';
     set({ user: null, token: null, isAuthenticated: false });
