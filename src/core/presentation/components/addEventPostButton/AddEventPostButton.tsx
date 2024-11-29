@@ -1,12 +1,11 @@
 interface AddEventPostButtonProps {
   text: string;
-  disabled?: boolean;
-  onClick?: () => void;
+  disabled: boolean;
 }
 
 const AddEventPostButton: React.FC<AddEventPostButtonProps> = ({
   text,
-  disabled = false,
+  disabled,
 }) => {
   return (
     <button
