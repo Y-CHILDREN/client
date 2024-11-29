@@ -139,6 +139,11 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
 
+  // 초기 지도 포커싱.
+  const [mapcenter, setMapcenter] = useState<google.maps.LatLngLiteral | null>(
+    null,
+  );
+
   const { isLoaded } = useGoogleMapsStore();
 
   // 이벤트 목록 드롭다운.
@@ -201,8 +206,31 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   }, []);
 
-  // tripEvent에 위치 정보 && Place Image를 추가하는 로직
+  // 여행 지도 초기 위치 계산 함수.
+  const handleMapCenter = (destination: string) => {
+    const geocoder = new google.maps.Geocoder();
+
+    return new Promise<google.maps.LatLngLiteral>((resolve, reject) => {
+      geocoder.geocode({ address: destination }, (results, status) => {
+        if (results === null) {
+          return console.log('목적지에 맞는 위치 정보가 없습니다.');
+        }
+
+        if (status === 'OK' && results[0]) {
+          const location = results[0].geometry.location;
+          const latLng = { lat: location.lat(), lng: location.lng() };
+          resolve(latLng);
+          console.log('latLng', latLng);
+        } else {
+          console.error('위치 정보를 불러오는데 실패했습니다: ', status);
+          reject(new Error('Geocoding failed'));
+        }
+      });
+    });
+  };
+
   useEffect(() => {
+    // tripEvent에 위치 정보 && Place Image를 추가하는 로직
     const fetchAndUpdateEvents = async () => {
       try {
         if (selectedTripId) {
@@ -212,6 +240,17 @@ const TripDetail: React.FC<TripDetailProps> = ({
         }
       } catch (error) {
         console.error('데이터 처리 중 오류:', error);
+      }
+
+      // 초기 지도 포커싱 설정
+      if (!mapcenter && tripScheduleData?.destination) {
+        handleMapCenter(tripScheduleData.destination)
+          .then((center) => {
+            setMapcenter(center); // 상태 업데이트
+          })
+          .catch((error) => {
+            console.error('Error setting map center:', error);
+          });
       }
     };
 
@@ -400,6 +439,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                   mapContainerStyle={{ width: '100%', height: '100%' }}
                   selectedEvent={selectedEvent}
                   setSelectedEvent={setSelectedEvent}
+                  mapCenter={
+                    mapcenter || { lat: 37.56521290000001, lng: 126.9773517 }
+                  } // 디폴트 위치: 서울
                 />
               ) : (
                 <div>Loading map...</div>
