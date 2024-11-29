@@ -103,7 +103,7 @@ const CreateTrip: React.FC<Props> = ({ onClose, onSubmit }) => {
       if (tripData.members.length === 0)
         newErrors.members = '적어도 한 명의 멤버를 추가하세요. (본인은 필수)';
     } else if (step === 4) {
-      if (!tripData.title) newErrors.title = '제목을 입력하세요.';
+      if (!tripData.title.trim()) newErrors.title = '제목을 입력하세요.';
     }
 
     setErrors(newErrors);
