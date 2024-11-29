@@ -325,7 +325,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                   {/* 날짜, 경비 */}
                   <div className="flex flex-col items-start gap-2 flex-1">
                     <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
-                      <Calendar />
+                      <Calendar className="w-4 h-4" />
                       {format(
                         parseISO(tripScheduleData.start_date),
                         'yyyy. MM. dd',
@@ -343,7 +343,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
                       )}
                     </span>
                     <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
-                      <CircleDollarSign /> <span>{totalCost} 원</span>
+                      <CircleDollarSign className="w-4 h-4" />
+                      <span>{totalCost} 원</span>
                     </span>
                   </div>
                   {/* 멤버 아바타 */}
@@ -371,12 +372,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
           {/*  날짜 선택 탭 */}
           <nav className="border-gray-200 border-y">
-            <div className="flex overflow-x-auto hide-scrollbar">
+            <div className="flex overflow-x-auto hide-scrollbar gap-4">
               {dateOptions.map((date) => (
                 <button
                   key={date.toISOString()}
                   onClick={() => setSelectedDate(date)}
-                  className={`flex-1 min-w-[100px] py-3 px-4 text-center relative bg-white focus:outline-none
+                  className={`flex-1 min-w-[100px] py-3 px-4 text-center relative bg-white focus:outline-none flex items-center justify-center
                 ${isSameDay(selectedDate, date) ? 'text-black' : 'text-gray-400'}`}
                 >
                   <div className="text-[15px]">
@@ -395,7 +396,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
           {/* 이벤트 목록 */}
           <main className="relative flex-1 bg-[#F5F6F6]">
-            {showMap ? (
+            {/* {showMap ? (
               isLoaded ? (
                 <MapWithMarkers
                   events={eventForSelectedDate}
@@ -405,7 +406,34 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 />
               ) : (
                 <div>Loading map...</div>
-              )
+              ) */}
+            {showMap ? (
+              <>
+                {isLoaded ? (
+                  <MapWithMarkers
+                    events={eventForSelectedDate}
+                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    selectedEvent={selectedEvent}
+                    setSelectedEvent={setSelectedEvent}
+                  />
+                ) : (
+                  <div>Loading map...</div>
+                )}
+                {/* 지도 모드일 때의 이벤트 추가 버튼 */}
+                <div
+                  className={`absolute ${eventForSelectedDate.length > 0 ? 'bottom-40' : 'bottom-5'} right-4 z-10 flex justify-center`}
+                >
+                  <button
+                    onClick={handleCreateEvent}
+                    className="flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
+                  >
+                    <Plus className="w-4 h-4 text-white" />
+                    <span className="text-white text-center font-semibold text-sm leading-5">
+                      이벤트 추가
+                    </span>
+                  </button>
+                </div>
+              </>
             ) : eventForSelectedDate.length > 0 ? (
               <div className="flex flex-col gap-3 p-4 mb-10">
                 {eventForSelectedDate.map((event, index) => (
@@ -493,13 +521,15 @@ const TripDetail: React.FC<TripDetailProps> = ({
                   </div>
                 ))}
                 {/* 이벤트 추가 버튼 */}
-                <div className="absolute bottom-20 right-4 z-10 flex justify-center">
+                <div>
                   <button
                     onClick={handleCreateEvent}
-                    className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
+                    className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
                   >
-                    <Plus className="w-5 h-5 mr-2" />
-                    이벤트 추가
+                    <Plus className="w-4 h-4 text-white" />
+                    <span className="text-white text-center font-semibold text-sm leading-5">
+                      이벤트 추가
+                    </span>
                   </button>
                 </div>
                 <div className="absolute bottom-0 w-full">
