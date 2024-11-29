@@ -252,7 +252,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, [tripEvents]);
 
   return (
-    <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
+    <div className="flex flex-col w-full h-full bg-white min-h-[600px]">
       {/*tripScheduleData 없으면 메시지 출력*/}
       {!tripScheduleData ? (
         <p>선택된 여행 데이터를 찾을 수 없습니다.</p>
@@ -496,7 +496,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             )}
 
             {/* 이벤트 추가 버튼 */}
-            <div className={`fixed bottom-20 right-36 z-10 `}>
+            <div className={`fixed bottom-20 right-32 z-10 `}>
               <button
                 onClick={handleCreateEvent}
                 className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
