@@ -471,13 +471,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                               <div className="flex gap-3">
                                 <button
-                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
+                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg bg-white hover:bg-gray-50"
                                   onClick={() => onEditEvent(event.event_id)}
                                 >
                                   수정
                                 </button>
                                 <button
-                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50"
+                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg bg-white hover:bg-red-50"
                                   onClick={() => onDeleteEvent(event.event_id)}
                                 >
                                   삭제
