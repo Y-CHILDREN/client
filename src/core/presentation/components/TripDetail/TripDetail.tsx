@@ -14,7 +14,7 @@ import {
   Pencil,
   Trash,
 } from 'lucide-react';
-import { format, isSameDay, parseISO } from 'date-fns';
+import { format, isSameDay, isWithinInterval, parseISO } from 'date-fns';
 import Avatar from 'react-avatar';
 import { ko } from 'date-fns/locale';
 
@@ -27,6 +27,7 @@ import { getUserByEmail } from '../../../data/infrastructure/services/userServic
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
+import { useAuthStore } from '@/core/presentation/hooks/stores/authStore.ts';
 
 interface TripDetailProps {
   onClose: () => void;
@@ -53,7 +54,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
     updateEventCoordinates, // event에 좌표 추가.
     updateEventPhotos,
   } = useUserTripEventStore();
-  const { getSelectedTripById } = useUserTripStore(); // trip_id로 tripData 조회.
+  const { getSelectedTripById, fetchTrips } = useUserTripStore(); // trip_id로 tripData 조회.
+  const { user } = useAuthStore();
 
   // tripData
   const tripScheduleData =
@@ -128,7 +130,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
   const eventForSelectedDate = tripEvents
     .filter((event) =>
       selectedDate
-        ? isSameDay(parseISO(event.start_date), selectedDate)
+        ? isWithinInterval(selectedDate, {
+            start: parseISO(event.start_date),
+            end: parseISO(event.end_date),
+          })
         : false,
     )
     .sort(
@@ -139,6 +144,11 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // Map (Google Map api)
   // 지도 표시 여부
   const [showMap, setShowMap] = useState(false);
+
+  // 초기 지도 포커싱.
+  const [mapcenter, setMapcenter] = useState<google.maps.LatLngLiteral | null>(
+    null,
+  );
 
   const { isLoaded } = useGoogleMapsStore();
 
@@ -195,15 +205,42 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   };
 
-  // 페이지 로드 시 이벤트 데이터 조회
+  // 페이지 로드 시 여행 정보 및 이벤트 데이터 조회
   useEffect(() => {
-    if (selectedTripId) {
+    if (selectedTripId && user) {
+      // 여행 정보 가져오기.
+      fetchTrips(user.id);
+
+      // 여행 이벤트 데이터 가져오기
       fetchTripEvents(selectedTripId);
     }
   }, []);
 
-  // tripEvent에 위치 정보 && Place Image를 추가하는 로직
+  // 여행 지도 초기 위치 계산 함수.
+  const handleMapCenter = (destination: string) => {
+    const geocoder = new google.maps.Geocoder();
+
+    return new Promise<google.maps.LatLngLiteral>((resolve, reject) => {
+      geocoder.geocode({ address: destination }, (results, status) => {
+        if (results === null) {
+          return console.log('목적지에 맞는 위치 정보가 없습니다.');
+        }
+
+        if (status === 'OK' && results[0]) {
+          const location = results[0].geometry.location;
+          const latLng = { lat: location.lat(), lng: location.lng() };
+          resolve(latLng);
+          // console.log('latLng', latLng);
+        } else {
+          console.error('위치 정보를 불러오는데 실패했습니다: ', status);
+          reject(new Error('Geocoding failed'));
+        }
+      });
+    });
+  };
+
   useEffect(() => {
+    // tripEvent에 위치 정보 && Place Image를 추가하는 로직
     const fetchAndUpdateEvents = async () => {
       try {
         if (selectedTripId) {
@@ -213,6 +250,17 @@ const TripDetail: React.FC<TripDetailProps> = ({
         }
       } catch (error) {
         console.error('데이터 처리 중 오류:', error);
+      }
+
+      // 초기 지도 포커싱 설정
+      if (!mapcenter && tripScheduleData?.destination) {
+        handleMapCenter(tripScheduleData.destination)
+          .then((center) => {
+            setMapcenter(center); // 상태 업데이트
+          })
+          .catch((error) => {
+            console.error('Error setting map center:', error);
+          });
       }
     };
 
@@ -404,6 +452,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     mapContainerStyle={{ width: '100%', height: '100%' }}
                     selectedEvent={selectedEvent}
                     setSelectedEvent={setSelectedEvent}
+                    mapCenter={
+                      mapcenter || { lat: 37.56521290000001, lng: 126.9773517 }
+                    } // 디폴트 위치: 서울
                   />
                 ) : (
                   <div>Loading map...</div>
@@ -523,7 +574,18 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 </div>
               </div>
             ) : (
-              <p className="mt-4">일정을 추가해 주세요</p>
+              <>
+                <p className="mt-4">일정을 추가해 주세요</p>
+                <button
+                  onClick={handleCreateEvent}
+                  className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
+                >
+                  <Plus className="w-4 h-4 text-white" />
+                  <span className="text-white text-center font-semibold text-sm leading-5">
+                    이벤트 추가
+                  </span>
+                </button>
+              </>
             )}
 
             {/* 하단 이벤트 목록 카드 */}

@@ -58,6 +58,9 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
 
   const dynamicMinDate = isEvent ? tripStartDay : minDate || new Date();
   const dynamicMaxDate = isEvent ? tripEndDay : maxDate;
+
+  const today = new Date();
+
   return (
     <div className={className}>
       {label && (
@@ -77,6 +80,14 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
         showYearDropdown={showYearDropdown}
         inline={inline}
         locale={ko}
+        dayClassName={(date) => {
+          // 오늘 날짜와 비교하여 같은 날짜인지 확인
+          return date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear()
+            ? 'react-datepicker__day--today'
+            : 'react-datepicker__day--not-today';
+        }}
         renderCustomHeader={({
           // 헤더 커스텀 CSS
           date,
@@ -129,7 +140,7 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
             padding: 0.5rem 0;
           }
           .react-datepicker__day-name {
-            color: #6b7280;
+            color: #545759;
             margin: 0.4rem;
             width: 2rem;
           }
@@ -141,6 +152,10 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
             border-radius: 0.25rem;
             color: #1f2937;
           }
+          .react-datepicker__day--disabled {
+            color: #DCDEE0;
+            pointer-events: none; /* 클릭 비활성화 */
+          }
           .react-datepicker__day:hover {
             background-color: #f3f4f6;
           }
@@ -148,15 +163,18 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
             background-color: #545759 !important;
             color: white !important;
           }
-          .react-datepicker__day--keyboard-selected {
-            background-color: #f3f4f6;
+          .react-datepicker__day--today {
+            background-color: white !important;
             color: #17B47B !important;
+          }
+          .react-datepicker__day--keyboard-selected {
+            background-color: white;
           }
           .react-datepicker__navigation {
             top: 0.75rem;
           }
           .react-datepicker__navigation-icon::before {
-            border-color: #1f2937;
+            border-color: #DCDEE0;
           }
           .react-datepicker__year-read-view--down-arrow {
             border-color: #1f2937;
