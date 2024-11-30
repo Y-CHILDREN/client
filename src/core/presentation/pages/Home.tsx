@@ -104,7 +104,8 @@ const Home: React.FC = () => {
             </div>
           </div>
           <Link to="/create-trip">
-            <button className="flex px-5 pl-4 py-3 items-center gap-2 absolute right-5 bottom-[60px] rounded-[160px] bg-[#3ACC97] text-white shadow-[0px_0px_4px_0px_rgba(0,0,0,0.08),0px_4px_8px_0px_rgba(0,0,0,0.08),0px_6px_12px_0px_rgba(0,0,0,0.12)]">
+            {/* <button className="flex px-5 pl-4 py-3 items-center gap-2 absolute right-5 bottom-[60px] rounded-[160px] bg-[#3ACC97] text-white shadow-[0px_0px_4px_0px_rgba(0,0,0,0.08),0px_4px_8px_0px_rgba(0,0,0,0.08),0px_6px_12px_0px_rgba(0,0,0,0.12)]"> */}
+            <button className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg text-white">
               + 새로운 여행
             </button>
           </Link>
