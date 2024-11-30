@@ -26,6 +26,7 @@ import { getUserByEmail } from '../../../data/infrastructure/services/userServic
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
+import { useAuthStore } from '@/core/presentation/hooks/stores/authStore.ts';
 
 interface TripDetailProps {
   onClose: () => void;
@@ -52,7 +53,8 @@ const TripDetail: React.FC<TripDetailProps> = ({
     updateEventCoordinates, // event에 좌표 추가.
     updateEventPhotos,
   } = useUserTripEventStore();
-  const { getSelectedTripById } = useUserTripStore(); // trip_id로 tripData 조회.
+  const { getSelectedTripById, fetchTrips } = useUserTripStore(); // trip_id로 tripData 조회.
+  const { user } = useAuthStore();
 
   // tripData
   const tripScheduleData =
@@ -202,9 +204,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
     }
   };
 
-  // 페이지 로드 시 이벤트 데이터 조회
+  // 페이지 로드 시 여행 정보 및 이벤트 데이터 조회
   useEffect(() => {
-    if (selectedTripId) {
+    if (selectedTripId && user) {
+      // 여행 정보 가져오기.
+      fetchTrips(user.id);
+
+      // 여행 이벤트 데이터 가져오기
       fetchTripEvents(selectedTripId);
     }
   }, []);
@@ -223,7 +229,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           const location = results[0].geometry.location;
           const latLng = { lat: location.lat(), lng: location.lng() };
           resolve(latLng);
-          console.log('latLng', latLng);
+          // console.log('latLng', latLng);
         } else {
           console.error('위치 정보를 불러오는데 실패했습니다: ', status);
           reject(new Error('Geocoding failed'));

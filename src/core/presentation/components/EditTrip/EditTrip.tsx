@@ -292,8 +292,8 @@ const EditTrip: React.FC<EditTripProps> = ({ trip, onUpdate, onClose }) => {
 
   // logging
   useEffect(() => {
-    console.log('formData', formData);
-  }, [formData]);
+    // console.log('formData', formData);
+  }, [handleSubmit]);
 
   return (
     <div className="w-full h-full bg-white min-h-[600px] flex flex-col">

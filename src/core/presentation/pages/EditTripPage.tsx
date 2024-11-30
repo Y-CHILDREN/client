@@ -21,8 +21,8 @@ export function EditTripPage() {
 
   // logging
   useEffect(() => {
-    console.log('selectedTripId', selectedTripId);
-    console.log('trip', trip);
+    // console.log('selectedTripId', selectedTripId);
+    // console.log('trip', trip);
   }, []);
 
   // 수정하기 핸들러
