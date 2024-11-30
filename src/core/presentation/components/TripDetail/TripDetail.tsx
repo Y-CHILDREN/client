@@ -574,7 +574,18 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 </div>
               </div>
             ) : (
-              <p className="mt-4">일정을 추가해 주세요</p>
+              <>
+                <p className="mt-4">일정을 추가해 주세요</p>
+                <button
+                  onClick={handleCreateEvent}
+                  className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
+                >
+                  <Plus className="w-4 h-4 text-white" />
+                  <span className="text-white text-center font-semibold text-sm leading-5">
+                    이벤트 추가
+                  </span>
+                </button>
+              </>
             )}
 
             {/* 하단 이벤트 목록 카드 */}
