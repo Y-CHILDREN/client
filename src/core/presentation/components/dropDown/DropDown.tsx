@@ -24,7 +24,7 @@ const DropDown: React.FC<DropDownProps> = ({
           value={value}
           onChange={onChange}
           className="appearance-none w-full bg-white px-4 py-2.5 pr-8 rounded-lg border border-gray-200
-            focus:outline-none focus:ring-2 focus:ring-[#92e7c5] focus:border-transparent
+            focus:outline-none focus:ring-1 focus:ring-[#92e7c5] focus:border-transparent
             disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed
             text-sm transition-colors cursor-pointer"
         >
