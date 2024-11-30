@@ -13,14 +13,18 @@ const Layout: React.FC = () => {
       {/*Main content*/}
       <main
         className={`flex-grow overflow-x-hidden overflow-y-auto ${
-          location.pathname === '/home' ? 'bg-[#F5F6F6]' : 'bg-white'
+          location.pathname === '/home' || location.pathname === '/delete-user'
+            ? 'bg-white'
+            : 'bg-[#F5F6F6]'
         }`}
       >
         <Outlet />
       </main>
       {/*Bottom navigation bar*/}
       {location.pathname !== '/add-event' &&
-        location.pathname !== `/update-event/${eventId}` && <Footer />}
+        location.pathname !== `/update-event/${eventId}` &&
+        location.pathname !== '/trip-detail' &&
+        location.pathname !== '/create-trip' && <Footer />}
     </div>
   );
 };

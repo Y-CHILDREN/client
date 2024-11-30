@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Footer from '../layout/Footer';
 import {
   X,
   Map,
@@ -300,41 +301,37 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, [tripEvents]);
 
   return (
-    <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
+    <div className="flex flex-col w-full h-full bg-white min-h-[600px]">
       {/*tripScheduleData 없으면 메시지 출력*/}
       {!tripScheduleData ? (
         <p>선택된 여행 데이터를 찾을 수 없습니다.</p>
       ) : (
         <>
           {/* 헤더 */}
-          <header className="px-4 space-y-4">
+          <header>
             {/* 닫기, 지도, 추가기능 버튼 */}
-            <div className="relative flex items-center justify-between pt-2">
+            <div className="relative flex items-center justify-between px-2">
               <button
                 onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-gray-100"
+                className="p-2 rounded-lg hover:bg-gray-100 bg-white w-12 h-12 p-3 focus:outline-none"
               >
-                <X className="w-6 h-6" />
+                <X />
               </button>
-              <div
-                className="flex items-center gap-4"
-                ref={dropdownRefMoreVertical}
-              >
+              <div className="flex items-center" ref={dropdownRefMoreVertical}>
                 {/* 맵 버튼 */}
-                <button onClick={handleMapToggle} className="bg-white">
-                  {showMap ? (
-                    <List className="w-6 h-6" />
-                  ) : (
-                    <Map className="w-6 h-6" />
-                  )}
+                <button
+                  onClick={handleMapToggle}
+                  className="bg-white w-12 h-12 p-3 rounded-lg hover:bg-gray-100 focus:outline-none"
+                >
+                  {showMap ? <List /> : <Map />}
                 </button>
 
                 {/* 추가기능 버튼 */}
                 <button
-                  className="bg-white"
+                  className="bg-white w-12 h-12 p-3 rounded-lg hover:bg-gray-100 focus:outline-none"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <MoreVertical className="w-6 h-6" />
+                  <MoreVertical />
                 </button>
                 {showDropdown && (
                   <div className="absolute right-0 z-50 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg top-full">
@@ -362,54 +359,60 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 )}
               </div>
             </div>
-            <div className="space-y-3">
-              {/* 제목 */}
-              <h1 className="text-2xl font-bold">{tripScheduleData.title}</h1>
 
-              <div className="flex items-center justify-between py-3 text-sm text-gray-600">
-                {/* 날짜, 경비 */}
-                <div className="flex flex-col items-center space-y-3">
-                  <span className="flex items-center mr-auto">
-                    <Calendar className="mr-2" />
-                    {format(
-                      parseISO(tripScheduleData.start_date),
-                      'yyyy. MM. dd',
-                      {
-                        locale: ko,
-                      },
-                    )}{' '}
-                    -{' '}
-                    {format(
-                      parseISO(tripScheduleData.end_date),
-                      'yyyy. MM. dd',
-                      {
-                        locale: ko,
-                      },
-                    )}
-                  </span>
-                  <span className="flex items-center mr-auto">
-                    <CircleDollarSign className="mr-2" />{' '}
-                    <strong>{totalCost} 원</strong>
+            <div>
+              <div className="flex flex-col items-start gap-3 self-stretch p-6 pt-5 pb-5 pl-5">
+                {/* 제목 */}
+                <div className="flex items-center gap-3 self-stretch">
+                  <span className="text-[28px] font-normal font-semibold leading-7 text-gray-900 text-left">
+                    {tripScheduleData.title}
                   </span>
                 </div>
 
-                {/* 멤버 아바타 */}
-                <div className="flex -space-x-2">
-                  {memberProfiles.map((member, index) => (
-                    <Avatar
-                      key={member.id}
-                      name={member.nickname}
-                      src={member.user_image}
-                      size="32"
-                      round
-                      color={`hsl(${index * 60}, 70%, 85%)`}
-                    />
-                  ))}
-                  {memberProfiles.length > 3 && (
-                    <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full">
-                      +{memberProfiles.length - 3}
-                    </div>
-                  )}
+                <div className="flex items-start gap-2 self-stretch">
+                  {/* 날짜, 경비 */}
+                  <div className="flex flex-col items-start gap-2 flex-1">
+                    <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
+                      <Calendar className="w-4 h-4" />
+                      {format(
+                        parseISO(tripScheduleData.start_date),
+                        'yyyy. MM. dd',
+                        {
+                          locale: ko,
+                        },
+                      )}{' '}
+                      -{' '}
+                      {format(
+                        parseISO(tripScheduleData.end_date),
+                        'yyyy. MM. dd',
+                        {
+                          locale: ko,
+                        },
+                      )}
+                    </span>
+                    <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
+                      <CircleDollarSign className="w-4 h-4" />
+                      <span>{totalCost} 원</span>
+                    </span>
+                  </div>
+                  {/* 멤버 아바타 */}
+                  <div className="flex items-center gap-2">
+                    {memberProfiles.map((member, index) => (
+                      <Avatar
+                        key={member.id}
+                        name={member.nickname}
+                        src={member.user_image}
+                        size="32"
+                        round
+                        color={`hsl(${index * 60}, 70%, 85%)`}
+                      />
+                    ))}
+                    {memberProfiles.length > 3 && (
+                      <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full">
+                        +{memberProfiles.length - 3}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -417,12 +420,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
           {/*  날짜 선택 탭 */}
           <nav className="border-gray-200 border-y">
-            <div className="flex overflow-x-auto hide-scrollbar">
+            <div className="flex overflow-x-auto hide-scrollbar gap-4">
               {dateOptions.map((date) => (
                 <button
                   key={date.toISOString()}
                   onClick={() => setSelectedDate(date)}
-                  className={`flex-1 min-w-[100px] py-3 px-4 text-center relative bg-white focus:outline-none
+                  className={`flex-1 min-w-[100px] py-3 px-4 text-center relative bg-white focus:outline-none flex items-center justify-center
                 ${isSameDay(selectedDate, date) ? 'text-black' : 'text-gray-400'}`}
                 >
                   <div className="text-[15px]">
@@ -440,39 +443,69 @@ const TripDetail: React.FC<TripDetailProps> = ({
           </nav>
 
           {/* 이벤트 목록 */}
-          <main className="relative flex-1">
+          <main className="relative flex-1 bg-[#F5F6F6]">
             {showMap ? (
-              isLoaded ? (
-                <MapWithMarkers
-                  events={eventForSelectedDate}
-                  mapContainerStyle={{ width: '100%', height: '100%' }}
-                  selectedEvent={selectedEvent}
-                  setSelectedEvent={setSelectedEvent}
-                  mapCenter={
-                    mapcenter || { lat: 37.56521290000001, lng: 126.9773517 }
-                  } // 디폴트 위치: 서울
-                />
-              ) : (
-                <div>Loading map...</div>
-              )
+              <>
+                {isLoaded ? (
+                  <MapWithMarkers
+                    events={eventForSelectedDate}
+                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    selectedEvent={selectedEvent}
+                    setSelectedEvent={setSelectedEvent}
+                    mapCenter={
+                      mapcenter || { lat: 37.56521290000001, lng: 126.9773517 }
+                    } // 디폴트 위치: 서울
+                  />
+                ) : (
+                  <div>Loading map...</div>
+                )}
+                {/* 지도 모드일 때의 이벤트 추가 버튼 */}
+                <div
+                  className={`absolute ${eventForSelectedDate.length > 0 ? 'bottom-[168px]' : 'bottom-5'} right-4 z-10 flex justify-center`}
+                >
+                  <button
+                    onClick={handleCreateEvent}
+                    className="flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
+                  >
+                    <Plus className="w-4 h-4 text-white" />
+                    <span className="text-white text-center font-semibold text-sm leading-5">
+                      이벤트 추가
+                    </span>
+                  </button>
+                </div>
+              </>
             ) : eventForSelectedDate.length > 0 ? (
-              <div className="flex flex-col gap-3 p-4 mb-10 bg-gray-50">
+              <div className="flex flex-col gap-3 p-4 mb-10">
                 {eventForSelectedDate.map((event, index) => (
-                  <div key={event.event_id} className="p-4">
+                  <div key={event.event_id}>
                     <div className="flex items-center space-x-4">
-                      <div className="flex flex-col items-center">
+                      <div className="flex flex-col items-center gap-1">
                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
                           {index + 1}
                         </div>
-                        <div className="text-sm font-medium text-gray-500">
+                        <div className="text-[13px] font-semibold text-gray-500">
                           {format(event.start_date, 'HH:mm', { locale: ko })}
                         </div>
                       </div>
-                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
+                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg bg-white">
                         <div className="flex flex-1 flex-row items-center justify-between">
                           <div className="flex flex-col items-start w-full">
-                            <div className="font-medium">
-                              {event.event_name}
+                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                              <div className="text-base font-semibold text-gray-90">
+                                {event.event_name}
+                              </div>
+                              <button
+                                className="p-1 bg-white"
+                                onClick={() =>
+                                  handleExpandEvent(event.event_id)
+                                }
+                              >
+                                {expandedEvents.includes(event.event_id) ? (
+                                  <ChevronUp className="w-5 h-5 text-gray-400" />
+                                ) : (
+                                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                                )}
+                              </button>
                             </div>
                             <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
                               <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-28">
@@ -489,22 +522,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                             </div>
                           </div>
-                          <button
-                            className="p-4"
-                            onClick={() => handleExpandEvent(event.event_id)}
-                          >
-                            {expandedEvents.includes(event.event_id) ? (
-                              <ChevronUp className="w-5 h-5 text-gray-400" />
-                            ) : (
-                              <ChevronDown className="w-5 h-5 text-gray-400" />
-                            )}
-                          </button>
                         </div>
                         {expandedEvents.includes(event.event_id) && (
                           <div className="pb-1 ">
                             <div className="pt-1 border-t border-gray-100">
-                              <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
-                                <span>{event.location}</span>
+                              <div className="flex justify-start items-center mb-2.5 text-gray-600 text-sm">
+                                <span className="text-left">
+                                  {event.location}
+                                </span>
                                 <button
                                   className="p-2 rounded-lg hover:bg-gray-100"
                                   onClick={() =>
@@ -516,13 +541,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                               <div className="flex gap-3">
                                 <button
-                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
+                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg bg-white hover:bg-gray-50"
                                   onClick={() => onEditEvent(event.event_id)}
                                 >
                                   수정
                                 </button>
                                 <button
-                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50"
+                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg bg-white hover:bg-red-50"
                                   onClick={() => onDeleteEvent(event.event_id)}
                                 >
                                   삭제
@@ -535,23 +560,22 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     </div>
                   </div>
                 ))}
+                {/* 이벤트 추가 버튼 */}
+                <div>
+                  <button
+                    onClick={handleCreateEvent}
+                    className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
+                  >
+                    <Plus className="w-4 h-4 text-white" />
+                    <span className="text-white text-center font-semibold text-sm leading-5">
+                      이벤트 추가
+                    </span>
+                  </button>
+                </div>
               </div>
             ) : (
               <p className="mt-4">일정을 추가해 주세요</p>
             )}
-
-            {/* 이벤트 추가 버튼 */}
-            <div
-              className={`absolute right-4 ${showMap ? 'top-4' : 'bottom-8'}`}
-            >
-              <button
-                onClick={handleCreateEvent}
-                className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                이벤트 추가
-              </button>
-            </div>
 
             {/* 하단 이벤트 목록 카드 */}
             {showMap && (
@@ -566,6 +590,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 />
               </div>
             )}
+            <div className="absolute bottom-0 w-full">
+              {!showMap && <Footer />}
+            </div>
           </main>
 
           {/* Toast Notification */}
