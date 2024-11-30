@@ -40,7 +40,7 @@ const DeleteCompletePage = () => {
       <Header>회원 탈퇴</Header>
       <div className="flex flex-col items-center justify-center p-6 ">
         <div className="h-[380px] flex items-center justify-center ">
-          <img src={backgroundImg} alt="byebye" />
+          <img src={backgroundImg} alt="byebye" className="w-[80%]" />
         </div>
         <div className="flex flex-col items-start gap-6 text-center">
           <p className="px-4 text-[14px] font-bold">

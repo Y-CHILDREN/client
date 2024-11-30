@@ -252,7 +252,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
   }, [tripEvents]);
 
   return (
-    <div className="flex flex-col w-full h-full bg-white min-h-[600px] relative">
+    <div className="flex flex-col w-full h-full bg-white min-h-[600px]">
       {/*tripScheduleData 없으면 메시지 출력*/}
       {!tripScheduleData ? (
         <p>선택된 여행 데이터를 찾을 수 없습니다.</p>
@@ -392,7 +392,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
           </nav>
 
           {/* 이벤트 목록 */}
-          <main className="relative flex-1">
+          <main className="relative flex-1 bg-[#F5F6F6]">
             {showMap ? (
               isLoaded ? (
                 <MapWithMarkers
@@ -405,23 +405,37 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 <div>Loading map...</div>
               )
             ) : eventForSelectedDate.length > 0 ? (
-              <div className="flex flex-col gap-3 p-4 mb-10 bg-gray-50">
+              <div className="flex flex-col gap-3 p-4 mb-10">
                 {eventForSelectedDate.map((event, index) => (
-                  <div key={event.event_id} className="p-4">
+                  <div key={event.event_id}>
                     <div className="flex items-center space-x-4">
-                      <div className="flex flex-col items-center">
+                      <div className="flex flex-col items-center gap-1">
                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white">
                           {index + 1}
                         </div>
-                        <div className="text-sm font-medium text-gray-500">
+                        <div className="text-[13px] font-semibold text-gray-500">
                           {format(event.start_date, 'HH:mm', { locale: ko })}
                         </div>
                       </div>
-                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg">
+                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg bg-white">
                         <div className="flex flex-1 flex-row items-center justify-between">
                           <div className="flex flex-col items-start w-full">
-                            <div className="font-medium">
-                              {event.event_name}
+                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                              <div className="text-base font-semibold text-gray-90">
+                                {event.event_name}
+                              </div>
+                              <button
+                                className="p-1 bg-white"
+                                onClick={() =>
+                                  handleExpandEvent(event.event_id)
+                                }
+                              >
+                                {expandedEvents.includes(event.event_id) ? (
+                                  <ChevronUp className="w-5 h-5 text-gray-400" />
+                                ) : (
+                                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                                )}
+                              </button>
                             </div>
                             <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
                               <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-28">
@@ -438,22 +452,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                             </div>
                           </div>
-                          <button
-                            className="p-4"
-                            onClick={() => handleExpandEvent(event.event_id)}
-                          >
-                            {expandedEvents.includes(event.event_id) ? (
-                              <ChevronUp className="w-5 h-5 text-gray-400" />
-                            ) : (
-                              <ChevronDown className="w-5 h-5 text-gray-400" />
-                            )}
-                          </button>
                         </div>
                         {expandedEvents.includes(event.event_id) && (
                           <div className="pb-1 ">
                             <div className="pt-1 border-t border-gray-100">
-                              <div className="flex justify-items-start items-center mb-2.5 text-gray-600 text-sm">
-                                <span>{event.location}</span>
+                              <div className="flex justify-start items-center mb-2.5 text-gray-600 text-sm">
+                                <span className="text-left">
+                                  {event.location}
+                                </span>
                                 <button
                                   className="p-2 rounded-lg hover:bg-gray-100"
                                   onClick={() =>
@@ -465,13 +471,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                               <div className="flex gap-3">
                                 <button
-                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
+                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg bg-white hover:bg-gray-50"
                                   onClick={() => onEditEvent(event.event_id)}
                                 >
                                   수정
                                 </button>
                                 <button
-                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50"
+                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg bg-white hover:bg-red-50"
                                   onClick={() => onDeleteEvent(event.event_id)}
                                 >
                                   삭제
@@ -490,9 +496,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             )}
 
             {/* 이벤트 추가 버튼 */}
-            <div
-              className={`absolute right-4 ${showMap ? 'top-4' : 'bottom-8'}`}
-            >
+            <div className={`fixed bottom-20 right-32 z-10 `}>
               <button
                 onClick={handleCreateEvent}
                 className="bg-[#3ACC97] hover:bg-[#7fceb0] text-white rounded-full px-6 py-3 shadow-lg flex items-center justify-center transition-colors duration-200 focus:outline-none"
