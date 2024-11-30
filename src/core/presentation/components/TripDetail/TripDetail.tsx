@@ -521,9 +521,6 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     </span>
                   </button>
                 </div>
-                <div className="absolute bottom-0 w-full">
-                  <Footer />
-                </div>
               </div>
             ) : (
               <p className="mt-4">일정을 추가해 주세요</p>
@@ -542,6 +539,9 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 />
               </div>
             )}
+            <div className="absolute bottom-0 w-full">
+              {!showMap && <Footer />}
+            </div>
           </main>
 
           {/* Toast Notification */}
