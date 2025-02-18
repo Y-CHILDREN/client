@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,7 +14,7 @@ import Home from './core/presentation/pages/Home';
 import LoginLayout from './core/presentation/components/layout/LoginLayout';
 import Mypage from './core/presentation/pages/Mypage';
 import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
-import AddEventPage from './core/presentation/pages/AddEventPage.tsx';
+
 import Mytrips from './core/presentation/pages/Mytrips';
 import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
 import { ProtectedRoute } from './routers/ProtectedRouter';
@@ -23,7 +23,15 @@ import { TripDetailPage } from './core/presentation/pages/TripDetailPage';
 import ToastMessageProvider from './core/presentation/components/ui/ToastMessageProvider.tsx';
 
 import { useGoogleMapsLoader } from '@/core/presentation/hooks/useGoogleMapsLoader.ts';
-import UpdateEventPage from './core/presentation/pages/UpdateEventPage.tsx';
+import EventFormSkeleton from './core/presentation/components/ui/EventFormSkeleton.tsx';
+
+const AddEventPage = lazy(
+  () => import('./core/presentation/pages/AddEventPage.tsx'),
+);
+
+const UpdateEventPage = lazy(
+  () => import('./core/presentation/pages/UpdateEventPage.tsx'),
+);
 
 const App: React.FC = () => {
   const { isLoaded, loadError } = useGoogleMapsLoader();
@@ -54,10 +62,21 @@ const App: React.FC = () => {
                 }
               >
                 <Route path="/zustand" element={<ZustandPractice />} />
-                <Route path="/add-event" element={<AddEventPage />} />
+                <Route
+                  path="/add-event"
+                  element={
+                    <Suspense fallback={<EventFormSkeleton />}>
+                      <AddEventPage />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="/update-event/:eventId"
-                  element={<UpdateEventPage />}
+                  element={
+                    <Suspense fallback={<EventFormSkeleton />}>
+                      <UpdateEventPage />
+                    </Suspense>
+                  }
                 />
                 <Route path="/home" element={<Home />} />
                 <Route path="/create-trip" element={<CreateTripPage />} />
