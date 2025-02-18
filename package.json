@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:prod": "VITE_ENV=production vite",
     "build": "tsc -b && vite build",
-    "build:prod": "tsc -b && vite build --mode production",
+    "build:prod": "tsc -b && vite build --mode production && node build-update.cjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
