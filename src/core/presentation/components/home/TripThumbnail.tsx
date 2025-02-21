@@ -18,6 +18,7 @@ import jeju from '../../assets/home/jeju.jpeg';
 import jeonbuk from '../../assets/home/jeonbuk.jpeg';
 import jeonnam from '../../assets/home/jeonnam.jpeg';
 import ulsan from '../../assets/home/ulsan.jpeg';
+import gyeonggi from '../../assets/home/gyeonggi.jpeg';
 
 interface TripThumbnailProps {
   destination: string;
@@ -43,6 +44,7 @@ const imageMap: { [key: string]: string } = {
   jeonbuk: jeonbuk,
   jeonnam: jeonnam,
   ulsan: ulsan,
+  gyeonggi: gyeonggi,
 };
 
 const TripThumbnail: React.FC<TripThumbnailProps> = ({

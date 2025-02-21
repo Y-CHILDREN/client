@@ -50,83 +50,93 @@ const EventCardRow: React.FC<EventCardRowProps> = ({
 
   return (
     <div
-      className={`snap-center flex-shrink-0 w-[90vw] min-w-[270px] max-w-[360px] bg-white rounded-2xl shadow-lg mx-2 cursor-pointer ${
-        isSelected ? 'ring-2 ring-[#3ACC97]' : ''
+      className={`relative flex flex-col items-start snap-center flex-shrink-0 w-[90vw] max-w-[300px] h-[136px] bg-white rounded-[8px] shadow-lg mx-1 cursor-pointer ${
+        isSelected ? '' : ''
       }`}
       onClick={onClick}
     >
-      <div className="p-4">
-        <div className="flex flex-col gap-4">
-          {/* Time and Number Badge */}
-          <div className="flex items-center w-full relative">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#3ACC97] text-white font-medium">
-                {index}
-              </div>
-              <div className="text-sm text-gray-500 whitespace-nowrap">
-                {format(new Date(startDate), 'HH:mm', { locale: ko })} -{' '}
-                {format(new Date(endDate), 'HH:mm', { locale: ko })}
-              </div>
-            </div>
+      <div className="flex pt-[12px] pr-[12px] pb-[8px] pl-[16px] items-center gap-[8px] self-stretch">
+        {/* Time and Number Badge */}
+        <div className="flex items-center gap-[8px] flex-1">
+          <div className="flex w-[16px] h-[16px] flex-col justify-center items-center gap-[10px] bg-[#3ACC97] rounded-full text-white font-medium overflow-hidden text-white text-center text-ellipsis font-semibold text-[10px] leading-[14px]">
+            {index}
+          </div>
+          <div className="overflow-hidden text-[#17B47B] text-ellipsis font-semibold text-[14px] leading-[20px]">
+            {format(new Date(startDate), 'HH:mm', { locale: ko })} -{' '}
+            {format(new Date(endDate), 'HH:mm', { locale: ko })}
+          </div>
+        </div>
 
-            {/* 드롭다운 버튼 */}
-            <div ref={dropdownRef} className="ml-auto">
+        {/* 드롭다운 버튼 */}
+        <div ref={dropdownRef} className="relative ml-auto">
+          <button
+            className="p-1 hover:bg-gray-100 rounded-lg bg-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDropdown(!showDropdown);
+            }}
+          >
+            <MoreVertical className="w-4 h-4 text-gray-400" />
+          </button>
+          {showDropdown && (
+            <div className="absolute top-full right-0 flex w-[124px] p-[6px] flex-col items-start bg-white rounded-lg shadow-lg border border-gray-200 z-50">
               <button
-                className="p-1 hover:bg-gray-100 rounded-lg bg-white"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setShowDropdown(!showDropdown);
+                  onEdit?.();
+                  setShowDropdown(false);
                 }}
+                className="flex h-[40px] p-[12px] pt-[12px] pl-[8px] items-center gap-[4px] self-stretch bg-white"
               >
-                <MoreVertical className="w-5 h-5 text-gray-400" />
+                <Pencil className="w-4 h-4 mr-2" />
+                수정
               </button>
-              {showDropdown && (
-                <div className="absolute top-full right-0 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit?.();
-                      setShowDropdown(false);
-                    }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    <Pencil className="w-4 h-4 mr-2" />
-                    수정
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete?.();
-                      setShowDropdown(false);
-                    }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
-                  >
-                    <Trash className="w-4 h-4 mr-2" />
-                    삭제
-                  </button>
-                </div>
-              )}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete?.();
+                  setShowDropdown(false);
+                }}
+                className="flex h-[40px] p-[12px] pt-[12px] pl-[8px] items-center gap-[4px] self-stretch bg-white text-red-500"
+              >
+                <Trash className="w-4 h-4 mr-2" />
+                삭제
+              </button>
             </div>
-          </div>
+          )}
+        </div>
+      </div>
 
-          {/* Content */}
-          <div className="flex items-start gap-3">
-            {image && (
-              <img
-                src={image}
-                alt={title}
-                className="w-20 h-20 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg object-cover"
-              />
-            )}
-            <div className="flex flex-col items-start">
-              <h3 className="font-medium">{title}</h3>
-              <p className="text-sm text-gray-600 truncate max-w-[150px]">
-                {location}
-              </p>
-              <p className="text-sm font-medium mt-1">
-                {cost.toLocaleString()} 원
-              </p>
-            </div>
+      {/* Content */}
+      <div className="flex pt-[0px] pr-[16px] pl-[16px] items-start gap-[12px] flex-1 self-stretch">
+        {image ? (
+          <div>
+            <img
+              src={image}
+              alt={title}
+              className="w-[60px] h-[60px] rounded-[6px] border border-[#DCDEE0]"
+            />
+          </div>
+        ) : (
+          <div className="flex w-[60px] h-[60px] rounded-[6px] border border-[#DCDEE0] items-center justify-center">
+            <span className="text-black text-[10px] ">Not image</span>
+          </div>
+        )}
+        <div className="flex flex-col items-start flex-1 self-stretch">
+          <div className="flex items-center self-stretch">
+            <span className="text-[#151616] text-ellipsis overflow-hidden font-semibold text-[16px] leading-[24px]">
+              {title}
+            </span>
+          </div>
+          <div className="flex items-start gap-[4px] self-stretch">
+            <span className="font-normal text-[13px] leading-[18px] truncate max-w-[150px]">
+              {location}
+            </span>
+          </div>
+          <div className="flex justify-center items-center gap-[4px]">
+            <span className="overflow-hidden text-[#545759] text-ellipsis font-normal text-[13px] leading-[18px]">
+              {cost.toLocaleString()} 원
+            </span>
           </div>
         </div>
       </div>

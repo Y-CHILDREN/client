@@ -23,6 +23,7 @@ import { TripDetailPage } from './core/presentation/pages/TripDetailPage';
 import ToastMessageProvider from './core/presentation/components/ui/ToastMessageProvider.tsx';
 
 import { useGoogleMapsLoader } from '@/core/presentation/hooks/useGoogleMapsLoader.ts';
+
 import EventFormSkeleton from './core/presentation/components/ui/EventFormSkeleton.tsx';
 
 const AddEventPage = lazy(
@@ -32,6 +33,8 @@ const AddEventPage = lazy(
 const UpdateEventPage = lazy(
   () => import('./core/presentation/pages/UpdateEventPage.tsx'),
 );
+
+
 
 const App: React.FC = () => {
   const { isLoaded, loadError } = useGoogleMapsLoader();
@@ -85,6 +88,7 @@ const App: React.FC = () => {
                 <Route path="/delete-user" element={<DeleteCompletePage />} />
                 <Route path="*" element={<Navigate to="/home" replace />} />
                 <Route path="/trip-detail" element={<TripDetailPage />} />
+                <Route path="/edit-trip/:tripId" element={<EditTripPage />} />
               </Route>
             </Routes>
           </ToastMessageProvider>
