@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EventCalenderInput } from '../components/event/eventCalenderInput/EventCalenderInput.tsx';
+import { Helmet } from 'react-helmet-async';
 
 export interface Cost {
   category: string;
@@ -99,41 +100,65 @@ const AddEventPage: React.FC = () => {
   const dateRange = watch('dateRange');
 
   return (
-    <FormProvider {...methods}>
-      <EventHeader message="이벤트 추가하기" />
-      <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
-        <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
-          <EventNameInput
-            register={register}
-            id="eventName"
-            label="이벤트 이름"
-            inputText="이벤트 이름을 입력해 주세요."
-            errors={errors}
-          />
-          <EventGoogleLocationInput setValue={setValue} errors={errors} />
-          <EventCalenderInput
-            openBottomSheet={bottomSheetHandler}
-            dateRange={dateRange}
-            errors={errors}
-          />
-          <EventCostInput
-            register={register}
-            setValue={setValue}
-            getValues={watch}
-          />
-          <EventSubmitButton
-            text={addEventMutation.isPending ? '추가 중...' : '추가 완료'}
-            disabled={addEventMutation.isPending}
-          />
-        </section>
-        <BottomSheet
-          isOpen={isBottomSheetOpen}
-          onClose={() => setIsBottomSheetOpen(false)}
-        >
-          <EventBottomSheetContent />
-        </BottomSheet>
-      </form>
-    </FormProvider>
+    <>
+      <Helmet>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="이벤트 추가" />
+        <meta
+          property="og:description"
+          content="이벤트 정보를 추가하세요. 여행 계획을 최적화하세요."
+        />
+        <meta
+          property="og:url"
+          content="https://codingcanvas.store/update-event"
+        />
+        <meta property="og:type" content="website" />
+        <meta name="title" content="이벤트 추가" />
+        <meta
+          name="keywords"
+          content="여행, 이벤트 추가, 일정 관리, Trip Planner"
+        />
+        <meta
+          name="description"
+          content="이벤트 정보를 추가하고 여행 계획을 최적화하세요."
+        />
+      </Helmet>
+      <FormProvider {...methods}>
+        <EventHeader message="이벤트 추가하기" />
+        <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
+          <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
+            <EventNameInput
+              register={register}
+              id="eventName"
+              label="이벤트 이름"
+              inputText="이벤트 이름을 입력해 주세요."
+              errors={errors}
+            />
+            <EventGoogleLocationInput setValue={setValue} errors={errors} />
+            <EventCalenderInput
+              openBottomSheet={bottomSheetHandler}
+              dateRange={dateRange}
+              errors={errors}
+            />
+            <EventCostInput
+              register={register}
+              setValue={setValue}
+              getValues={watch}
+            />
+            <EventSubmitButton
+              text={addEventMutation.isPending ? '추가 중...' : '추가 완료'}
+              disabled={addEventMutation.isPending}
+            />
+          </section>
+          <BottomSheet
+            isOpen={isBottomSheetOpen}
+            onClose={() => setIsBottomSheetOpen(false)}
+          >
+            <EventBottomSheetContent />
+          </BottomSheet>
+        </form>
+      </FormProvider>
+    </>
   );
 };
 
