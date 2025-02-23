@@ -207,14 +207,18 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
   // 페이지 로드 시 여행 정보 및 이벤트 데이터 조회
   useEffect(() => {
-    if (selectedTripId && user) {
-      // 여행 정보 가져오기.
-      fetchTrips(user.id);
+    const fetchData = async () => {
+      if (selectedTripId && user) {
+        // 여행 정보 가져오기.
+        await fetchTrips(user.id);
 
-      // 여행 이벤트 데이터 가져오기
-      fetchTripEvents(selectedTripId);
-    }
-  }, []);
+        // 여행 이벤트 데이터 가져오기
+        await fetchTripEvents(selectedTripId);
+      }
+    };
+
+    fetchData().catch(console.error);
+  }, [fetchTrips, fetchTripEvents, selectedTripId, user]);
 
   // 여행 지도 초기 위치 계산 함수.
   const handleMapCenter = (destination: string) => {
@@ -293,12 +297,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // logging
   useEffect(() => {
     // console.log('tripScheduleData:', tripScheduleData);
-    console.log('tripEvents:', tripEvents);
+    // console.log('tripEvents:', tripEvents);
     // console.log('showMap:', showMap);
     // console.log('Filtered Members:', filteredMembers);
     // console.log('eventForSelectedDate', eventForSelectedDate);
     // console.log('selectedEvent', selectedEvent);
-  }, [tripEvents]);
+  }, []);
 
   return (
     <div className="flex flex-col w-full h-full bg-white min-h-[600px]">
