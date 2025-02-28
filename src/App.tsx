@@ -14,7 +14,7 @@ import Home from './core/presentation/pages/Home';
 import LoginLayout from './core/presentation/components/layout/LoginLayout';
 import Mypage from './core/presentation/pages/Mypage';
 import { CreateTripPage } from './core/presentation/pages/CreateTripPage';
-
+import { EditTripPage } from './core/presentation/pages/EditTripPage';
 import Mytrips from './core/presentation/pages/Mytrips';
 import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
 import { ProtectedRoute } from './routers/ProtectedRouter';
@@ -33,8 +33,6 @@ const AddEventPage = lazy(
 const UpdateEventPage = lazy(
   () => import('./core/presentation/pages/UpdateEventPage.tsx'),
 );
-
-
 
 const App: React.FC = () => {
   const { isLoaded, loadError } = useGoogleMapsLoader();
