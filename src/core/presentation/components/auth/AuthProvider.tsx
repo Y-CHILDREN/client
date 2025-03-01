@@ -16,8 +16,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(true);
-      const storedUserId = localStorage.getItem('userId');
-      const storedToken = localStorage.getItem('token');
+      const storedUserId = sessionStorage.getItem('userId');
+      const storedToken = sessionStorage.getItem('token');
 
       if (!storedUserId || !storedToken) {
         setAuthenticated(false);
