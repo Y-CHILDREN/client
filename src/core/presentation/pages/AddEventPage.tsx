@@ -110,9 +110,8 @@ const AddEventPage: React.FC = () => {
         />
         <meta
           property="og:url"
-          content="https://codingcanvas.store/update-event"
+          content={`${import.meta.env.VITE_API_URL}/update-event`}
         />
-        <meta property="og:type" content="website" />
         <meta name="title" content="이벤트 추가" />
         <meta
           name="keywords"

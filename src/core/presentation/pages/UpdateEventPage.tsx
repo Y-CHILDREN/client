@@ -141,7 +141,7 @@ const UpdateEventPage = () => {
         />
         <meta
           property="og:url"
-          content="https://codingcanvas.store/update-event"
+          content={`${import.meta.env.VITE_API_URL}/update-event`}
         />
         <meta property="og:type" content="website" />
         <meta name="title" content="이벤트 수정" />
@@ -153,48 +153,48 @@ const UpdateEventPage = () => {
           name="description"
           content="이벤트 정보를 수정하고 여행 계획을 최적화하세요."
         />
-
-        <FormProvider {...methods}>
-          <EventHeader message="이벤트 수정하기" />
-          <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
-            <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
-              <EventNameInput
-                register={register}
-                id="eventName"
-                label="이벤트 이름"
-                inputText="수정할 이벤트 이름을 입력해 주세요."
-                errors={errors}
-              />
-              <EventGoogleLocationInput
-                setValue={setValue}
-                errors={errors}
-                defaultLocation={data?.location} // 기본값 전달
-              />
-              <EventCalenderInput
-                openBottomSheet={bottomSheetHandler}
-                dateRange={dateRange}
-                errors={errors}
-              />
-              <EventCostInput
-                register={register}
-                setValue={setValue}
-                getValues={watch}
-                defaultCosts={data?.cost as Cost[] | undefined} // 기본값 전달
-              />
-              <EventSubmitButton
-                text={updateEventMutation.isPending ? '수정중...' : '수정 완료'}
-                disabled={updateEventMutation.isPending}
-              />
-            </section>
-            <BottomSheet
-              isOpen={isBottomSheetOpen}
-              onClose={() => setIsBottomSheetOpen(false)}
-            >
-              <EventBottomSheetContent />
-            </BottomSheet>
-          </form>
-        </FormProvider>
       </Helmet>
+
+      <FormProvider {...methods}>
+        <EventHeader message="이벤트 수정하기" />
+        <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
+          <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
+            <EventNameInput
+              register={register}
+              id="eventName"
+              label="이벤트 이름"
+              inputText="수정할 이벤트 이름을 입력해 주세요."
+              errors={errors}
+            />
+            <EventGoogleLocationInput
+              setValue={setValue}
+              errors={errors}
+              defaultLocation={data?.location} // 기본값 전달
+            />
+            <EventCalenderInput
+              openBottomSheet={bottomSheetHandler}
+              dateRange={dateRange}
+              errors={errors}
+            />
+            <EventCostInput
+              register={register}
+              setValue={setValue}
+              getValues={watch}
+              defaultCosts={data?.cost as Cost[] | undefined} // 기본값 전달
+            />
+            <EventSubmitButton
+              text={updateEventMutation.isPending ? '수정중...' : '수정 완료'}
+              disabled={updateEventMutation.isPending}
+            />
+          </section>
+          <BottomSheet
+            isOpen={isBottomSheetOpen}
+            onClose={() => setIsBottomSheetOpen(false)}
+          >
+            <EventBottomSheetContent />
+          </BottomSheet>
+        </form>
+      </FormProvider>
     </>
   );
 };
