@@ -1,7 +1,7 @@
 import { UseFormGetValues, UseFormRegister } from 'react-hook-form';
 import { UseFormSetValue } from 'react-hook-form';
 import { Plus } from 'lucide-react';
-interface AddEventCostInputProps {
+interface EventCostInputProps {
   register: UseFormRegister<FormValues>;
   setValue: UseFormSetValue<FormValues>;
   getValues: UseFormGetValues<FormValues>;
@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { FormValues } from '../../pages/AddEventPage.tsx';
 import EventFormDropDown from '../event/eventFormDropDown/EventFormDropDown.tsx';
 
-const EventCostInput: React.FC<AddEventCostInputProps> = ({
+const EventCostInput: React.FC<EventCostInputProps> = ({
   register,
   setValue,
   getValues,

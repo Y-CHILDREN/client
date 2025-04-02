@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
 import { BottomSheet } from './BottomSheet.tsx';
 
 const meta: Meta<typeof BottomSheet> = {
@@ -14,6 +13,7 @@ const meta: Meta<typeof BottomSheet> = {
   args: {
     isOpen: false,
   },
+  tags: ['autodocs'],
 };
 
 export default meta;
