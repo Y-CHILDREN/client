@@ -10,7 +10,7 @@ const EventHeaderWrapper = ({ message }: { message: string }) => {
   );
 };
 
-const meta = {
+const meta: Meta<typeof EventHeaderWrapper> = {
   title: 'components/EventHeader',
   component: EventHeaderWrapper,
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
       description: '헤더에 표시될 메시지',
     },
   },
-} satisfies Meta<typeof EventHeaderWrapper>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -27,6 +27,6 @@ const meta: Meta<typeof EventBottomSheetContentWrapper> = {
 
 export default meta;
 
-type Story = StoryObj<typeof EventBottomSheetContentWrapper>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};

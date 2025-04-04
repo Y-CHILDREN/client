@@ -51,7 +51,7 @@ const meta: Meta<typeof EventFormDropDownWrapper> = {
 
 export default meta;
 
-type Story = StoryObj<typeof EventFormDropDownWrapper>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {

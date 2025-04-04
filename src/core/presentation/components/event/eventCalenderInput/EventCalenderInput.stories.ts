@@ -12,7 +12,7 @@ const meta: Meta<typeof EventCalenderInput> = {
 
 export default meta;
 
-type Story = StoryObj<typeof EventCalenderInput>;
+type Story = StoryObj<typeof meta>;
 
 const Default: Story = {
   args: {
