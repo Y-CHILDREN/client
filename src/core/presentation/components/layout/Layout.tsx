@@ -1,5 +1,4 @@
 import React from 'react';
-import './Layout.css';
 import { useLocation, useParams } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 

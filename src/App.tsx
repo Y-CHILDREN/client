@@ -6,7 +6,6 @@ import {
   Navigate,
 } from 'react-router-dom';
 
-import './App.css';
 import Layout from './core/presentation/components/layout/Layout';
 import Login from './core/presentation/pages/Login';
 import Home from './core/presentation/pages/Home';
