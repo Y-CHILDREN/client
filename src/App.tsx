@@ -7,7 +7,6 @@ import {
 } from 'react-router-dom';
 
 import './App.css';
-import ZustandPractice from './core/presentation/pages/ZustandPractice';
 import Layout from './core/presentation/components/layout/Layout';
 import Login from './core/presentation/pages/Login';
 import Home from './core/presentation/pages/Home';
@@ -65,7 +64,6 @@ const App: React.FC = () => {
                     </ProtectedRoute>
                   }
                 >
-                  <Route path="/zustand" element={<ZustandPractice />} />
                   <Route
                     path="/add-event"
                     element={
