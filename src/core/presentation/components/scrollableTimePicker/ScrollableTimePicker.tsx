@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 const times: string[] = ['AM', 'PM'];
 const hours: number[] = Array.from({ length: 12 }, (_, i) => i);
@@ -112,4 +112,4 @@ const ScrollableTimePicker: React.FC<ScrollableTimePickerProps> = ({
   );
 };
 
-export default ScrollableTimePicker;
+export default memo(ScrollableTimePicker);
