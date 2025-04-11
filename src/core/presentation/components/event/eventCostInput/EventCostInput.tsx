@@ -1,5 +1,9 @@
-import { UseFormGetValues, UseFormRegister } from 'react-hook-form';
-import { UseFormSetValue } from 'react-hook-form';
+import {
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
+
 import { Plus } from 'lucide-react';
 interface EventCostInputProps {
   register: UseFormRegister<FormValues>;
