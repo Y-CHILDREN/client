@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -184,4 +184,4 @@ const DatePickerComponent: React.FC<DatePickerProps> = ({
   );
 };
 
-export default DatePickerComponent;
+export default memo(DatePickerComponent);
