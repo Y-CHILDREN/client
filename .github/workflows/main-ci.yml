@@ -40,7 +40,7 @@ jobs:
 			
 			# 4 - 빌드
       - name: Build
-        run: pnpm build
+        run: pnpm build:pro
 			
 			# 5 - AWS 인증
       - name: Configure AWS Credentials
