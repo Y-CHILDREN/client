@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { CreatedTrip } from '../../domain/entities/trip.ts';
+import { UpdatedTrip } from '../../domain/entities/trip.ts';
 import { useUserTripEventStore } from '@/core/presentation/hooks/stores/userTripEventStore.ts';
 import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
 
@@ -26,19 +26,31 @@ export function EditTripPage() {
   }, []);
 
   // 수정하기 핸들러
-  const handleTripUpdate = async (updatedTrip: CreatedTrip) => {
+  const handleTripUpdate = async (updatedTrip: UpdatedTrip) => {
     try {
+      // 날짜 데이터를 ISO 문자열로 변환
+      const payload = {
+        ...updatedTrip,
+        start_date: updatedTrip.start_date?.toISOString(),
+        end_date: updatedTrip.end_date?.toISOString(),
+      };
+
+      console.log('updatedTrip', updatedTrip);
+      console.log('payload', payload);
+
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/trips/${tripId}`,
         {
-          method: 'PUT',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(updatedTrip),
+          body: JSON.stringify(payload),
         },
       );
+
       if (!response.ok) throw new Error('Failed to update trip');
+
       navigate('/trip-detail');
       resetStep();
     } catch (error) {

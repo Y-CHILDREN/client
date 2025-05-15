@@ -12,6 +12,8 @@ import { useAuthStore } from '@/core/presentation/hooks/stores/authStore.ts';
 
 import DatePickerComponent from '@/core/presentation/components/datePicker/DatePickerComponent.tsx';
 import SearchInputComponent from '@/core/presentation/components/Search/SearchInputComponent.tsx';
+import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
+import axios from 'axios';
 
 interface EditTripProps {
   trip: Trip;
@@ -47,6 +49,8 @@ const EditTrip: React.FC<EditTripProps> = ({ trip, onUpdate, onClose }) => {
   const [region, setRegion] = useState<Region | ''>('');
   const [subregion, setSubregion] = useState('');
   const subregionOptions = region ? subregions[region] : [];
+
+  const { setUserTripData } = useUserTripStore();
 
   useEffect(() => {
     const initialRegion = determineRegion(trip.destination);
@@ -101,9 +105,17 @@ const EditTrip: React.FC<EditTripProps> = ({ trip, onUpdate, onClose }) => {
   };
 
   // 폼 제출 핸들러.
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     onUpdate(formData);
+
+    // 업데이트 된 데이터 불러오기
+    if (user) {
+      const updatedTripsData = await axios.get(
+        `${import.meta.env.VITE_API_URL}/trips/user/${user.id}`,
+      );
+      setUserTripData(updatedTripsData.data);
+    }
   };
 
   // datePicker 핸들러.
