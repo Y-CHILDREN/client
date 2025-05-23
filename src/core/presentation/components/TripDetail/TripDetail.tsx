@@ -20,14 +20,13 @@ import { ko } from 'date-fns/locale';
 
 import User from '@/core/domain/entities/user.ts';
 import { Event } from '@/core/domain/entities/event.ts';
-import { useUserTripStore } from '../../hooks/stores/userTripStore.ts';
 import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore';
 import { useGoogleMapsStore } from '@/core/presentation/hooks/stores/googleMapsStore.ts';
-import { getUserByEmail } from '../../../data/infrastructure/services/userService';
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
 import { useAuthStore } from '@/core/presentation/hooks/stores/authStore.ts';
+import useTripStore from '@/core/presentation/hooks/stores/tripStore.ts';
 
 interface TripDetailProps {
   onClose: () => void;
@@ -54,14 +53,11 @@ const TripDetail: React.FC<TripDetailProps> = ({
     updateEventCoordinates, // event에 좌표 추가.
     updateEventPhotos,
   } = useUserTripEventStore();
-  const { getSelectedTripById, fetchTrips } = useUserTripStore(); // trip_id로 tripData 조회.
+  const { fetchTripMembers, fetchTrip, tripData } = useTripStore();
   const { user } = useAuthStore();
 
   // tripData
-  const tripScheduleData =
-    selectedTripId && getSelectedTripById
-      ? getSelectedTripById(selectedTripId) // selectedTripId를 이용해 데이터 조회
-      : undefined; // selectedTripId가 없으면 undefined
+  const tripScheduleData = tripData;
 
   // 선택 또는 포커싱된 이벤트
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -71,31 +67,22 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // 멤버의 유저 정보를 가져오는 로직
   useEffect(() => {
     const fetchMemberProfiles = async () => {
-      const memberEmails = selectedTripId
-        ? getSelectedTripById(selectedTripId)?.members || []
-        : [];
+      if (!tripScheduleData?.members || tripScheduleData.members.length === 0) {
+        setMemberProfiles([]);
+        return;
+      }
 
-      const profiles = await Promise.all(
-        memberEmails.map(async (email) => {
-          try {
-            return await getUserByEmail(email);
-          } catch (error) {
-            console.error(`유저정보 가져오기 실패 ${email}:`, error);
-            return null;
-          }
-        }),
-      );
-
-      // null 값을 필터링하고 상태 업데이트 (타입 가드 개념 공부 필요)
-      setMemberProfiles(
-        profiles.filter((profile): profile is User => profile !== null),
-      );
+      try {
+        const users = await fetchTripMembers(tripScheduleData.members);
+        console.log('users:', users);
+        setMemberProfiles(users);
+      } catch (error) {
+        console.error('멤버 유저 정보 조회 실패:', error);
+      }
     };
 
-    if (selectedTripId) {
-      fetchMemberProfiles();
-    }
-  }, [selectedTripId]);
+    fetchMemberProfiles();
+  }, [tripScheduleData]);
 
   // 비용 합계 계산
   const totalCost = tripEvents
@@ -209,12 +196,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
   useEffect(() => {
     if (selectedTripId && user) {
       // 여행 정보 가져오기.
-      fetchTrips(user.id);
+      fetchTrip(selectedTripId);
 
       // 여행 이벤트 데이터 가져오기
       fetchTripEvents(selectedTripId);
     }
-  }, []);
+  }, [selectedTripId]);
 
   // 여행 지도 초기 위치 계산 함수.
   const handleMapCenter = (destination: string) => {

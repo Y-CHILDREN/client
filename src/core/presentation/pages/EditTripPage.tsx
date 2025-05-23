@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { UpdatedTrip } from '../../domain/entities/trip.ts';
-import { useUserTripEventStore } from '@/core/presentation/hooks/stores/userTripEventStore.ts';
-import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
 
 import EditTrip from '@/core/presentation/components/EditTrip/EditTrip.tsx';
 import useTripStore from '@/core/presentation/hooks/stores/tripStore.ts';
@@ -14,10 +12,8 @@ export function EditTripPage() {
   const navigate = useNavigate();
 
   // TripData 상태관리
-  const { selectedTripId } = useUserTripEventStore();
-  const { getSelectedTripById } = useUserTripStore();
-  const trip = getSelectedTripById(selectedTripId!);
-  const { resetStep } = useTripStore();
+  const { resetStep, tripData } = useTripStore();
+  const trip = tripData;
 
   // logging
   useEffect(() => {

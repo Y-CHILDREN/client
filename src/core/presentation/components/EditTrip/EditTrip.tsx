@@ -3,17 +3,18 @@ import { Navigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import DropDown from '@/core/presentation/components/dropDown/DropDown.tsx';
 import Avatar from 'react-avatar';
+import axios from 'axios';
 
 import { CreatedTrip, Trip } from '@/core/domain/entities/trip.ts';
 import User from '@/core/domain/entities/user.ts';
 import { Region, regions, subregions } from '@/core/domain/entities/regions.ts';
+
 import useTripStore from '@/core/presentation/hooks/stores/tripStore.ts';
 import { useAuthStore } from '@/core/presentation/hooks/stores/authStore.ts';
+import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
 
 import DatePickerComponent from '@/core/presentation/components/datePicker/DatePickerComponent.tsx';
 import SearchInputComponent from '@/core/presentation/components/Search/SearchInputComponent.tsx';
-import { useUserTripStore } from '@/core/presentation/hooks/stores/userTripStore.ts';
-import axios from 'axios';
 
 interface EditTripProps {
   trip: Trip;
@@ -51,12 +52,22 @@ const EditTrip: React.FC<EditTripProps> = ({ trip, onUpdate, onClose }) => {
   const subregionOptions = region ? subregions[region] : [];
 
   const { setUserTripData } = useUserTripStore();
+  const { fetchTripMembers } = useTripStore();
 
   useEffect(() => {
     const initialRegion = determineRegion(trip.destination);
     setRegion(initialRegion);
     setSubregion(trip.destination.split(' ')[1]);
   }, [trip]);
+
+  useEffect(() => {
+    const loadTripMembers = async () => {
+      const members = await fetchTripMembers(trip.members);
+      setMembers(members);
+    };
+
+    loadTripMembers();
+  }, [trip.members]);
 
   // 목적지 구분 (국내/해외)
   const determineRegion = (destination: string): Region => {
@@ -304,8 +315,8 @@ const EditTrip: React.FC<EditTripProps> = ({ trip, onUpdate, onClose }) => {
 
   // logging
   useEffect(() => {
-    // console.log('formData', formData);
-  }, [handleSubmit]);
+    console.log('update formData:', formData);
+  }, [handleSubmit, formData]);
 
   return (
     <div className="w-full h-full bg-white min-h-[600px] flex flex-col">
