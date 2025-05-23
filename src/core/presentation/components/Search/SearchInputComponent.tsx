@@ -83,6 +83,16 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
     handleSearchProps(searchResults);
   }, [searchResults]);
 
+  // logging
+  useEffect(() => {
+    console.log('selectedMembers:', selectedMembers);
+    console.log(
+      'selectedMembersEmails:',
+      selectedMembers.map((m) => m.email),
+    );
+    console.log('options:', options);
+  }, [options, selectedMembers]);
+
   const handleSelectionChange = (selectedValuesArray: string[]) => {
     const selectedUsers = searchResults.filter((user) =>
       selectedValuesArray.includes(user.email),
