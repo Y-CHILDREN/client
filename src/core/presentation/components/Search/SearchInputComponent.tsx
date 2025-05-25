@@ -46,9 +46,10 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
 
       setIsLoading(true);
       try {
-        console.log('debouncedSearchTerms', debouncedSearchTerms);
+        const query = debouncedSearchTerms.join('');
+        console.log('query:', query);
         const response = await axios.get<User[]>(
-          `${apiUrl}/users/emails/${debouncedSearchTerms}`,
+          `${apiUrl}/users/search?query=${encodeURIComponent(query)}`,
         );
         setSearchResults(response.data);
         console.log('SearchResults:', response.data);
@@ -81,6 +82,16 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({
   useEffect(() => {
     handleSearchProps(searchResults);
   }, [searchResults]);
+
+  // logging
+  useEffect(() => {
+    console.log('selectedMembers:', selectedMembers);
+    console.log(
+      'selectedMembersEmails:',
+      selectedMembers.map((m) => m.email),
+    );
+    console.log('options:', options);
+  }, [options, selectedMembers]);
 
   const handleSelectionChange = (selectedValuesArray: string[]) => {
     const selectedUsers = searchResults.filter((user) =>
