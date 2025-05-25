@@ -125,7 +125,7 @@ const AddEventPage: React.FC = () => {
       <FormProvider {...methods}>
         <EventHeader message="이벤트 추가하기" />
         <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
-          <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
+          <section className="flex flex-col w-full  h-full px-[20px] pt-[20px] gap-[14px]">
             <EventNameInput
               register={register}
               id="eventName"
