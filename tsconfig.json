@@ -6,7 +6,7 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "webworker"],
     "paths": {
       "@/*": ["./src/*"]
     }
