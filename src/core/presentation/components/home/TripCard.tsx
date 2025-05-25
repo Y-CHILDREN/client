@@ -3,7 +3,6 @@ import TripThumbnail from './TripThumbnail';
 import { useNavigate } from 'react-router-dom';
 import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore';
 
-useUserTripEventStore;
 interface TripCardProps {
   tripId: number;
   tripName: string;
@@ -35,11 +34,11 @@ const TripCard: React.FC<TripCardProps> = ({
 
       <div className="flex w-[148px] h-[148px] p-3 px-4 flex-col justify-end items-start gap-[215px] absolute">
         <div className="flex flex-col items-start gap-[2px]">
-          <h3 className="line-clamp-1 text-white truncate font-pretendard text-sm font-semibold leading-6">
+          <h3 className="text-sm font-semibold leading-6 text-white truncate line-clamp-1 font-pretendard">
             {tripName}
           </h3>
 
-          <time className="line-clamp-1 overflow-hidden text-white truncate font-pretendard text-sm font-normal leading-5">
+          <time className="overflow-hidden text-sm font-normal leading-5 text-white truncate line-clamp-1 font-pretendard">
             {tripDate
               ? tripDate.toLocaleDateString('ko-KR', {
                   year: 'numeric',
