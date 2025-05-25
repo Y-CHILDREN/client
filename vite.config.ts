@@ -13,7 +13,7 @@ export default defineConfig({
       includeAssets: ['**/*'],
       manifest: false,
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,ico,json}'],
+        globPatterns: ['**/*.{js,css,html,png,svg}'],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
       },
     }),
