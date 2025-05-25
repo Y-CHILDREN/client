@@ -42,6 +42,11 @@ self.addEventListener('activate', (event) => {
 
 // 리소스 요청 시 실행
 self.addEventListener('fetch', (event) => {
+  // API 요청은 캐시 안 함
+  if (request.url.includes('/api/')) {
+    return;
+  }
+
   event.respondWith(
     // 캐시에 요청한 리소스가 존재하면 바로 응답하고, 그렇지 않으면 네트워크로 요청을 보냄
     caches.match(event.request).then((cachedResponse) => {
