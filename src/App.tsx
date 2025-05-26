@@ -17,7 +17,6 @@ import { EditTripPage } from './core/presentation/pages/EditTripPage';
 
 import { HelmetProvider } from 'react-helmet-async';
 
-
 import Mytrips from './core/presentation/pages/Mytrips';
 import { AuthProvider } from './core/presentation/components/auth/AuthProvider';
 import { ProtectedRoute } from './routers/ProtectedRouter';
@@ -28,7 +27,6 @@ import ToastMessageProvider from './core/presentation/components/ui/ToastMessage
 import { useGoogleMapsLoader } from '@/core/presentation/hooks/useGoogleMapsLoader.ts';
 
 import EventFormSkeleton from './core/presentation/components/ui/EventFormSkeleton.tsx';
-
 
 const AddEventPage = lazy(
   () => import('./core/presentation/pages/AddEventPage.tsx'),
