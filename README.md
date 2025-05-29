@@ -2,8 +2,7 @@
 </h1>
 
 <h1 align="center">
-<!-- 배포후 도메인 href에 작성해주시면 될 거 같아요! -->
-  <a href="" style="color:#3ACC97"> Trip J </a>
+  <a href="https://jtrip.store/login" style="color:#3ACC97"> Trip J </a>
 </h1>
 
 <h3 align="center">여행을 J처럼!</h3>
@@ -22,7 +21,7 @@
 </p>
 
 <h4 align="center"> 
-	 Status: Finished
+	 Status: Work in Progress
 </h4>
 
 <p align="center">
