@@ -5048,7 +5048,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.27.1
       '@babel/helper-validator-option': 7.27.1
-      browserslist: 4.24.2
+      browserslist: 4.24.5
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -5650,7 +5650,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.0
       '@babel/helper-plugin-utils': 7.27.1
-      '@babel/types': 7.26.0
+      '@babel/types': 7.27.1
       esutils: 2.0.3
 
   '@babel/runtime@7.26.0':
@@ -6630,7 +6630,7 @@ snapshots:
   '@rollup/plugin-babel@5.3.1(@babel/core@7.26.0)(@types/babel__core@7.20.5)(rollup@2.79.2)':
     dependencies:
       '@babel/core': 7.26.0
-      '@babel/helper-module-imports': 7.25.9
+      '@babel/helper-module-imports': 7.27.1
       '@rollup/pluginutils': 3.1.0(rollup@2.79.2)
       rollup: 2.79.2
     optionalDependencies:
@@ -7635,7 +7635,7 @@ snapshots:
   call-bind@1.0.8:
     dependencies:
       call-bind-apply-helpers: 1.0.2
-      es-define-property: 1.0.0
+      es-define-property: 1.0.1
       get-intrinsic: 1.3.0
       set-function-length: 1.2.2
 
@@ -9848,7 +9848,7 @@ snapshots:
   typed-array-byte-length@1.0.3:
     dependencies:
       call-bind: 1.0.8
-      for-each: 0.3.3
+      for-each: 0.3.5
       gopd: 1.2.0
       has-proto: 1.2.0
       is-typed-array: 1.1.15
@@ -9857,7 +9857,7 @@ snapshots:
     dependencies:
       available-typed-arrays: 1.0.7
       call-bind: 1.0.8
-      for-each: 0.3.3
+      for-each: 0.3.5
       gopd: 1.2.0
       has-proto: 1.2.0
       is-typed-array: 1.1.15
@@ -9866,7 +9866,7 @@ snapshots:
   typed-array-length@1.0.7:
     dependencies:
       call-bind: 1.0.8
-      for-each: 0.3.3
+      for-each: 0.3.5
       gopd: 1.2.0
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.0.0

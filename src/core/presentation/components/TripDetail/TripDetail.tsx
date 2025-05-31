@@ -20,14 +20,13 @@ import { ko } from 'date-fns/locale';
 
 import User from '@/core/domain/entities/user.ts';
 import { Event } from '@/core/domain/entities/event.ts';
-import { useUserTripStore } from '../../hooks/stores/userTripStore.ts';
 import { useUserTripEventStore } from '../../hooks/stores/userTripEventStore';
 import { useGoogleMapsStore } from '@/core/presentation/hooks/stores/googleMapsStore.ts';
-import { getUserByEmail } from '../../../data/infrastructure/services/userService';
 
 import EventCardList from '@/core/presentation/components/TripDetail/eventCardList/EventCardList.tsx';
 import MapWithMarkers from '@/core/presentation/components/TripDetail/map/MapWithMarkers.tsx';
 import { useAuthStore } from '@/core/presentation/hooks/stores/authStore.ts';
+import useTripStore from '@/core/presentation/hooks/stores/tripStore.ts';
 
 interface TripDetailProps {
   onClose: () => void;
@@ -54,14 +53,11 @@ const TripDetail: React.FC<TripDetailProps> = ({
     updateEventCoordinates, // event에 좌표 추가.
     updateEventPhotos,
   } = useUserTripEventStore();
-  const { getSelectedTripById, fetchTrips } = useUserTripStore(); // trip_id로 tripData 조회.
+  const { fetchTripMembers, fetchTrip, tripData } = useTripStore();
   const { user } = useAuthStore();
 
   // tripData
-  const tripScheduleData =
-    selectedTripId && getSelectedTripById
-      ? getSelectedTripById(selectedTripId) // selectedTripId를 이용해 데이터 조회
-      : undefined; // selectedTripId가 없으면 undefined
+  const tripScheduleData = tripData;
 
   // 선택 또는 포커싱된 이벤트
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -71,31 +67,22 @@ const TripDetail: React.FC<TripDetailProps> = ({
   // 멤버의 유저 정보를 가져오는 로직
   useEffect(() => {
     const fetchMemberProfiles = async () => {
-      const memberEmails = selectedTripId
-        ? getSelectedTripById(selectedTripId)?.members || []
-        : [];
+      if (!tripScheduleData?.members || tripScheduleData.members.length === 0) {
+        setMemberProfiles([]);
+        return;
+      }
 
-      const profiles = await Promise.all(
-        memberEmails.map(async (email) => {
-          try {
-            return await getUserByEmail(email);
-          } catch (error) {
-            console.error(`유저정보 가져오기 실패 ${email}:`, error);
-            return null;
-          }
-        }),
-      );
-
-      // null 값을 필터링하고 상태 업데이트 (타입 가드 개념 공부 필요)
-      setMemberProfiles(
-        profiles.filter((profile): profile is User => profile !== null),
-      );
+      try {
+        const users = await fetchTripMembers(tripScheduleData.members);
+        console.log('users:', users);
+        setMemberProfiles(users);
+      } catch (error) {
+        console.error('멤버 유저 정보 조회 실패:', error);
+      }
     };
 
-    if (selectedTripId) {
-      fetchMemberProfiles();
-    }
-  }, [selectedTripId]);
+    fetchMemberProfiles();
+  }, [tripScheduleData]);
 
   // 비용 합계 계산
   const totalCost = tripEvents
@@ -209,12 +196,12 @@ const TripDetail: React.FC<TripDetailProps> = ({
   useEffect(() => {
     if (selectedTripId && user) {
       // 여행 정보 가져오기.
-      fetchTrips(user.id);
+      fetchTrip(selectedTripId);
 
       // 여행 이벤트 데이터 가져오기
       fetchTripEvents(selectedTripId);
     }
-  }, []);
+  }, [selectedTripId]);
 
   // 여행 지도 초기 위치 계산 함수.
   const handleMapCenter = (destination: string) => {
@@ -313,7 +300,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
             <div className="relative flex items-center justify-between px-2">
               <button
                 onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-gray-100 bg-white w-12 h-12 p-3 focus:outline-none"
+                className="w-12 h-12 p-2 bg-white rounded-lg hover:bg-gray-100 focus:outline-none"
               >
                 <X />
               </button>
@@ -321,14 +308,14 @@ const TripDetail: React.FC<TripDetailProps> = ({
                 {/* 맵 버튼 */}
                 <button
                   onClick={handleMapToggle}
-                  className="bg-white w-12 h-12 p-3 rounded-lg hover:bg-gray-100 focus:outline-none"
+                  className="w-12 h-12 p-3 bg-white rounded-lg hover:bg-gray-100 focus:outline-none"
                 >
                   {showMap ? <List /> : <Map />}
                 </button>
 
                 {/* 추가기능 버튼 */}
                 <button
-                  className="bg-white w-12 h-12 p-3 rounded-lg hover:bg-gray-100 focus:outline-none"
+                  className="w-12 h-12 p-3 bg-white rounded-lg hover:bg-gray-100 focus:outline-none"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
                   <MoreVertical />
@@ -361,17 +348,17 @@ const TripDetail: React.FC<TripDetailProps> = ({
             </div>
 
             <div>
-              <div className="flex flex-col items-start gap-3 self-stretch p-6 pt-5 pb-5 pl-5">
+              <div className="flex flex-col items-start self-stretch gap-3 p-6 pt-5 pb-5 pl-5">
                 {/* 제목 */}
-                <div className="flex items-center gap-3 self-stretch">
-                  <span className="text-[28px] font-normal font-semibold leading-7 text-gray-900 text-left">
+                <div className="flex items-center self-stretch gap-3">
+                  <span className="text-[28px] font-semibold leading-7 text-gray-900 text-left">
                     {tripScheduleData.title}
                   </span>
                 </div>
 
-                <div className="flex items-start gap-2 self-stretch">
+                <div className="flex items-start self-stretch gap-2">
                   {/* 날짜, 경비 */}
-                  <div className="flex flex-col items-start gap-2 flex-1">
+                  <div className="flex flex-col items-start flex-1 gap-2">
                     <span className="flex items-center gap-2 self-stretch text-[#737678] text-[16px] font-normal leading-[20px]">
                       <Calendar className="w-4 h-4" />
                       {format(
@@ -396,20 +383,36 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     </span>
                   </div>
                   {/* 멤버 아바타 */}
-                  <div className="flex items-center gap-2">
-                    {memberProfiles.map((member, index) => (
-                      <Avatar
-                        key={member.id}
-                        name={member.nickname}
-                        src={member.user_image}
-                        size="32"
-                        round
-                        color={`hsl(${index * 60}, 70%, 85%)`}
-                      />
+                  <div
+                    className="relative h-8"
+                    style={{
+                      width: `${memberProfiles.length > 4 ? 5 * 20 : memberProfiles.length * 20 + 12}px`,
+                    }}
+                  >
+                    {memberProfiles.slice(0, 4).map((member, index) => (
+                      <div
+                        key={member.email}
+                        className="absolute"
+                        style={{ left: `${index * 20}px`, zIndex: 10 - index }} // 겹치게
+                      >
+                        <Avatar
+                          name={member.nickname}
+                          src={member.user_image}
+                          size="32"
+                          round
+                          color={`hsl(${index * 60}, 70%, 85%)`}
+                        />
+                      </div>
                     ))}
-                    {memberProfiles.length > 3 && (
-                      <div className="flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full">
-                        +{memberProfiles.length - 3}
+                    {memberProfiles.length > 4 && (
+                      <div
+                        className="absolute flex items-center justify-center w-8 h-8 text-sm text-gray-600 bg-gray-100 border-2 border-white rounded-full"
+                        style={{
+                          left: `${4 * 20}px`,
+                          zIndex: 11, // 가장 위로
+                        }}
+                      >
+                        +{memberProfiles.length - 4}
                       </div>
                     )}
                   </div>
@@ -420,7 +423,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
 
           {/*  날짜 선택 탭 */}
           <nav className="border-gray-200 border-y">
-            <div className="flex overflow-x-auto hide-scrollbar gap-4">
+            <div className="flex gap-4 overflow-x-auto hide-scrollbar">
               {dateOptions.map((date) => (
                 <button
                   key={date.toISOString()}
@@ -468,7 +471,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     className="flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
                   >
                     <Plus className="w-4 h-4 text-white" />
-                    <span className="text-white text-center font-semibold text-sm leading-5">
+                    <span className="text-sm font-semibold leading-5 text-center text-white">
                       이벤트 추가
                     </span>
                   </button>
@@ -487,10 +490,10 @@ const TripDetail: React.FC<TripDetailProps> = ({
                           {format(event.start_date, 'HH:mm', { locale: ko })}
                         </div>
                       </div>
-                      <div className="justify-between flex-1 p-3 px-5 space-y-2 border border-gray-200 rounded-lg shadow-lg bg-white">
-                        <div className="flex flex-1 flex-row items-center justify-between">
+                      <div className="justify-between flex-1 p-3 px-5 space-y-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                        <div className="flex flex-row items-center justify-between flex-1">
                           <div className="flex flex-col items-start w-full">
-                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                            <div className="flex flex-row items-center justify-between w-full space-x-3 text-sm text-gray-600">
                               <div className="text-base font-semibold text-gray-90">
                                 {event.event_name}
                               </div>
@@ -507,7 +510,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                                 )}
                               </button>
                             </div>
-                            <div className="flex flex-row justify-between items-center space-x-3 text-sm text-gray-600 w-full">
+                            <div className="flex flex-row items-center justify-between w-full space-x-3 text-sm text-gray-600">
                               <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-28">
                                 {event.location
                                   .split(' ')
@@ -541,13 +544,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
                               </div>
                               <div className="flex gap-3">
                                 <button
-                                  className="flex-1 py-3 text-sm border border-gray-200 rounded-lg bg-white hover:bg-gray-50"
+                                  className="flex-1 py-3 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
                                   onClick={() => onEditEvent(event.event_id)}
                                 >
                                   수정
                                 </button>
                                 <button
-                                  className="flex-1 py-3 text-sm text-red-500 border border-red-200 rounded-lg bg-white hover:bg-red-50"
+                                  className="flex-1 py-3 text-sm text-red-500 bg-white border border-red-200 rounded-lg hover:bg-red-50"
                                   onClick={() => onDeleteEvent(event.event_id)}
                                 >
                                   삭제
@@ -567,7 +570,7 @@ const TripDetail: React.FC<TripDetailProps> = ({
                     className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
                   >
                     <Plus className="w-4 h-4 text-white" />
-                    <span className="text-white text-center font-semibold text-sm leading-5">
+                    <span className="text-sm font-semibold leading-5 text-center text-white">
                       이벤트 추가
                     </span>
                   </button>
@@ -575,13 +578,13 @@ const TripDetail: React.FC<TripDetailProps> = ({
               </div>
             ) : (
               <>
-                <p className="mt-4">일정을 추가해 주세요</p>
+                <p className="px-4 mt-4">일정을 추가해 주세요</p>
                 <button
                   onClick={handleCreateEvent}
                   className="absolute bottom-20 right-4 z-10 flex pt-3 pr-5 pb-3 pl-4 items-center gap-2 rounded-full bg-[#3ACC97] shadow-lg"
                 >
                   <Plus className="w-4 h-4 text-white" />
-                  <span className="text-white text-center font-semibold text-sm leading-5">
+                  <span className="text-sm font-semibold leading-5 text-center text-white">
                     이벤트 추가
                   </span>
                 </button>

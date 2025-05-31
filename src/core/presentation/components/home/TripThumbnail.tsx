@@ -1,10 +1,10 @@
 //이미지명 수정 -> ex. domestic seoul
 //이미지 장소별로 추가
-import la from '../../assets/home/la.jpg';
-import china from '../../assets/home/china.jpg';
-import japan from '../../assets/home/japan.jpg';
-import seoul from '../../assets/home/seoul.jpg';
-import busan from '../../assets/home/busan.jpg';
+import la from '../../assets/home/LA.jpg';
+import china from '../../assets/home/China.jpg';
+import japan from '../../assets/home/Japan.jpg';
+import seoul from '../../assets/home/Seoul.jpg';
+import busan from '../../assets/home/Busan.jpg';
 import chungbuk from '../../assets/home/chungbuk.jpeg';
 import chungnam from '../../assets/home/chungnam.jpeg';
 import daegu from '../../assets/home/daegu.jpeg';

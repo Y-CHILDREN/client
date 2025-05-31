@@ -26,7 +26,10 @@ const Layout: React.FC = () => {
       {/*Main content*/}
       <main
         className={`flex-grow overflow-x-hidden overflow-y-auto ${
-          location.pathname === '/home' || location.pathname === '/delete-user'
+          location.pathname === '/home' ||
+          location.pathname === '/delete-user' ||
+          location.pathname === '/add-event' ||
+          location.pathname.startsWith('/update-event')
             ? 'bg-white'
             : 'bg-[#F5F6F6]'
         }`}

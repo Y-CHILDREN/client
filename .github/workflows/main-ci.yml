@@ -10,7 +10,13 @@ on:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
-
+    env:
+      VITE_ENV: ${{ secrets.VITE_ENV }}
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      VITE_AWS_EC2_GOOGLE_CALLBACK_URL: ${{ secrets.VITE_AWS_EC2_GOOGLE_CALLBACK_URL }}
+      VITE_AWS_EC2_KAKAO_CALLBACK_URL: ${{ secrets.VITE_AWS_EC2_KAKAO_CALLBACK_URL }}
+      VITE_AWS_EC2_NAVER_CALLBACK_URL: ${{ secrets.VITE_AWS_EC2_NAVER_CALLBACK_URL }}
+      VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -31,7 +37,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build:pro
+        run: pnpm build:prod
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
