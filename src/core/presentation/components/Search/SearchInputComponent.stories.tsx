@@ -32,7 +32,6 @@ const dummyUsers: User[] = [
     user_memo: 'Loves traveling',
     access_token: 'access_token_1',
     refresh_token: 'refresh_token_1',
-    trip_history: [1, 2, 3],
   },
   {
     id: '2',
@@ -43,7 +42,6 @@ const dummyUsers: User[] = [
     user_memo: 'Frequent flyer',
     access_token: 'access_token_2',
     refresh_token: 'refresh_token_2',
-    trip_history: [1],
   },
   {
     id: '3',
@@ -54,7 +52,6 @@ const dummyUsers: User[] = [
     user_memo: 'Adventure seeker',
     access_token: 'access_token_3',
     refresh_token: 'refresh_token_3',
-    trip_history: [2, 3],
   },
 ];
 

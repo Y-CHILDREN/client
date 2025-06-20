@@ -36,7 +36,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             {children}
             <button
               onClick={onClose}
-              className="w-full px-3 mt-3 text-white rounded-lg bg-dot-color"
+              className="w-full px-3 mt-3 text-white rounded-lg min-h-10 bg-dot-color"
               type="button"
             >
               확인

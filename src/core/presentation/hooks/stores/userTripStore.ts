@@ -13,7 +13,6 @@ interface UserTripState {
 export const useUserTripStore = create<UserTripState>()((set, get) => ({
   tripData: [],
   setUserTripData: (trips: Trip[]) => {
-
     set({ tripData: trips });
   },
 

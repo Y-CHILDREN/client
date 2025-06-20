@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormValues } from '../../../pages/AddEventPage.tsx';
 import DatePickerComponent from '../../datePicker/DatePickerComponent.tsx';
@@ -11,45 +11,48 @@ const EventBottomSheetContent = () => {
     end: undefined,
   });
 
-  const handleStartTimeChange = (
-    hour: number,
-    minute: number,
-    time: string,
-  ) => {
-    const selectedStartDate = new Date(dateRange.start || Date.now());
-    if (time === 'PM') hour += 12;
-    selectedStartDate.setHours(hour, minute);
+  const handleStartTimeChange = useCallback(
+    (hour: number, minute: number, time: string) => {
+      const selectedStartDate = new Date(dateRange.start || Date.now());
+      if (time === 'PM') hour += 12;
+      selectedStartDate.setHours(hour, minute);
 
-    setDateRange((prev) => {
-      const updatedRange = { ...prev, start: selectedStartDate };
+      setDateRange((prev) => {
+        const updatedRange = { ...prev, start: selectedStartDate };
+        setValue('dateRange', updatedRange);
+        return updatedRange;
+      });
+    },
+    [dateRange.start, setValue],
+  );
+
+  const handleEndTimeChange = useCallback(
+    (hour: number, minute: number, time: string) => {
+      const selectedEndDate = new Date(dateRange.end || Date.now());
+      if (time === 'PM') hour += 12;
+      selectedEndDate.setHours(hour, minute);
+
+      setDateRange((prev) => {
+        const updatedRange = { ...prev, end: selectedEndDate };
+        setValue('dateRange', updatedRange);
+        return updatedRange;
+      });
+    },
+    [dateRange.end, setValue],
+  );
+
+  const handleDateChange = useCallback(
+    (update: [Date | null | undefined, Date | null | undefined]) => {
+      const [selectedStartDate, selectedEndDate] = update.map(
+        (date) => date || undefined,
+      );
+      const updatedRange = { start: selectedStartDate, end: selectedEndDate };
+
+      setDateRange(updatedRange);
       setValue('dateRange', updatedRange);
-      return updatedRange;
-    });
-  };
-
-  const handleEndTimeChange = (hour: number, minute: number, time: string) => {
-    const selectedEndDate = new Date(dateRange.end || Date.now());
-    if (time === 'PM') hour += 12;
-    selectedEndDate.setHours(hour, minute);
-
-    setDateRange((prev) => {
-      const updatedRange = { ...prev, end: selectedEndDate };
-      setValue('dateRange', updatedRange);
-      return updatedRange;
-    });
-  };
-
-  const handleDateChange = (
-    update: [Date | null | undefined, Date | null | undefined],
-  ) => {
-    const [selectedStartDate, selectedEndDate] = update.map(
-      (date) => date || undefined,
-    );
-    const updatedRange = { start: selectedStartDate, end: selectedEndDate };
-
-    setDateRange(updatedRange);
-    setValue('dateRange', updatedRange);
-  };
+    },
+    [setValue],
+  );
 
   return (
     <>

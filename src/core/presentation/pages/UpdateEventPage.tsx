@@ -20,6 +20,7 @@ import { EventBottomSheetContent } from '../components/event/eventBottomSheetCon
 import { EventHeader } from '../components/event/eventHeader/EventHeader.tsx';
 import { EventNameInput } from '../components/event/eventNameInput/EventNameInput.tsx';
 import { EventSubmitButton } from '../components/event/eventSubmitButton/EventSubmitButton.tsx';
+import { Helmet } from 'react-helmet-async';
 
 const UpdateEventPage = () => {
   const { eventId } = useParams();
@@ -129,46 +130,72 @@ const UpdateEventPage = () => {
   const dateRange = watch('dateRange');
 
   return (
-    <FormProvider {...methods}>
-      <EventHeader message="이벤트 수정하기" />
-      <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
-        <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
-          <EventNameInput
-            register={register}
-            id="eventName"
-            label="이벤트 이름"
-            inputText="수정할 이벤트 이름을 입력해 주세요."
-            errors={errors}
-          />
-          <EventGoogleLocationInput
-            setValue={setValue}
-            errors={errors}
-            defaultLocation={data?.location} // 기본값 전달
-          />
-          <EventCalenderInput
-            openBottomSheet={bottomSheetHandler}
-            dateRange={dateRange}
-            errors={errors}
-          />
-          <EventCostInput
-            register={register}
-            setValue={setValue}
-            getValues={watch}
-            defaultCosts={data?.cost as Cost[] | undefined} // 기본값 전달
-          />
-          <EventSubmitButton
-            text={updateEventMutation.isPending ? '수정중...' : '수정 완료'}
-            disabled={updateEventMutation.isPending}
-          />
-        </section>
-        <BottomSheet
-          isOpen={isBottomSheetOpen}
-          onClose={() => setIsBottomSheetOpen(false)}
-        >
-          <EventBottomSheetContent />
-        </BottomSheet>
-      </form>
-    </FormProvider>
+    <>
+      <Helmet>
+        {/* og - open graph로 facebook에서 만든 방식으로 sns에서 웹페이지가 게시될 때 표시할 정보를 명시 */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="이벤트 수정" />
+        <meta
+          property="og:description"
+          content="이벤트 정보를 수정하고 여행 계획을 최적화하세요."
+        />
+        <meta
+          property="og:url"
+          content={`${import.meta.env.VITE_API_URL}/update-event`}
+        />
+        <meta property="og:type" content="website" />
+        <meta name="title" content="이벤트 수정" />
+        <meta
+          name="keywords"
+          content="여행, 이벤트 수정, 일정 관리, Trip Planner"
+        />
+        <meta
+          name="description"
+          content="이벤트 정보를 수정하고 여행 계획을 최적화하세요."
+        />
+      </Helmet>
+
+      <FormProvider {...methods}>
+        <EventHeader message="이벤트 수정하기" />
+        <form className="w-full h-[90%]" onSubmit={handleSubmit(onSubmit)}>
+          <section className="flex flex-col w-full bg-white h-full px-[20px] pt-[20px] gap-[14px]">
+            <EventNameInput
+              register={register}
+              id="eventName"
+              label="이벤트 이름"
+              inputText="수정할 이벤트 이름을 입력해 주세요."
+              errors={errors}
+            />
+            <EventGoogleLocationInput
+              setValue={setValue}
+              errors={errors}
+              defaultLocation={data?.location} // 기본값 전달
+            />
+            <EventCalenderInput
+              openBottomSheet={bottomSheetHandler}
+              dateRange={dateRange}
+              errors={errors}
+            />
+            <EventCostInput
+              register={register}
+              setValue={setValue}
+              getValues={watch}
+              defaultCosts={data?.cost as Cost[] | undefined} // 기본값 전달
+            />
+            <EventSubmitButton
+              text={updateEventMutation.isPending ? '수정중...' : '수정 완료'}
+              disabled={updateEventMutation.isPending}
+            />
+          </section>
+          <BottomSheet
+            isOpen={isBottomSheetOpen}
+            onClose={() => setIsBottomSheetOpen(false)}
+          >
+            <EventBottomSheetContent />
+          </BottomSheet>
+        </form>
+      </FormProvider>
+    </>
   );
 };
 

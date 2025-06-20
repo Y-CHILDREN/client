@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
           alt="home"
           className="w-[20px] h-[20px] flex-shrink-0"
         />
-        <div className="color-#AAADB0 text-center font-Pretendard text-[10px] font-normal leading-3">
+        <div className="color-#AAADB0 text-center font-Pretendard text-[12px] font-normal leading-3">
           홈
         </div>
       </div>
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
           alt="내여행"
           className="w-[20px] h-[20px] flex-shrink-0"
         />
-        <div className="color-#AAADB0 text-center font-Pretendard text-[10px] font-normal leading-3">
+        <div className="color-#AAADB0 text-center font-Pretendard text-[12px] font-normal leading-3">
           내여행
         </div>
       </div>
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
           alt="마이페이지"
           className="w-[20px] h-[20px] flex-shrink-0"
         />
-        <p className="color-#AAADB0 text-center font-Pretendard text-[10px] font-normal leading-3">
+        <p className="color-#AAADB0 text-center font-Pretendard text-[12px] font-normal leading-3">
           마이페이지
         </p>
       </div>

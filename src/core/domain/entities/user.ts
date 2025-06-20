@@ -7,7 +7,6 @@ interface User {
   user_memo: string;
   access_token: string;
   refresh_token: string;
-  trip_history: Array<number>;
 }
 
 export default User;

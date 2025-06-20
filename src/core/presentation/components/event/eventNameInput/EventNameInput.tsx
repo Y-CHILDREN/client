@@ -3,7 +3,7 @@ import RequiredDot from '../../requiredDot/RequiredDot.tsx';
 import { FormValues } from '../../../pages/AddEventPage.tsx';
 
 interface EventInputProps {
-  id: keyof FormValues;
+  id: keyof FormValues & string;
   label: string;
   inputText: string;
   register: UseFormRegister<FormValues>;

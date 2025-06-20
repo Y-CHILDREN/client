@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/stores/authStore';
 import { getUserById } from '../../data/infrastructure/services/userService';
 import './Login.css';
+import { handleAllowNotification } from '../../notification/handleAllowNotification.ts';
 
 const Login: React.FC = () => {
   const [textList, setTextList] = useState<string[]>([]);
@@ -118,7 +119,10 @@ const Login: React.FC = () => {
         </Box>
       ) : !user ? (
         <>
-          <div className="w-[327px] h-[573px] p-[24px_20px_24px] flex flex-col justify-center items-center g-[4px] flex-1 self-stretch filter brightness-200">
+          <div
+            onClick={handleAllowNotification}
+            className="w-[327px] h-[573px] p-[24px_20px_24px] flex flex-col justify-center items-center g-[4px] flex-1 self-stretch filter brightness-200"
+          >
             <div className="flex flex-col w-[112px] h-[120px] items-center text-center text-[32px] font-bold leading-[40px] font-pretendard">
               {!showFinal &&
                 textList.map((text, index) => (

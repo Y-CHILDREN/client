@@ -9,7 +9,7 @@ const EventSubmitButton: React.FC<EventSubmitButtonProps> = ({
 }) => {
   return (
     <button
-      className={`w-full mt-auto my-3 text-white bg-dot-color ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={`w-full mt-auto my-3 min-h-10 rounded-lg text-white bg-dot-color ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       disabled={disabled}
       type="submit"
     >

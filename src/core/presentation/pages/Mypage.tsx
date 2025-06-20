@@ -9,7 +9,7 @@ const Mypage = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const copyLink = 'http://y-children.s3-website.ap-northeast-2.amazonaws.com';
+  const copyLink = 'https://jtrip.store';
 
   console.log('User Object:', user);
   console.log('User Image URL:', user?.user_image);
